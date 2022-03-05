@@ -42,7 +42,7 @@ endfunc
 if !exists('g:vimmake_grep_exts')
 	let g:vimmake_grep_exts = ['c', 'cpp', 'cc', 'h', 'hpp', 'hh', 'as']
 	let g:vimmake_grep_exts += ['m', 'mm', 'py', 'js', 'php', 'java', 'vim']
-	let g:vimmake_grep_exts += ['asm', 's', 'pyw', 'lua', 'go', 'rs']
+	let g:vimmake_grep_exts += ['asm', 's', 'pyw', 'lua', 'go', 'rs', 'pas']
 endif
 
 function! vimmake#grep(text, cwd)
