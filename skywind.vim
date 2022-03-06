@@ -36,8 +36,8 @@ endif
 
 set cpt=.,w,k
 
-if has('patch-8.2.4396')
-	set wildoptions+=pum
+if has('patch-8.2.4500')
+	set wildoptions+=pum,fuzzy
 	set wildmode=longest,full
 	" cnoremap <expr> <cr> pumvisible() ? "\<c-y>" : "\<cr>"
 	" cnoremap <expr> <esc> pumvisible() ? "\<c-e>" : "\<esc>"
