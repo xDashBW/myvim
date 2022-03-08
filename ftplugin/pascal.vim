@@ -16,6 +16,6 @@ setlocal tabstop=2
 setlocal sts=2
 setlocal expandtab
 
-" compiler fpc
+compiler fpc
 
 

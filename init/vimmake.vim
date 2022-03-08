@@ -48,6 +48,8 @@ endif
 function! vimmake#grep(text, cwd)
 	let mode = get(g:, 'vimmake_grep_mode', '')
 	let fixed = get(g:, 'vimmake_grep_fixed', 0)
+	let opts = {}
+	let opts.errorformat = '%f:%l:%c:%m,%f:%l:%m'
 	if mode == ''
 		let mode = (s:vimmake_windows == 0)? 'grep' : 'findstr'
 	endif
@@ -68,7 +70,7 @@ function! vimmake#grep(text, cwd)
 		endif
 		let cmd = 'grep -n -s -R ' . (fixed? '-F ' : '')
 		let cmd .= shellescape(a:text). l:inc .' /dev/null'
-		call asyncrun#run('', {}, cmd)
+		call asyncrun#run('', opts, cmd)
 	elseif mode == 'findstr'
 		let l:inc = ''
 		for l:item in g:vimmake_grep_exts
@@ -79,8 +81,8 @@ function! vimmake#grep(text, cwd)
 				let l:inc .= '"%CD%/*.'.l:item.'" '
 			endif
 		endfor
-		let options = { 'cwd':a:cwd }
-		call asyncrun#run('', options, 'findstr /n /s /C:"'.a:text.'" '.l:inc)
+		let opts.cwd = a:cwd
+		call asyncrun#run('', opts, 'findstr /n /s /C:"'.a:text.'" '.l:inc)
 	elseif mode == 'ag'
 		let inc = []
 		for item in g:vimmake_grep_exts
@@ -94,7 +96,7 @@ function! vimmake#grep(text, cwd)
 		if a:cwd != '.' && a:cwd != ''
 			let cmd .= ' '. shellescape(asyncrun#fullname(a:cwd))
 		endif
-		call asyncrun#run('', {'mode':0}, cmd)
+		call asyncrun#run('', opts, cmd)
 	elseif mode == 'rg'
 		let cmd = 'rg -n --no-heading --color never '. (fixed? '-F ' : '')
 		if len(g:vimmake_grep_exts) > 0
@@ -112,7 +114,7 @@ function! vimmake#grep(text, cwd)
 		if a:cwd != '.' && a:cwd != ''
 			let cmd .= ' '. shellescape(asyncrun#fullname(a:cwd))
 		endif
-		call asyncrun#run('', {'mode':0}, cmd)
+		call asyncrun#run('', opts, cmd)
 	endif
 endfunc
 
