@@ -57,6 +57,9 @@ endfunc
 function! module#init()
 	let s:module_list = []
 	let s:module_load = []
+	if has('patch-7.4.1') == 0
+		return -1
+	endif
 	let scripts = globpath(s:module_home, '*.vim', 1, 1)
 	for name in scripts
 		if filereadable(name)
@@ -86,6 +89,7 @@ function! module#init()
 		exec 'ModuleLoad ' . fnameescape(name)
 	endfor
 	let g:ModuleLoaded = 1
+	return 0
 endfunc
 
 
