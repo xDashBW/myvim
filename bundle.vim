@@ -87,7 +87,6 @@ if has_key(s:enabled, 'basic')
 	Plug 't9md/vim-choosewin'
 	Plug 'tpope/vim-rhubarb'
 	Plug 'mhinz/vim-startify'
-	Plug 'flazz/vim-colorschemes'
 	Plug 'xolox/vim-misc'
 	Plug 'terryma/vim-expand-region'
 	Plug 'skywind3000/vim-dict'
@@ -438,6 +437,8 @@ if has_key(s:enabled, 'colors')
 	Plug 'romainl/Apprentice'
 	Plug 'arzg/vim-colors-xcode'
     Plug 'wuelnerdotexe/vim-enfocado'
+	Plug 'kaicataldo/material.vim'
+	Plug 'flazz/vim-colorschemes'
 	let g:enfocado_style = "neon"
 endif
 
