@@ -9,7 +9,7 @@
 # Version: 8, Last Modified: 2020/11/01 15:06
 #
 #======================================================================
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 import sys
 import time
 import os
