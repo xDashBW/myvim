@@ -46,6 +46,7 @@ function! module#cpp#switch_header(...)
 		if switch != ''
 			let opts.switch = 'useopen,' . switch
 		endif
+		" unsilent echom opts
 		call asclib#core#switch(found, opts)
 	else
 		let t = 'switch failed, can not find another part of c/c++ source'

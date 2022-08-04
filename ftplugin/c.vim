@@ -93,3 +93,10 @@ if get(g:, 'asc_format_clang', 1) != 0
 endif
 
 
+"----------------------------------------------------------------------
+" keymaps
+"----------------------------------------------------------------------
+nnoremap <buffer> <space>fw :SwitchHeader edit<cr>
+nnoremap <buffer> <space>fh :SwitchHeader vsplit<cr>
+
+

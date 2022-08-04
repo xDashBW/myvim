@@ -128,7 +128,7 @@ endif
 
 call quickui#menu#install("&C/C++", [
 			\ ["&Switch Header/Source\t<spc>fw", "SwitchHeader edit"],
-			\ ["S&plit Header/Source\t<spc>fw", "SwitchHeader vsplit"],
+			\ ["S&plit Header/Source\t<spc>fh", "SwitchHeader vsplit"],
 			\ ])
 
 call quickui#menu#install('&Tools', [
