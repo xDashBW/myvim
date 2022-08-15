@@ -205,8 +205,8 @@ noremap <space>aa ggVG
 "----------------------------------------------------------------------
 " text-objects
 "----------------------------------------------------------------------
-onoremap z :<c-u>normal! ggVG<cr>
-vnoremap z ogg0oG$
+onoremap az :<c-u>normal! ggVG<cr>
+vnoremap az ogg0oG$
 onoremap il :<c-u>normal! v$o^oh<cr>
 vnoremap il $o^oh
 
