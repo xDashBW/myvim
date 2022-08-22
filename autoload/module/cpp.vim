@@ -12,9 +12,10 @@
 " init
 "----------------------------------------------------------------------
 function! module#cpp#init()
-	" echom "load cpp"
+	" echom "load module cpp"
 endfunc
 
+" echom "sourcing cpp"
 
 "----------------------------------------------------------------------
 " switch header
