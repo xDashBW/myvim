@@ -177,7 +177,7 @@ if has_key(s:enabled, 'inter')
 	
 	IncScript site/bundle/outliner.vim
 
-	if get(g:, 'bundle_usnip', 0) == 0 || (has('python3') == 0 && has('python') == 0)
+	if has_key(s:enabled, 'ultisnips') == 0 || (has('python3') == 0 && has('python') == 0)
 		Plug 'MarcWeber/vim-addon-mw-utils'
 		Plug 'tomtom/tlib_vim'
 		Plug 'garbas/vim-snipmate'

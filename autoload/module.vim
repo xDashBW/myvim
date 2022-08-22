@@ -58,7 +58,7 @@ endfunc
 "----------------------------------------------------------------------
 function! module#ensure(name)
 	if get(s:module_loaded, a:name, 0) == 0
-		call s:module_load(a:name)
+		call module#load(a:name)
 	endif
 endfunc
 
@@ -94,7 +94,7 @@ function! module#init()
 	endfor
 	if exists('g:module_load') == 0
 		for name in s:module_list
-			if name !~ '^_'
+			if name !~ '^__'
 				let s:module_load += [name]
 			endif
 		endfor
