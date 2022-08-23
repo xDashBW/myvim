@@ -4,8 +4,8 @@
 "
 " Maintainer: skywind3000 (at) gmail.com, 2020-2021
 "
-" Last Modified: 2022/08/24 00:30
-" Verision: 1.9.4
+" Last Modified: 2022/08/24 01:45
+" Verision: 1.9.5
 "
 " For more information, please visit:
 " https://github.com/skywind3000/asynctasks.vim
@@ -2372,9 +2372,23 @@ function! s:environ_help()
 endfunc
 
 function! s:complete_environ(ArgLead, CmdLine, CursorPos)
+	let candidate = []
+	if a:ArgLead == '-'
+		let candidate = ['-h']
+	else
+		let names = keys(g:asynctasks_environ)
+		call sort(names)
+		for name in names
+			if stridx(name, a:ArgLead) == 0
+				let candidate += [name]
+			endif
+		endfor
+	endif
+	return candidate
 endfunc
 
 command! -bang -nargs=* -complete=customlist,s:complete_environ 
-			\ AsyncTaskEnviron  call s:task_environ('<bang>', <f-args>)
+		\ AsyncTaskEnviron  call s:task_environ('<bang>', <f-args>)
+
 
 
