@@ -26,6 +26,7 @@ tags
 /autoload/module/test_*
 /autoload/asyncrun/runner/test_*
 /autoload/asyncrun/program/test_*
+/autoload/test/test_*
 /plugin/test_*
 /lua/test/*
 
