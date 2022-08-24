@@ -41,7 +41,7 @@ endfunc
 "----------------------------------------------------------------------
 " main cmd
 "----------------------------------------------------------------------
-function! quickui#main#cmd(bang, cmdline)
+function! quickui#main#cmd(bang, cmdline) abort
 	let [cmdline, op1] = quickui#core#extract_opts(a:cmdline)
 	let cmdline = quickui#core#string_strip(cmdline)
 	let name = ''
@@ -71,28 +71,25 @@ function! quickui#main#cmd(bang, cmdline)
 	if name == ''
 		if has_key(op1, 'h')
 			call s:sub_help(opts, argv)
-			return 0
 		elseif has_key(op1, 'l')
 			call s:sub_list(opts, argv)
-			return 0
 		endif
-	else
+		return 0
 	endif
-	return 0
+	if has_key(s:private.quickui, name) == 0
+		call quickui#utils#errmsg('invalid extension name: ' . name)
+		return -1
+	endif
+	let obj = s:private.quickui[name]
+	if has_key(obj, 'run') == 0
+		call quickui#utils#errmsg('not find "run" funcref in extension: ' . name)
+		return -2
+	endif
+	let hr = call(obj.run, [opts, argv])
+	return hr
 endfunc
 
 
 
-echo quickui#main#cmd('', '')
-echo quickui#main#cmd('', 'hello')
-echo quickui#main#cmd('', '-h')
-echo quickui#main#cmd('', '-h world')
-echo quickui#main#cmd('', '-h world -v')
-echo quickui#main#cmd('', '-h world -v -x -y')
-echo quickui#main#cmd('', '-h world -v python')
-echo quickui#main#cmd('', '-h world -v -x -y python')
-
-echo quickui#core#split_argv('1 2 3')
-echo quickui#core#split_argv('1 2 3 hello\ world 4\x3')
 
 
