@@ -673,6 +673,12 @@ function! quickui#context#reduce_items(textlist)
 							let output += [item]
 							let state = 0
 						endif
+					elseif detect =~ '^\!'
+						let pattern = strpart(detect, 1)
+						if match(&ft, pattern) < 0
+							let output += [item]
+							let state = 0
+						endif
 					else
 						for check in split(detect, ',')
 							if &ft == check
