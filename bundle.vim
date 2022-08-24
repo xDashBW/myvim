@@ -470,6 +470,12 @@ if has_key(s:enabled, 'anyjump')
 	Plug 'pechorin/any-jump.vim'
 endif
 
+if has_key(s:enabled, 'notify')
+	if has('nvim')
+		Plug 'rcarriga/nvim-notify'
+	endif
+endif
+
 
 "----------------------------------------------------------------------
 " packages end
