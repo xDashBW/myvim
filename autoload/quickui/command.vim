@@ -27,14 +27,14 @@ let s:private.quickui = {}
 "----------------------------------------------------------------------
 " help
 "----------------------------------------------------------------------
-function! s:sub_help(opts, argv)
+function! s:help(opts, argv)
 endfunc
 
 
 "----------------------------------------------------------------------
 " list extension
 "----------------------------------------------------------------------
-function! s:sub_list(opts, argv)
+function! s:list(opts, argv)
 endfunc
 
 
@@ -70,9 +70,9 @@ function! quickui#main#cmd(bang, cmdline) abort
 	let s:private.names = names
 	if name == ''
 		if has_key(op1, 'h')
-			call s:sub_help(opts, argv)
+			call s:help(opts, argv)
 		elseif has_key(op1, 'l')
-			call s:sub_list(opts, argv)
+			call s:list(opts, argv)
 		endif
 		return 0
 	endif
@@ -89,6 +89,13 @@ function! quickui#main#cmd(bang, cmdline) abort
 	return hr
 endfunc
 
+
+
+"----------------------------------------------------------------------
+" sub: main menu
+"----------------------------------------------------------------------
+function! s:sub_menu(opts, argv)
+endfunc
 
 
 
