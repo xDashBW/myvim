@@ -127,10 +127,10 @@ if has('win32') || has('win64') || has('win16') || has('win95')
 endif
 
 call quickui#menu#install("&C/C++", [
+			\ ["&Code Snippet\t<spc>fp", "Leaderf snippet"],
+			\ ["&Edit Snippet\t", "UltiSnipsEdit"],
 			\ ["&Switch Header/Source\t<spc>fw", "SwitchHeader edit"],
 			\ ["S&plit Header/Source\t<spc>fh", "SwitchHeader vsplit"],
-			\ ["&Code Snippet\t<spc>fp", "Leaderf snippet"],
-			\ ["&Edit Snippet\t<spc>fp", "UltiSnipsEdit"],
 			\ ])
 
 call quickui#menu#install('&Tools', [
