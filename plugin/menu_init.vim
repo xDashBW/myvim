@@ -128,10 +128,12 @@ endif
 
 call quickui#menu#install("&C/C++", [
 			\ ["&List Function\tAlt+i", 'call quickui#tools#list_function()', ],
-			\ ["&Switch Header/Source\t<spc>fw", "SwitchHeader edit"],
-			\ ["S&plit Header/Source\t<spc>fh", "SwitchHeader vsplit"],
 			\ ["&Code Snippet\t<spc>fp", "Leaderf snippet"],
 			\ ["&Edit Snippet\t", "UltiSnipsEdit"],
+			\ ["Cpp&man Help\t", 'call MenuHelp_Cppman()'],
+			\ ['--'],
+			\ ["&Switch Header/Source\t<spc>fw", "SwitchHeader edit"],
+			\ ["S&plit Header/Source\t<spc>fh", "SwitchHeader vsplit"],
 			\ ])
 
 call quickui#menu#install('&Tools', [
