@@ -23,9 +23,10 @@ function! quickui#main#cmd(bang, cmdline)
 	let [cmdline, opt2] = quickui#core#extract_opts(cmdline)
 	let opt2.cmdline = cmdline
 	let op = deepcopy(opts)
-	for k in keys(opts2)
-		let op[k] = opts2[k]
+	for k in keys(opt2)
+		let op[k] = opt2[k]
 	endfor
+	let argv = quickui#core#split_argv(cmdline)
 	return [opts, name, opt2, cmdline]
 endfunc
 
