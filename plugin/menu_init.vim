@@ -127,6 +127,7 @@ if has('win32') || has('win64') || has('win16') || has('win95')
 endif
 
 call quickui#menu#install("&C/C++", [
+			\ ["&List Function\tAlt+i", 'call quickui#tools#list_function()', ],
 			\ ["&Switch Header/Source\t<spc>fw", "SwitchHeader edit"],
 			\ ["S&plit Header/Source\t<spc>fh", "SwitchHeader vsplit"],
 			\ ["&Code Snippet\t<spc>fp", "Leaderf snippet"],
@@ -138,7 +139,6 @@ call quickui#menu#install('&Tools', [
 			\ ['&Compare Buffer', 'call svnhelp#compare_ask_buffer()', ''],
 			\ ['--',''],
 			\ ['List &Buffer', 'call quickui#tools#list_buffer("FileSwitch tabe")', ],
-			\ ['List &Function', 'call quickui#tools#list_function()', ],
 			\ ['Display &Messages', 'call quickui#tools#display_messages()', ],
 			\ ['--',''],
 			\ ["&DelimitMate %{get(b:, 'delimitMate_enabled', 0)? 'Disable':'Enable'}", 'DelimitMateSwitch'],

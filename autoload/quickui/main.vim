@@ -9,9 +9,18 @@
 
 " vim: set ts=4 sw=4 tw=78 noet :
 
+
+"----------------------------------------------------------------------
+" extension map
+"----------------------------------------------------------------------
 let g:quickui = get(g:, 'quickui', {})
+let s:quickui = {}
 
 
+
+"----------------------------------------------------------------------
+" main cmd
+"----------------------------------------------------------------------
 function! quickui#main#cmd(bang, cmdline)
 	let [cmdline, opts] = quickui#core#extract_opts(a:cmdline)
 	let cmdline = quickui#core#string_strip(cmdline)
