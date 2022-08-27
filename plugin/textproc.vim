@@ -3,7 +3,7 @@
 " textproc.vim - 
 "
 " Created by skywind on 2022/01/21
-" Last Modified: 2022/08/28 07:00
+" Last Modified: 2022/08/28 07:19
 "
 "======================================================================
 
@@ -185,7 +185,7 @@ function! s:script_runner(script) abort
 			return 'gawk -f'
 		endif
 	elseif ext == 'awk'
-		for name in ['gawk', 'awk', 'mawk']
+		for name in ['gawk', 'awk', 'mawk', 'nawk']
 			if executable(name)
 				return name . ' -f'
 			endif
