@@ -398,3 +398,27 @@ endfunc
 
 
 
+"----------------------------------------------------------------------
+" returns shebang
+"----------------------------------------------------------------------
+function! asclib#utils#script_shebang(script)
+	let script = a:script
+	if !filereadable(script)
+		return ''
+	endif
+	let textlist = readfile(script, '', 20)
+	let shebang = ''
+	for text in textlist
+		let text = asclib#string#strip(text)
+		if text =~ '^#'
+			let text = asclib#string#strip(strpart(text, 1))
+			if text =~ '^!'
+				let shebang = asclib#string#strip(strpart(text, 1))
+				break
+			endif
+		endif
+	endfor
+	return shebang
+endfunc
+
+
