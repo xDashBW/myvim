@@ -3,7 +3,7 @@
 " textproc.vim - 
 "
 " Created by skywind on 2022/01/21
-" Last Modified: 2022/08/28 06:01
+" Last Modified: 2022/08/28 07:00
 "
 "======================================================================
 
@@ -29,26 +29,38 @@ endfunc
 "----------------------------------------------------------------------
 " script root
 "----------------------------------------------------------------------
-function! s:script_root()
-	let location = get(g:, 'textproc_root', '')
-	if location != ''
-		return location
-	endif
+function! s:script_roots() abort
+	let candidate = []
 	let fn = s:script_home . '/site/text'
 	let fn = substitute(fn, '\\', '\/', 'g')
-	return fn
+	let candidate += [fn]
+	let location = get(g:, 'textproc_root', '')
+	if location != ''
+		if isdirectory(location)
+			let candidate += [location]
+		endif
+	endif
+	let rtp_name = get(g:, 'textproc_home', 'text')
+	for rtp in split(&rtp, ',')
+		if rtp != ''
+			let path = rtp . '/' . rtp_name
+			if isdirectory(path)
+				let candidate += [path]
+			endif
+		endif
+	endfor
+	return candidate
 endfunc
 
 
 "----------------------------------------------------------------------
 " list script
 "----------------------------------------------------------------------
-function! s:script_list()
-	let root = s:script_root()
-	let filelist = globpath(root, '*', 1, 1)
+function! s:script_list() abort
 	let select = {}
 	let check = {}
 	let marks = ['py', 'lua', 'pl', 'php', 'js', 'ts', 'rb']
+	let marks += ['gawk', 'awk']
 	if s:windows == 0
 		let marks += ['sh', 'zsh', 'bash', 'fish']
 	else
@@ -57,18 +69,25 @@ function! s:script_list()
 	for mark in marks
 		let check[mark] = 1
 	endfor
-	call sort(filelist)
-	for fn in filelist
-		let name = fnamemodify(fn, ':t')
-		let main = fnamemodify(fn, ':t:r')
-		let ext = fnamemodify(name, ':e')
-		let ext = (s:windows == 0)? ext : tolower(ext)
-		if s:windows
-			let fn = substitute(fn, '\/', '\\', 'g')
+	let roots = s:script_roots()
+	for root in roots
+		if isdirectory(root) == 0
+			continue
 		endif
-		if has_key(check, ext)
-			let select[main] = fn
-		endif
+		let filelist = globpath(root, '*', 1, 1)
+		call sort(filelist)
+		for fn in filelist
+			let name = fnamemodify(fn, ':t')
+			let main = fnamemodify(fn, ':t:r')
+			let ext = fnamemodify(name, ':e')
+			let ext = (s:windows == 0)? ext : tolower(ext)
+			if s:windows
+				let fn = substitute(fn, '\/', '\\', 'g')
+			endif
+			if has_key(check, ext)
+				let select[main] = fn
+			endif
+		endfor
 	endfor
 	return select
 endfunc
@@ -161,6 +180,16 @@ function! s:script_runner(script) abort
 		if executable('busybox')
 			return 'busybox sh'
 		endif
+	elseif ext == 'gawk'
+		if executable('gawk')
+			return 'gawk -f'
+		endif
+	elseif ext == 'awk'
+		for name in ['gawk', 'awk', 'mawk']
+			if executable(name)
+				return name . ' -f'
+			endif
+		endfor
 	endif
 	let ext_runners = {
 				\ 'pl' : 'perl',
@@ -188,7 +217,7 @@ function! s:script_runner(script) abort
 	return ''
 endfunc
 
-" echo s:script_runner('c:/share/vim/lib/ascmini.py')
+" echo s:script_runner('c:/share/vim/lib/ascmini.awk')
 
 
 "----------------------------------------------------------------------
@@ -215,6 +244,10 @@ function! s:script_run(name, args, lnum, count, debug) abort
 	let line1 = a:lnum
 	let line2 = line1 + a:count - 1
 	let cmd = printf('%s,%s!%s', line1, line2, cmd)
+	let $VIM_ENCODING = &encoding
+	let $VIM_FILEPATH = expand('%:p')
+	let $VIM_FILENAME = expand('%:t')
+	let $VIM_FILEDIR = expand('%:p:h')
 	execute cmd
 	return 0
 endfunc
