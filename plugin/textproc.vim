@@ -236,7 +236,7 @@ function! s:script_run(name, args, lnum, count, debug) abort
 	endif
 	let script = scripts[a:name]
 	let runner = s:script_runner(script)
-	let runner = (runner != '')? (' ' . runner) : ''
+	let runner = (runner != '')? (runner . ' ') : ''
 	let cmd = runner . script
 	if a:args != ''
 		let cmd = cmd . ' ' . (a:args)
