@@ -3,7 +3,7 @@
 " textproc.vim - 
 "
 " Created by skywind on 2022/01/21
-" Last Modified: 2022/08/28 07:19
+" Last Modified: 2022/08/30 02:58
 "
 "======================================================================
 
@@ -108,13 +108,15 @@ function! s:script_list() abort
 		endfor
 	endif
 	for key in keys(methods)
-		let value = g:textproc[key]
-		if type(value) == v:t_string
+		if type(methods[key]) == v:t_string
+			let value = methods[key]
 			if value =~ '^:'
 				let value = strpart(value, 1)
 			endif
+			let select[key] = function(value)
+		else
+			let select[key] = function(methods[key])
 		endif
-		let select[key] = function(value)
 	endfor
 	return select
 endfunc

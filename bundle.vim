@@ -157,7 +157,6 @@ end
 "----------------------------------------------------------------------
 if has_key(s:enabled, 'inter')
 	Plug 'vim-scripts/L9'
-	Plug 'honza/vim-snippets'
 	Plug 'xolox/vim-notes', { 'on': ['Note', 'SearchNotes', 'DeleteNotes', 'RecentNotes'] }
 	Plug 'skywind3000/vimoutliner', { 'for': 'votl' }
 	" Plug 'vimoutliner/vimoutliner', { 'for': 'votl' }
@@ -474,6 +473,10 @@ if has_key(s:enabled, 'notify')
 	if has('nvim')
 		Plug 'rcarriga/nvim-notify'
 	endif
+endif
+
+if has_key(s:enabled, 'snippets')
+	Plug 'honza/vim-snippets'
 endif
 
 
