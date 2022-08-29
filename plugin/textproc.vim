@@ -38,6 +38,10 @@ function! s:script_roots() abort
 	if location != ''
 		if isdirectory(location)
 			let candidate += [location]
+			let test = location . '/' . (&filetype)
+			if isdirectory(test)
+				let candidate += [test]
+			endif
 		endif
 	endif
 	let rtp_name = get(g:, 'textproc_home', 'text')
@@ -46,6 +50,10 @@ function! s:script_roots() abort
 			let path = rtp . '/' . rtp_name
 			if isdirectory(path)
 				let candidate += [path]
+				let test = path . '/' . (&filetype)
+				if isdirectory(test)
+					let candidate += [test]
+				endif
 			endif
 		endif
 	endfor
@@ -89,10 +97,32 @@ function! s:script_list() abort
 			endif
 		endfor
 	endfor
+	let methods = {}
+	if exists('g:textproc')
+		for key in keys(g:textproc)
+			let methods[key] = g:textproc[key]
+		endfor
+	endif
+	if exists('b:textproc')
+		for key in keys(b:textproc)
+			let methods[key] = b:textproc[key]
+		endfor
+	endif
+	for key in keys(methods)
+		let value = g:textproc[key]
+		if type(value) == v:t_string
+			if value =~ '^:'
+				let value = strpart(value, 1)
+			endif
+		endif
+		let select[key] = function(value)
+	endfor
 	return select
 endfunc
 
 " echo s:script_list()
+
+" echo function(funcref(function('s:script_list')))()
 
 
 "----------------------------------------------------------------------
@@ -100,7 +130,9 @@ endfunc
 "----------------------------------------------------------------------
 function! s:script_shebang(script)
 	let script = a:script
-	if !filereadable(script)
+	if type(script) != v:t_string
+		return ''
+	elseif !filereadable(script)
 		return ''
 	endif
 	let textlist = readfile(script, '', 20)
@@ -128,6 +160,8 @@ function! s:script_runner(script) abort
 	let ext = (s:windows == 0)? ext : tolower(ext)
 	let runner = ''
 	if script == ''
+		return ''
+	elseif script =~ '^:'
 		return ''
 	elseif executable(script) 
 		return ''
