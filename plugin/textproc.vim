@@ -38,10 +38,6 @@ function! s:script_roots() abort
 	if location != ''
 		if isdirectory(location)
 			let candidate += [location]
-			let test = location . '/' . (&filetype)
-			if isdirectory(test)
-				let candidate += [test]
-			endif
 		endif
 	endif
 	let rtp_name = get(g:, 'textproc_home', 'text')
@@ -50,10 +46,6 @@ function! s:script_roots() abort
 			let path = rtp . '/' . rtp_name
 			if isdirectory(path)
 				let candidate += [path]
-				let test = path . '/' . (&filetype)
-				if isdirectory(test)
-					let candidate += [test]
-				endif
 			endif
 		endif
 	endfor
@@ -82,19 +74,26 @@ function! s:script_list() abort
 		if isdirectory(root) == 0
 			continue
 		endif
-		let filelist = globpath(root, '*', 1, 1)
-		call sort(filelist)
-		for fn in filelist
-			let name = fnamemodify(fn, ':t')
-			let main = fnamemodify(fn, ':t:r')
-			let ext = fnamemodify(name, ':e')
-			let ext = (s:windows == 0)? ext : tolower(ext)
-			if s:windows
-				let fn = substitute(fn, '\/', '\\', 'g')
-			endif
-			if has_key(check, ext)
-				let select[main] = fn
-			endif
+		let candidate = [root]
+		let test = root . '/' . (&filetype)
+		if isdirectory(test)
+			let candidate += [test]
+		endif
+		for location in candidate
+			let filelist = globpath(location, '*', 1, 1)
+			call sort(filelist)
+			for fn in filelist
+				let name = fnamemodify(fn, ':t')
+				let main = fnamemodify(fn, ':t:r')
+				let ext = fnamemodify(name, ':e')
+				let ext = (s:windows == 0)? ext : tolower(ext)
+				if s:windows
+					let fn = substitute(fn, '\/', '\\', 'g')
+				endif
+				if has_key(check, ext)
+					let select[main] = fn
+				endif
+			endfor
 		endfor
 	endfor
 	let methods = {}
@@ -159,7 +158,9 @@ function! s:script_runner(script) abort
 	let ext = fnamemodify(script, ':e')
 	let ext = (s:windows == 0)? ext : tolower(ext)
 	let runner = ''
-	if script == ''
+	if type(script) != v:t_string
+		return ''
+	elseif script == ''
 		return ''
 	elseif script =~ '^:'
 		return ''
@@ -268,25 +269,38 @@ function! s:script_run(name, args, lnum, count, debug) abort
 		echohl None
 		return 0
 	endif
-	let script = scripts[a:name]
-	let runner = s:script_runner(script)
-	let runner = (runner != '')? (runner . ' ') : ''
-	let cmd = runner . script
-	if a:args != ''
-		let cmd = cmd . ' ' . (a:args)
+	if type(scripts[a:name]) == v:t_string
+		let script = scripts[a:name]
+		let runner = s:script_runner(script)
+		let runner = (runner != '')? (runner . ' ') : ''
+		let runner = (runner != '' || s:windows == 0)? runner : 'call '
+		let cmd = runner . shellescape(script)
+		if a:args != ''
+			let cmd = cmd . ' ' . (a:args)
+		endif
+		let line1 = a:lnum
+		let line2 = line1 + a:count - 1
+		let cmd = printf('%s,%s!%s', line1, line2, cmd)
+		let $VIM_ENCODING = &encoding
+		let $VIM_FILEPATH = expand('%:p')
+		let $VIM_FILENAME = expand('%:t')
+		let $VIM_FILEDIR = expand('%:p:h')
+		execute cmd
+	elseif type(scripts[a:name]) == v:t_func
+		let bid = bufnr('%')
+		let text = getbufline(bid, a:lnum, a:lnum + a:count - 1)
+		let hr = call(scripts[a:name], [text])
+		if len(text) < len(hr)
+			call appendbufline(bid, a:lnum, repeat([''], len(hr) - len(text)))
+		elseif len(text) > len(hr)
+			call deletebufline(bid, a:lnum, a:lnum + len(text) - len(hr) - 1)
+		endif
+		call setbufline(bid, a:lnum, hr)
 	endif
-	let line1 = a:lnum
-	let line2 = line1 + a:count - 1
-	let cmd = printf('%s,%s!%s', line1, line2, cmd)
-	let $VIM_ENCODING = &encoding
-	let $VIM_FILEPATH = expand('%:p')
-	let $VIM_FILENAME = expand('%:t')
-	let $VIM_FILEDIR = expand('%:p:h')
-	execute cmd
 	return 0
 endfunc
 
-
+" hello world
 
 "----------------------------------------------------------------------
 " function
