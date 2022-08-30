@@ -11,7 +11,7 @@
 "----------------------------------------------------------------------
 " Follow switchbuf option to open a file
 "----------------------------------------------------------------------
-command! -nargs=+ FileSwitch call s:FileSwitch(<f-args>)
+command! -nargs=+ -complete=file FileSwitch call s:FileSwitch(<f-args>)
 function! s:FileSwitch(...)
 	call asclib#utils#file_switch(a:000)
 endfunc

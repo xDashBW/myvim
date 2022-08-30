@@ -1,3 +1,30 @@
+"======================================================================
+"
+" snipmate.vim - 
+"
+" Created by skywind on 2022/08/30
+" Last Modified: 2022/08/30 16:51:03
+"
+"======================================================================
+
+"----------------------------------------------------------------------
+" edit snip
+"----------------------------------------------------------------------
+function! s:SnipMateEdit()
+	let ft = &ft
+	let test = asclib#path#runtime('snippets')
+	let test = asclib#path#normalize(test)
+	if isdirectory(test)
+		let fn = printf('%s/%s.snippets', test, &ft)
+		exec 'FileSwitch -switch=useopen,usetab,auto ' fnameescape(fn)
+	else
+		call asclib#core#errmsg('invalid path: ' . test)
+	endif
+endfunc
+
+command! -nargs=0 SnipMateEdit call s:SnipMateEdit()
+
+
 " using new parser
 let g:snipMate = { 'snippet_version' : 1 }
 
@@ -15,4 +42,6 @@ elseif 1
 	smap <m-E> <Plug>snipMateBack
 	imap <expr> <m-m> pumvisible() ? '<c-g>u<Plug>snipMateShow' : '<Plug>snipMateShow'
 endif
+
+
 
