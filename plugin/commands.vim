@@ -187,3 +187,18 @@ function! s:CdToProjectRoot()
 	endif
 endfunc
 
+
+"----------------------------------------------------------------------
+" edit current snippet file
+"----------------------------------------------------------------------
+command! -nargs=0 CodeSnipEdit call s:CodeSnipEdit()
+function! s:CodeSnipEdit()
+	if exists(':SnipMateLoadScope') == 2 && exists(':SnipMateEdit') == 2
+		SnipMateEdit
+	elseif exits(':UltiSnipsEdit') == 2
+		UltiSnipEdit
+	endif
+endfunc
+
+
+

@@ -129,7 +129,7 @@ endif
 call quickui#menu#install("&C/C++", [
 			\ ["&List Function\tAlt+i", 'call quickui#tools#list_function()', ],
 			\ ["&Code Snippet\t<spc>fp", "Leaderf snippet"],
-			\ ["&Edit Snippet\t", "UltiSnipsEdit"],
+			\ ["&Edit Snippet\t", "CodeSnipEdit"],
 			\ ["Cpp&man Help\t", 'call MenuHelp_Cppman()'],
 			\ ['--'],
 			\ ["&Switch Header/Source\t<spc>fw", "SwitchHeader edit"],
