@@ -16,7 +16,9 @@ function! s:SnipMateEdit()
 	let test = asclib#path#normalize(test)
 	if isdirectory(test)
 		let fn = printf('%s/%s.snippets', test, &ft)
-		exec 'FileSwitch -switch=useopen,usetab,auto ' fnameescape(fn)
+		let cmd = 'FileSwitch -switch=useopen,usetab,auto ' . fnameescape(fn)
+		unsilent echom 'cmd: ' . cmd
+		exec cmd
 	else
 		call asclib#core#errmsg('invalid path: ' . test)
 	endif
