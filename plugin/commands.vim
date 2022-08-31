@@ -194,7 +194,7 @@ endfunc
 command! -nargs=0 CodeSnipEdit call s:CodeSnipEdit()
 function! s:CodeSnipEdit()
 	if &ft == ''
-		call asclib#core#errmsg('empty file type')
+		call asclib#core#errmsg('non-empty file type required')
 		return 0
 	elseif exists(':SnipMateLoadScope') == 2 && exists(':SnipMateEdit') == 2
 		SnipMateEdit
