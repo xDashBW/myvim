@@ -7,6 +7,30 @@
 "
 "======================================================================
 
+
+"----------------------------------------------------------------------
+" tab switching
+"----------------------------------------------------------------------
+let s:array = [')', '!', '@', '#', '$', '%', '^', '&', '*', '(']
+for i in range(10)
+	let x = (i == 0)? 10 : i
+	let c = s:array[i]
+	exec "noremap <silent><M-".i."> :tabn ".x."<cr>"
+	exec "inoremap <silent><M-".i."> <ESC>:tabn ".x."<cr>"
+	if get(g:, 'vim_no_meta_shift_num', 0) == 0
+		exec "noremap <silent><M-".c."> :tabn ".x."<cr>"
+		exec "inoremap <silent><M-".c."> <ESC>:tabn ".x."<cr>"
+	endif
+endfor
+
+noremap <silent><m-t> :tabnew<cr>
+inoremap <silent><m-t> <ESC>:tabnew<cr>
+noremap <silent><m-w> :tabclose<cr>
+inoremap <silent><m-w> <ESC>:tabclose<cr>
+noremap <m-s> :w<cr>
+inoremap <m-s> <esc>:w<cr>
+
+
 "----------------------------------------------------------------------
 " VimTools
 "----------------------------------------------------------------------
@@ -19,23 +43,6 @@ for s:index in range(10)
 	endif
 endfor
 
-
-" keymap for VimTool
-if (has('gui_running') || has('nvim')) && (has('win32') || has('win64'))
-	let s:keys = [')', '!', '@', '#', '$', '%', '^', '&', '*', '(']
-	for s:index in range(10)
-		let s:name = ''.s:index
-		if s:index == 0 | let s:name = '10' | endif
-		exec 'noremap <silent><M-'.s:keys[s:index].'> :AsyncTask task-f'.s:index.'<cr>'
-		exec 'inoremap <silent><M-'.s:keys[s:index].'> <ESC>:AsyncTask task-f'.s:index.'<cr>'
-	endfor
-else
-	" require to config terminal to remap key alt-shift+? to '\033[{0}?~'
-	for s:index in range(10)
-		let s:name = ''.s:index
-		if s:index == 0 | let s:name = '10' | endif
-	endfor
-endif
 
 
 "----------------------------------------------------------------------
