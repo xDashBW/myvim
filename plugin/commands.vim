@@ -10,6 +10,9 @@
 
 "----------------------------------------------------------------------
 " Follow switchbuf option to open a file
+" usage: 
+"     :FileSwitch abc.txt
+"     :FileSwitch -switch=useopen,usetab,auto abc.txt
 "----------------------------------------------------------------------
 command! -nargs=+ -complete=file FileSwitch call s:FileSwitch(<f-args>)
 function! s:FileSwitch(...)

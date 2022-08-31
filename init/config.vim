@@ -224,10 +224,14 @@ function! Terminal_SwitchTab()
 	if has('gui_running')
 		return
 	endif
+	let s:array = [')', '!', '@', '#', '$', '%', '^', '&', '*', '(']
 	for i in range(10)
 		let x = (i == 0)? 10 : i
+		let c = s:array[i]
 		exec "noremap <silent><M-".i."> :tabn ".x."<cr>"
 		exec "inoremap <silent><M-".i."> <ESC>:tabn ".x."<cr>"
+		exec "noremap <silent><M-".c."> :tabn ".x."<cr>"
+		exec "inoremap <silent><M-".c."> <ESC>:tabn ".x."<cr>"
 	endfor
 	noremap <silent><m-t> :tabnew<cr>
 	inoremap <silent><m-t> <ESC>:tabnew<cr>
