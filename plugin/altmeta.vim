@@ -730,7 +730,7 @@ endfunc
 " have completed.
 
 if !exists("g:altmeta_delay")
-	let g:altmeta_delay = 10
+	let g:altmeta_delay = 0
 endif
 
 if g:altmeta_delay == 0
