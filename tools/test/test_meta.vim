@@ -13,4 +13,21 @@ for t in ['up', 'down', 'left', 'right']
 	exec printf("noremap <m-%s> :echo 'meta+%s'<cr>", t, t)
 endfor
 
+let skip = ['i', 'j', 'v']
+
+for i in range(26)
+	let c = nr2char(char2nr('a') + i)
+	let u = toupper(c)
+	exec printf("noremap <m-%s> :echo 'meta+%s'<cr>", c, c)
+	exec printf("noremap <m-%s> :echo 'meta+shift+%s'<cr>", u, c)
+	exec printf("noremap <c-%s> :echo 'ctrl+%s'<cr>", c, c)
+	" exec printf("noremap <m-c-%s> :echo 'meta+ctrl+%s'<cr>", c, c)
+endfor
+
+
+let s:array = [')', '!', '@', '#', '$', '%', '^', '&', '*', '(']
+for i in range(10)
+	exec printf("noremap <m-%s> :echo 'meta+%d'<cr>", s:array[i], i)
+endfor
+
 
