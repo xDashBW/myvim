@@ -28,7 +28,8 @@ endfor
 
 let s:array = [')', '!', '@', '#', '$', '%', '^', '&', '*', '(']
 for i in range(10)
-	exec printf("noremap <m-%s> :echo 'meta+%d'<cr>", s:array[i], i)
+	exec printf("noremap <m-%d> :echo 'meta+%d'<cr>", i, i)
+	exec printf("noremap <m-%s> :echo 'meta+shift+%d'<cr>", s:array[i], i)
 endfor
 
 
