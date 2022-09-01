@@ -38,6 +38,10 @@ endfunc
 let s:fn_num_spare_keys = 50
 let s:fn_spare_keys_used = 0
 
+" Allocate a new key, set it to use the passed-in keyCode, then map it to
+" the passed-in key.
+" New keys are taken from <F13> through <F37> and <S-F13> through <S-F37>,
+" for a total of 50 keys.
 function! s:set_newkey(key, keyCode)
 	if get(g:, 'altmeta_skip_meta', 0) == 0
 		if s:fn_spare_keys_used >= s:fn_num_spare_keys
@@ -130,6 +134,14 @@ function! s:reset_meta_letters()
 		endif
 		let c = nr2char(char2nr(c) + 1)
 	endwhile
+endfunc
+
+function! s:init_meta_marks()
+	let c1 = [',', '.', '/', ';', '{', '}']
+	let c2 = ['?', ':', '-', '_', '+', '=', "'"]
+	for c in c1 + c2
+		call s:set_key("<M-" . c . ">", "\e" . c)
+	endfor
 endfunc
 
 function! s:unset_function_keys()
@@ -443,7 +455,7 @@ function! s:init_putty_sco_meta_home_end()
 	call s:set_newkey("<M-End>",     "\e\e[F")
 endfunc
 
-function! s:init_putty_keys()
+function! s:init_putty_sco_keys()
 	call s:unset_function_keys()
 	call s:init_meta_numbers()
 	call s:init_meta_shift_numbers()
@@ -685,7 +697,7 @@ function! AltMeta_Setup()
 	elseif g:altmeta_term_type == 'linux'
 		call s:init_linux_keys()
 	elseif g:altmeta_term_type == 'putty-sco'
-		call s:init_putty_keys()
+		call s:init_putty_sco_keys()
 	elseif g:altmeta_term_type == 'putty'
 		call s:init_putty_keys()
 	elseif g:altmeta_term_type == 'rxvt'
@@ -704,7 +716,9 @@ function! AltMeta_Setup()
 		endif
 	else
 		echoerr "Unsupported terminal: g:altmeta_term_type=" . g:altmeta_term_type
+		return
 	endif
+	call s:init_meta_marks()
 endfunc
 
 " With newer Xterm, Vim enters an extended negotiation during startup.  First
