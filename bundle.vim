@@ -54,6 +54,7 @@ if has_key(s:enabled, 'simple')
 	Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
 	Plug 'bootleq/vim-cycle'
 	Plug 'tpope/vim-surround'
+	Plug 'andymass/vim-matchup'
 
 	nnoremap gb= :Tabularize /=<CR>
 	vnoremap gb= :Tabularize /=<CR>
@@ -72,6 +73,9 @@ if has_key(s:enabled, 'simple')
 	vnoremap gbr :Tabularize /\|/r0<cr>
 	map gz <Plug>Sneak_s
 	map gZ <Plug>Sneak_S
+
+	" vim-matchup conflicts with matchit, should disable matchit
+	let g:loaded_matchit = 1
 
 	IncScript site/bundle/dirvish.vim
 	IncScript site/bundle/cycle.vim
