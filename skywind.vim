@@ -30,8 +30,6 @@ if isdirectory(g:asyncrun_msys)
 	let g:asyncrun_msys = 'd:/Linux'
 endif
 
-let g:asynctasks_environ = get(g:, 'asynctasks_environ', {})
-
 if has('patch-8.0.0')
 	set shortmess+=c
 endif

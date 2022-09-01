@@ -158,7 +158,7 @@ let g:vim_json_conceal = 0
 
 
 "----------------------------------------------------------------------
-" asyncrun / vimmake 
+" asyncrun / vimmake
 "----------------------------------------------------------------------
 let g:asyncrun_timer = 64
 let s:python = executable('python3')? 'python3' : 'python'
@@ -183,7 +183,6 @@ if executable('rg')
 endif
 
 
-
 "----------------------------------------------------------------------
 " asynctasks
 "----------------------------------------------------------------------
@@ -193,6 +192,7 @@ let g:asynctasks_term_pos = (s:windows && s:gui)? 'external' : 'TAB'
 let g:asynctasks_template = 0
 let g:asynctasks_confirm = 0
 let g:asynctasks_template = s:home . '/tools/conf/template.ini'
+let g:asynctasks_environ = get(g:, 'asynctasks_environ', {})
 " let g:asynctasks_rtp_config = 'etc/tasks.ini'
 
 
