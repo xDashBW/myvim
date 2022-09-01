@@ -55,7 +55,7 @@ call quickui#menu#install("&Edit", [
 			\ ['&Break long line', 'call MenuHelp_SplitLine()', ''],
 			\ ])
 
-call quickui#menu#install('&Symbol', [
+call quickui#menu#install('&Search', [
 			\ [ "&Grep Word\t(In Project)", 'call MenuHelp_GrepCode()', 'Grep keyword in current project' ],
 			\ [ "--", ],
 			\ [ "Find &Definition\t(GNU Global)", 'call MenuHelp_Gscope("g")', 'GNU Global search g'],
