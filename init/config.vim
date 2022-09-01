@@ -164,6 +164,10 @@ set guitablabel=%{Vim_NeatGuiTabLabel()}
 set guitabtooltip=%{Vim_NeatGuiTabTip()}
 
 
+
+"----------------------------------------------------------------------
+" Tab Manipulation
+"----------------------------------------------------------------------
 function! Tab_MoveLeft()
 	let l:tabnr = tabpagenr() - 2
 	if l:tabnr >= 0
@@ -182,6 +186,10 @@ function! s:Filter_Push(desc, wildcard)
 	let g:browsefilter .= a:desc . " (" . a:wildcard . ")\t" . a:wildcard . "\n"
 endfunc
 
+
+"----------------------------------------------------------------------
+" GVim Dialogs
+"----------------------------------------------------------------------
 let g:browsefilter = ''
 call s:Filter_Push("All Files", "*")
 call s:Filter_Push("C/C++/Object-C", "*.c;*.cpp;*.cc;*.h;*.hh;*.hpp;*.m;*.mm")
@@ -190,7 +198,9 @@ call s:Filter_Push("Text", "*.txt")
 call s:Filter_Push("Vim Script", "*.vim")
 
 
-" restore screen after quitting
+"----------------------------------------------------------------------
+" terminal turn
+"----------------------------------------------------------------------
 if has('unix')
 	" disable modifyOtherKeys
 	if exists('+t_TI') && exists('+t_TE')
@@ -218,10 +228,6 @@ if has('unix')
 		set restorescreen
 	endif
 endif
-
-
-
-
 
 
 
