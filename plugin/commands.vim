@@ -13,10 +13,16 @@
 " usage: 
 "     :FileSwitch abc.txt
 "     :FileSwitch -switch=useopen,usetab,auto abc.txt
+"     :FileSwitch -switch=useopen -mods=botright abc.txt
 "----------------------------------------------------------------------
-command! -nargs=+ -complete=file FileSwitch call s:FileSwitch(<f-args>)
-function! s:FileSwitch(...)
-	call asclib#utils#file_switch(a:000)
+command! -nargs=+ -complete=file FileSwitch 
+			\ call s:FileSwitch('<mods>', <f-args>)
+function! s:FileSwitch(mods, ...)
+	let args = deepcopy(a:000)
+	if a:mods != ''
+		let args = ['-mods=' . a:mods] + args
+	endif
+	call asclib#utils#file_switch(args)
 endfunc
 
 
