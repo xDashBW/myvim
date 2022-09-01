@@ -54,7 +54,6 @@ if has_key(s:enabled, 'simple')
 	Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
 	Plug 'bootleq/vim-cycle'
 	Plug 'tpope/vim-surround'
-	Plug 'andymass/vim-matchup'
 
 	nnoremap gb= :Tabularize /=<CR>
 	vnoremap gb= :Tabularize /=<CR>
@@ -73,9 +72,6 @@ if has_key(s:enabled, 'simple')
 	vnoremap gbr :Tabularize /\|/r0<cr>
 	map gz <Plug>Sneak_s
 	map gZ <Plug>Sneak_S
-
-	" vim-matchup conflicts with matchit, should disable matchit
-	let g:loaded_matchit = 1
 
 	IncScript site/bundle/dirvish.vim
 	IncScript site/bundle/cycle.vim
@@ -352,6 +348,14 @@ endif
 if has_key(s:enabled, 'ale')
 	Plug 'w0rp/ale'
 	IncScript site/bundle/ale.vim
+endif
+
+if has_key(s:enabled, 'matchup')
+	Plug 'andymass/vim-matchup'
+	" vim-matchup conflicts with matchit, should disable matchit
+	let g:loaded_matchit = 1
+else
+	runtime! macros/matchit.vim
 endif
 
 if has_key(s:enabled, 'neomake')

@@ -16,7 +16,6 @@ if has('gui_running')
 	IncScript site/opt/hexhigh.vim
 endif
 
-" runtime! macros/matchit.vim
 
 call after_object#enable(['r', 'R'], '=', ':', '-', '#', ' ', '/', ';', '(', ')')
 
