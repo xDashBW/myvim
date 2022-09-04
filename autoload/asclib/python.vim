@@ -13,12 +13,19 @@ endif
 
 
 "----------------------------------------------------------------------
+" script home
+"----------------------------------------------------------------------
+let s:script_home = fnamemodify(expand('<sfile>:p'), ':h')
+
+
+"----------------------------------------------------------------------
 " version detection
 "----------------------------------------------------------------------
 let s:py_cmd = ''
 let s:py_eval = ''
 let s:py_file = ''
 let s:py_version = 0
+let s:py_ensure = 0
 let s:py_inited = 0
 
 if g:asclib#python#version == 0
@@ -116,9 +123,9 @@ function! asclib#python#call(funcname, args) abort
 		call asclib#common#errmsg('vim does not support python')
 		return
 	else
-		if s:py_inited == 0
+		if s:py_ensure == 0
 			exec s:py_cmd 'import vim'
-			let s:py_inited = 1
+			let s:py_ensure = 1
 		endif
 		if s:py_version == 2
 			py __py_args = vim.eval('a:args')
@@ -185,8 +192,38 @@ function! asclib#python#import(module_name)
 		call asclib#common#errmsg('vim does not support python')
 		return 0
 	endif
+	if s:py_inited == 0
+		call asclib#python#init()
+	endif
 	exec s:py_cmd 'import ' . a:module_name
 	return 1
 endfunc
+
+
+"----------------------------------------------------------------------
+" initialize asclib.py
+"----------------------------------------------------------------------
+function! asclib#python#init()
+	if s:py_version == 0
+		call asclib#common#errmsg('vim does not support python')
+		return 0
+	elseif s:py_inited != 0
+		return 1
+	endif
+	exec s:py_cmd 'import vim'
+	exec s:py_cmd 'import os'
+	call asclib#python#path_add(s:script_home)
+	exec s:py_cmd '__path = vim.eval("s:script_home") + "/../python"'
+	exec s:py_cmd '__path = os.path.normpath(__path)'
+	exec s:py_cmd 'sys.path.append(__path)'
+	let fn = s:script_home . '/asclib.py'
+	if filereadable(fn)
+		exec s:py_cmd 'import asclib'
+	endif
+	let s:py_ensure = 1
+	let s:py_inited = 1
+	return 1
+endfunc
+
 
 

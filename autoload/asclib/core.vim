@@ -14,6 +14,7 @@
 " Global
 "----------------------------------------------------------------------
 let s:windows = has('win32') || has('win64') || has('win95') || has('win16')
+let g:asclib = get(g:, 'asclib', {})
 let g:asclib#core#windows = s:windows
 let g:asclib#core#has_nvim = has('nvim')
 
