@@ -211,3 +211,21 @@ endfunc
 
 
 
+"----------------------------------------------------------------------
+" list loaded scripts
+"----------------------------------------------------------------------
+command! -nargs=0 ScriptNames call s:ScriptNames()
+function! s:ScriptNames()
+	redir => x
+	silent scriptnames
+	redir END
+	tabnew
+	let save = @0
+	let @0 = x
+	exec 'normal "0Pggdd'
+	let @0 = save
+	setlocal nomodified
+endfunc
+
+
+
