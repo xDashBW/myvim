@@ -13,6 +13,9 @@
 "----------------------------------------------------------------------
 let g:snipMate = { 'snippet_version' : 1 }
 let g:snipMate.dirs = [asclib#path#runtime('site')]
+let g:snipMate.description_in_completion = 1
+
+let g:snips_author = 'skywind'
 
 
 "----------------------------------------------------------------------
