@@ -1,1 +1,1 @@
-UltiSnip collections
+UltiSnips collections
