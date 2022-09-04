@@ -37,6 +37,5 @@ if filereadable(name)
 	exec 'source ' . fnameescape(name)
 endif
 
-call module#init()
 
 

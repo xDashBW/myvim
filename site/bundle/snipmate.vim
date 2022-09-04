@@ -7,12 +7,26 @@
 "
 "======================================================================
 
+
+"----------------------------------------------------------------------
+" initialize
+"----------------------------------------------------------------------
+let g:snipMate = { 'snippet_version' : 1 }
+let g:snipMate.dirs = [asclib#path#runtime('site')]
+
+
+"----------------------------------------------------------------------
+" snipmate enhancement: allow extra paths in g:snipMate.dirs
+"----------------------------------------------------------------------
+call module#snipmate#active()
+
+
 "----------------------------------------------------------------------
 " edit snip
 "----------------------------------------------------------------------
 function! s:SnipMateEdit()
 	let ft = &ft
-	let test = asclib#path#runtime('snippets')
+	let test = asclib#path#runtime('site/snippets')
 	let test = asclib#path#normalize(test)
 	if isdirectory(test)
 		let fn = printf('%s/%s.snippets', test, &ft)
@@ -25,9 +39,6 @@ endfunc
 
 command! -nargs=0 SnipMateEdit call s:SnipMateEdit()
 
-
-" using new parser
-let g:snipMate = { 'snippet_version' : 1 }
 
 if 0
 	imap <expr> <m-e> pumvisible() ? '<c-g>u<Plug>snipMateTrigger' : '<Plug>snipMateTrigger'
