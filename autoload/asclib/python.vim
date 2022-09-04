@@ -17,16 +17,20 @@ endif
 "----------------------------------------------------------------------
 let s:py_cmd = ''
 let s:py_eval = ''
+let s:py_file = ''
 let s:py_version = 0
+let s:py_inited = 0
 
 if g:asclib#python#version == 0
 	if has('python3')
 		let s:py_cmd = 'py3'
 		let s:py_eval = 'py3eval'
+		let s:py_file = 'py3file'
 		let s:py_version = 3
 	elseif has('python')
 		let s:py_cmd = 'py'
 		let s:py_eval = 'pyeval'
+		let s:py_file = 'pyfile'
 		let s:py_version = 2
 	else
 		call asclib#common#errmsg('vim does not support +python/+python3 feature')
@@ -35,6 +39,7 @@ elseif g:asclib#python#version == 2
 	if has('python')
 		let s:py_cmd = 'py'
 		let s:py_eval = 'pyeval'
+		let s:py_file = 'pyfile'
 		let s:py_version = 2
 	else
 		call asclib#common#errmsg('vim does not support +python feature')
@@ -43,6 +48,7 @@ else
 	if has('python3')
 		let s:py_cmd = 'py3'
 		let s:py_eval = 'py3eval'
+		let s:py_file = 'py3file'
 		let s:py_version = 3
 	else
 		call asclib#common#errmsg('vim does not support +python3 feature')
@@ -56,6 +62,7 @@ endif
 let g:asclib#python#py_ver = s:py_version
 let g:asclib#python#py_cmd = s:py_cmd
 let g:asclib#python#py_eval = s:py_eval
+let g:asclib#python#py_file = s:py_file
 let g:asclib#python#shell_error = 0
 
 let g:asclib#python#locate = fnamemodify(resolve(expand('<sfile>:p')), ':h')
@@ -92,6 +99,33 @@ function! asclib#python#eval(script) abort
 			return pyeval(code)
 		elseif s:py_version == 3
 			return py3eval(code)
+		endif
+	endif
+endfunc
+
+function! asclib#python#file(filename) abort
+	if s:py_version == 0
+		call asclib#common#errmsg('vim does not support python')
+	else
+		exec s:py_file . ' ' . fnameescape(a:filename)
+	endif
+endfunc
+
+function! asclib#python#call(funcname, args) abort
+	if s:py_version == 0
+		call asclib#common#errmsg('vim does not support python')
+		return
+	else
+		if s:py_inited == 0
+			exec s:py_cmd 'import vim'
+			let s:py_inited = 1
+		endif
+		if s:py_version == 2
+			py __py_args = vim.eval('a:args')
+			return pyeval(a:funcname . '(__py_args)')
+		else
+			py3 __py_args = vim.eval('a:args')
+			return py3eval(a:funcname . '(__py_args)')
 		endif
 	endif
 endfunc
@@ -143,6 +177,15 @@ function! asclib#python#reload(module_name)
 	exec s:py_cmd 'import vim'
 	exec s:py_cmd 'import ' . a:module_name . ' as __mm'
 	exec s:py_cmd '__imp.reload(__mm)'
+	return 1
+endfunc
+
+function! asclib#python#import(module_name)
+	if s:py_version == 0
+		call asclib#common#errmsg('vim does not support python')
+		return 0
+	endif
+	exec s:py_cmd 'import ' . a:module_name
 	return 1
 endfunc
 
