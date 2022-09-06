@@ -7,3 +7,8 @@
 "
 "======================================================================
 
+function! quickui#dashboard#utils#hello()
+	echo "suck"
+endfunc
+
+
