@@ -71,8 +71,7 @@ function! asclib#path#isabs(path)
 		return 1
 	endif
 	if s:windows != 0
-		let head = strpart(path, 1, 2)
-		if head == ':/' || head == ":\\"
+		if path =~ '^.:[\/\\]'
 			return 1
 		endif
 		let head = strpart(path, 0, 1)
@@ -136,8 +135,12 @@ endfunc
 function! asclib#path#normalize(path, ...)
 	let lower = (a:0 > 0)? a:1 : 0
 	let path = a:path
-	if path =~ '^[\/\\]' || (s:windows && path =~ '^\w:[\/\\]')
-		let path = fnamemodify(path, ':p')
+	if asclib#path#isabs(path)
+		if path != '~'
+			let path = fnamemodify(path, ':p')
+		endif
+	else
+		let path = fnamemodify(path, ':.')
 	endif
 	if s:windows
 		let path = tr(path, "\\", '/')
@@ -147,7 +150,7 @@ function! asclib#path#normalize(path, ...)
 	endif
 	if path =~ '^[\/\\]$'
 		return path
-	elseif s:windows && path =~ '^\w:[\/\\]$'
+	elseif s:windows && path =~ '^.:[\/\\]$'
 		return path
 	endif
 	let size = len(path)
