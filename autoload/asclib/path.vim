@@ -138,7 +138,9 @@ function! asclib#path#normalize(path, ...)
 	if (s:windows == 0 && path == '/') || (s:windows && path =~ '^.:[\/\\]')
 		let path = fnamemodify(path, ':p')
 	else
-		let path = fnamemodify(path, ':.')
+		if s:windows == 0 || (s:windows && path !~ '^.:')
+			let path = fnamemodify(path, ':.')
+		endif
 	endif
 	if s:windows
 		let path = tr(path, "\\", '/')
