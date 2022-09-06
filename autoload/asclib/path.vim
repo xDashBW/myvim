@@ -145,7 +145,7 @@ function! asclib#path#normalize(path, ...)
 	let size = len(path)
 	if path =~ '^[\/\\]$'
 		return path
-	elseif s:windows && path =~ '^\a:[\/\\]$'
+	elseif s:windows && path =~ '^\w:[\/\\]$'
 		return path
 	endif
 	if path[size - 1] == '/'
