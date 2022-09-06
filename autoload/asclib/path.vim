@@ -136,19 +136,22 @@ endfunc
 function! asclib#path#normalize(path, ...)
 	let lower = (a:0 > 0)? a:1 : 0
 	let path = a:path
+	if path =~ '^[\/\\]' || (s:windows && path =~ '^\w:[\/\\]')
+		let path = fnamemodify(path, ':p')
+	endif
 	if s:windows
 		let path = tr(path, "\\", '/')
 	endif
 	if lower && (s:windows || has('win32unix'))
 		let path = tolower(path)
 	endif
-	let size = len(path)
 	if path =~ '^[\/\\]$'
 		return path
 	elseif s:windows && path =~ '^\w:[\/\\]$'
 		return path
 	endif
-	if path[size - 1] == '/'
+	let size = len(path)
+	if size > 1 && path[size - 1] == '/'
 		let path = strpart(path, 0, size - 1)
 	endif
 	return path
