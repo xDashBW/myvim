@@ -135,10 +135,8 @@ endfunc
 function! asclib#path#normalize(path, ...)
 	let lower = (a:0 > 0)? a:1 : 0
 	let path = a:path
-	if asclib#path#isabs(path)
-		if path != '~'
-			let path = fnamemodify(path, ':p')
-		endif
+	if (s:windows == 0 && path == '/') || (s:windows && path =~ '^.:[\/\\]')
+		let path = fnamemodify(path, ':p')
 	else
 		let path = fnamemodify(path, ':.')
 	endif
