@@ -143,7 +143,7 @@ function! asclib#path#normalize(path, ...)
 		let path = tolower(path)
 	endif
 	let size = len(path)
-	if path == '/' || path == '\\'
+	if path =~ '^[\/\\]$'
 		return path
 	elseif s:windows && path =~ '^\w:[\/\\]$'
 		return path
