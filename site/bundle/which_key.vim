@@ -57,3 +57,20 @@ let g:which_key_map.w = {
   \ '/': [':Leaderf window', 'search-for-a-window'],
   \ }
 
+let g:which_key_map.x = {
+  \ 'name': '+lsp',
+  \ 'a': ['<Plug>(coc-codeaction-selected)', 'do-code-action-on-region'],
+  \ 'A': ['<Plug>(coc-codeaction)', 'do-code-action-on-line'],
+  \ 'r': ['<Plug>(coc-references)', 'find-references'],
+  \ 'R': ['<Plug>(coc-rename)', 'rename-current-symbol'],
+  \ 'f': ['CocAction("format")', 'format-buffer'],
+  \ '=': ['<Plug>(coc-format-selected)', 'format-region'],
+  \ 'k': ["CocAction('doHover')", 'show-documentation'],
+  \ 'q': ['<Plug>(coc-fix-current)', 'fix-line'],
+  \ 'l': {
+  \     'name': '+lists',
+  \     'a': [':CocList --normal actions', 'list-code-actions'],
+  \     'e': [':CocList --normal diagnostics', 'list-errors']
+  \ },
+  \ }
+
