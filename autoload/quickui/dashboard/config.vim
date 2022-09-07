@@ -40,6 +40,11 @@ endfunc
 " 
 "----------------------------------------------------------------------
 function! quick#dashboard#config#visit(cmdtree, path) abort
+	let cmdtree = a:cmdtree
+	let path = a:path
+	if type(cmdtree) == v:t_none || type(path) == v:t_none
+		return v:none
+	endif
 endfunc
 
 
