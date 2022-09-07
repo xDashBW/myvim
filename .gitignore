@@ -28,6 +28,8 @@ tags
 /autoload/asyncrun/program/test_*
 /autoload/test/test_*
 /autoload/preload/test_*
+/autoload/quickui/test_*
+/autoload/quickui/**/test_*
 /plugin/test_*
 /lua/test/*
 
