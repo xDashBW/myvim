@@ -11,22 +11,50 @@ vnoremap <silent> <TAB><TAB> :<C-u>WhichKeyVisual 'TAB'<CR>
 
 let g:which_key_map = get(g:, 'which_key_map', {})
 
+let g:which_key_map.b = {
+      \ 'name' : '+buffer' ,
+      \ '1' : ['b1'        , 'buffer 1']        ,
+      \ '2' : ['b2'        , 'buffer 2']        ,
+      \ 'd' : ['bd'        , 'delete-buffer']   ,
+      \ 'f' : ['bfirst'    , 'first-buffer']    ,
+      \ 'h' : ['Startify'  , 'home-buffer']     ,
+      \ 'l' : ['blast'     , 'last-buffer']     ,
+      \ 'n' : ['bnext'     , 'next-buffer']     ,
+      \ 'p' : ['bprevious' , 'previous-buffer'] ,
+      \ '?' : ['Buffers'   , 'fzf-buffer']      ,
+      \ }
+
 let g:which_key_map.c = {
-  \ 'name': '+comments',
-  \ 'c': 'comment-lines',
-  \ 'n': 'comment-lines-force-nesting',
-  \ ' ': 'toggle-comment',
-  \ 'm': 'comment-lines-with-block-comment',
-  \ 'i': 'toggle-individual-line-comment',
-  \ 's': 'comment-lines-documentation-style',
-  \ 'y': 'yank-and-comment-lines',
-  \ '$': 'comment-to-the-end',
-  \ 'A': 'add-comment-to-end-of-line',
-  \ 'a': 'switch-comment-delimiters',
-  \ 'l': 'comment-left-aligned',
-  \ 'b': 'comment-both-side-aligned',
-  \ 'u': 'uncomment-lines'
-  \ }
+	  \ 'name': '+comments',
+	  \ 'c': 'comment-lines',
+	  \ 'n': 'comment-lines-force-nesting',
+	  \ ' ': 'toggle-comment',
+	  \ 'm': 'comment-lines-with-block-comment',
+	  \ 'i': 'toggle-individual-line-comment',
+	  \ 's': 'comment-lines-documentation-style',
+	  \ 'y': 'yank-and-comment-lines',
+	  \ '$': 'comment-to-the-end',
+	  \ 'A': 'add-comment-to-end-of-line',
+	  \ 'a': 'switch-comment-delimiters',
+	  \ 'l': 'comment-left-aligned',
+	  \ 'b': 'comment-both-side-aligned',
+	  \ 'u': 'uncomment-lines'
+	  \ }
+
+let g:which_key_map.l = {
+      \ 'name' : '+lsp',
+      \ 'f' : ['spacevim#lang#util#Format()'          , 'formatting']       ,
+      \ 'r' : ['spacevim#lang#util#FindReferences()'  , 'references']       ,
+      \ 'R' : ['spacevim#lang#util#Rename()'          , 'rename']           ,
+      \ 's' : ['spacevim#lang#util#DocumentSymbol()'  , 'document-symbol']  ,
+      \ 'S' : ['spacevim#lang#util#WorkspaceSymbol()' , 'workspace-symbol'] ,
+      \ 'g' : {
+        \ 'name': '+goto',
+        \ 'd' : ['spacevim#lang#util#Definition()'     , 'definition']      ,
+        \ 't' : ['spacevim#lang#util#TypeDefinition()' , 'type-definition'] ,
+        \ 'i' : ['spacevim#lang#util#Implementation()' , 'implementation']  ,
+        \ },
+      \ }
 
 
 let g:which_key_map['p'] = {
