@@ -28,6 +28,36 @@ let g:which_key_map.c = {
   \ 'u': 'uncomment-lines'
   \ }
 
+
+let g:which_key_map['p'] = {
+  \ 'name': '+fuzzy-finder',
+  \ ';': [':Leaderf command', 'find-commands'],
+  \ 'C': [':Leaderf colorscheme', 'find-colors'],
+  \ 'c': [':CocList commands', 'find-coc-commands'],
+  \ 'd': [':Leaderf filer', 'show-file-tree'],
+  \ 'e': [':CocList extensions', 'find-coc-extensions'],
+  \ 'f': [':Leaderf file', 'find-files'],
+  \ 'F': [':CocList folders', 'find-folders'],
+  \ 'g': [':Leaderf rg', 'grep'],
+  \ 'k': [':CocList links', 'list-links'],
+  \ 'L': [':CocList locationlist', 'show-loclist'],
+  \ 'l': [':Leaderf line', 'search-buffer-lines'],
+  \ 'm': [':Leaderf marks', 'show-marks'],
+  \ 'M': [':CocList maps', 'list-mappings'],
+  \ 'H': {
+  \     'name': '+history',
+  \     'c': [':Leaderf cmdHistory', 'show-command-history'],
+  \     'j': [':CocList location', 'list-jump-history']
+  \ },
+  \ 'h': [':Leaderf help', 'find-help'],
+  \ 'o': [':Leaderf bufTag', 'search-buffer-tags'],
+  \ 'P': [':CocList snippets', 'list snippets'],
+  \ 'q': [':CocList quickfix', 'show-quickfix'],
+  \ 'r': [':Leaderf mru', 'find-recent-files'],
+  \ 's': [':CocList -I symbols', 'list-symbols'],
+  \ 'S': [':CocList sessions', 'list-sessions']
+  \ }
+
 let g:which_key_map.s = {
   \ 'name': '+search-replace',
   \ 'r': 'search-replace-to-the-end',
