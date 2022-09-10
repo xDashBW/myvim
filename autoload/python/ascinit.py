@@ -20,7 +20,7 @@ except:
 
 
 #----------------------------------------------------------------------
-# check script 
+# global constants
 #----------------------------------------------------------------------
 SCRIPT_NAME = os.path.abspath(__file__)
 SCRIPT_HOME = os.path.join(os.path.dirname(SCRIPT_NAME), '../..')
@@ -38,6 +38,11 @@ def runtime(dir):
 # call vim function
 #----------------------------------------------------------------------
 def call(funcname, args):
+    vim.__args__ = args
+    if sys.version_info[0] == 3:
+        hr = vim.eval('call("%s", py3eval("vim.__args__"))'%funcname)
+    else:
+        hr = vim.eval('call("%s", pyeval("vim.__args__"))'%funcname)
     return hr
 
 
