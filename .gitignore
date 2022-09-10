@@ -21,6 +21,7 @@ tags
 *.pch
 /tools/scratch
 /tools/samples
+/tools/test/test_*
 /doc/tags
 
 /autoload/module/test_*
@@ -30,6 +31,7 @@ tags
 /autoload/preload/test_*
 /autoload/quickui/test_*
 /autoload/quickui/**/test_*
+/autoload/python/test_*
 /plugin/test_*
 /lua/test/*
 
