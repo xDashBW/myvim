@@ -31,6 +31,8 @@ SCRIPT_HOME = os.path.normpath(SCRIPT_HOME)
 # runtime: 
 #----------------------------------------------------------------------
 def runtime(dir):
+    if not dir:
+        return SCRIPT_HOME
     return os.path.normpath(os.path.join(SCRIPT_HOME, dir))
 
 
