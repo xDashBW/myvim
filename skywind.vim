@@ -1,11 +1,12 @@
 "----------------------------------------------------------------------
-" system detection
+" startup
 "----------------------------------------------------------------------
 let g:asc_uname = asclib#platform#uname()
+exec 'set rtp+='. fnameescape(expand('<sfile>:p:h') . '/site/package')
 
 
 "----------------------------------------------------------------------
-"- OptImport
+" OptImport
 "----------------------------------------------------------------------
 IncScript site/opt/argtextobj.vim
 IncScript site/opt/indent-object.vim
