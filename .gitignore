@@ -35,3 +35,6 @@ tags
 /plugin/test_*
 /lua/test/*
 
+/site/text/test_*
+/site/escript/test_*
+

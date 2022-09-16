@@ -267,7 +267,7 @@ function! s:script_run(name, args, lnum, count, debug) abort
 	let scripts = s:script_list()
 	if has_key(scripts, a:name) == 0
 		echohl ErrorMsg
-		echo 'ERROR: runner not find:' a:name
+		echo 'ERROR: runner not find: ' . a:name
 		echohl None
 		return 0
 	endif
