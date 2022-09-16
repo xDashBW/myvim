@@ -270,6 +270,7 @@ if has('autocmd')
 		autocmd!
 		autocmd FileType qf call s:quickfix_keymap()
 		autocmd FileType vim noremap <buffer><F4> :<c-u>silent update<cr>:so %<cr>
+		autocmd FileType python noremap <buffer><F4> :<c-u>silent update<cr>:pyxf %<cr>
 		autocmd InsertLeave * call s:insert_leave()
 		" autocmd InsertLeave * set showmode
 	augroup END
