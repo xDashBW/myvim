@@ -5,4 +5,6 @@ for name in split(&rtp, ',')
 endfor
 exec "normal ggdd"
 set nomodified
+let b:__asc_bufname = '[List of RTP]'
+
 

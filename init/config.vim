@@ -54,18 +54,22 @@ endfunc
 
 " get a single tab name 
 function! Vim_NeatBuffer(bufnr, fullname)
-	let l:name = bufname(a:bufnr)
+	let name = bufname(a:bufnr)
 	let bt = getbufvar(a:bufnr, '&buftype')
+	let xname = getbufvar(a:bufnr, '__asc_bufname', '')
+	if xname != ''
+		return xname
+	endif
 	if getbufvar(a:bufnr, '&modifiable')
-		if l:name == ''
+		if name == ''
 			return '[No Name]'
 		elseif bt == 'terminal'
 			return '[Terminal]'
 		else
 			if a:fullname 
-				return fnamemodify(l:name, ':p')
+				return fnamemodify(name, ':p')
 			else
-				let aname = fnamemodify(l:name, ':p')
+				let aname = fnamemodify(name, ':p')
 				let sname = fnamemodify(aname, ':t')
 				if sname == ''
 					let test = fnamemodify(aname, ':h:t')
@@ -82,11 +86,11 @@ function! Vim_NeatBuffer(bufnr, fullname)
 			return '[Quickfix]'
 		elseif bt == 'terminal'
 			return '[Terminal]'
-		elseif l:name != ''
+		elseif name != ''
 			if a:fullname 
-				return '-'.fnamemodify(l:name, ':p')
+				return '-'.fnamemodify(name, ':p')
 			else
-				return '-'.fnamemodify(l:name, ':t')
+				return '-'.fnamemodify(name, ':t')
 			endif
 		else
 		endif
