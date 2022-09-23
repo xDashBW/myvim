@@ -8,7 +8,8 @@ exec 'set rtp+='. fnameescape(expand('<sfile>:p:h') . '/site/package')
 "----------------------------------------------------------------------
 " OptImport
 "----------------------------------------------------------------------
-IncScript site/opt/argtextobj.vim
+" IncScript site/opt/argtextobj.vim
+IncScript site/opt/angry.vim
 IncScript site/opt/indent-object.vim
 IncScript site/opt/after_object.vim
 IncScript site/opt/apc.vim
