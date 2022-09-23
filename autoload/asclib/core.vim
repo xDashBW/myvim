@@ -501,4 +501,23 @@ function! asclib#core#switch(filename, opts)
 endfunc
 
 
+"----------------------------------------------------------------------
+" simulate time.time()
+"----------------------------------------------------------------------
+function! asclib#core#time()
+	return reltimefloat(reltime())
+endfunc
+
+
+"----------------------------------------------------------------------
+" clock since start
+"----------------------------------------------------------------------
+function! asclib#core#clock()
+	if !exists('s:__clock_start')
+		let s:__clock_start = asclib#core#time()
+	endif
+	return asclib#core#time() - s:__clock_start
+endfunc
+
+
 
