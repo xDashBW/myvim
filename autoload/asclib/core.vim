@@ -3,7 +3,7 @@
 " core.vim - 
 "
 " Created by skywind on 2020/02/06
-" Last Modified: 2022/09/23 14:08
+" Last Modified: 2022/09/23 14:19
 "
 "======================================================================
 
@@ -31,35 +31,27 @@ let g:asclib#core#has_vim9script = (v:version >= 900) && has('vim9script')
 "----------------------------------------------------------------------
 " Get Instance
 "----------------------------------------------------------------------
-function! asclib#core#instance(mode)
+function! asclib#core#instance(mode, name)
+	if !exists('s:__asclib_core_instance__')
+		let s:__asclib_core_instance__ = {}
+	endif
+	let hr = s:__asclib_core_instance__
 	if a:mode =~ '^b'
 		if !exists('b:__asclib_core_instance__')
 			let b:__asclib_core_instance__ = {}
 		endif
-		return b:__asclib_core_instance__
+		let hr = b:__asclib_core_instance__
 	elseif a:mode =~ '^t'
 		if !exists('t:__asclib_core_instance__')
 			let t:__asclib_core_instance__ = {}
 		endif
-		return t:__asclib_core_instance__
+		let hr = t:__asclib_core_instance__
 	elseif a:mode =~ '^w'
 		if !exists('w:__asclib_core_instance__')
 			let w:__asclib_core_instance__ = {}
 		endif
-		return w:__asclib_core_instance__
+		let hr = w:__asclib_core_instance__
 	endif
-	if !exists('s:__asclib_core_instance__')
-		let s:__asclib_core_instance__ = {}
-	endif
-	return s:__asclib_core_instance__
-endfunc
-
-
-"----------------------------------------------------------------------
-" Get Object
-"----------------------------------------------------------------------
-function! asclib#core#object(mode, name)
-	let hr = asclib#core#instance(a:mode)
 	if !has_key(hr, a:name)
 		let hr[a:name] = {}
 	endif
