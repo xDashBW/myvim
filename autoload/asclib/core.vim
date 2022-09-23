@@ -17,6 +17,15 @@ let s:windows = has('win32') || has('win64') || has('win95') || has('win16')
 let g:asclib = get(g:, 'asclib', {})
 let g:asclib#core#windows = s:windows
 let g:asclib#core#has_nvim = has('nvim')
+let g:asclib#core#has_vim9 = v:version >= 900
+let g:asclib#core#has_popup = exists('*popup_create') && v:version >= 800
+let g:asclib#core#has_floating = has('nvim-0.4')
+let g:asclib#core#has_nvim_040 = has('nvim-0.4')
+let g:asclib#core#has_nvim_050 = has('nvim-0.5.0')
+let g:asclib#core#has_nvim_060 = has('nvim-0.6.0')
+let g:asclib#core#has_vim_820 = (has('nvim') == 0 && has('patch-8.2.1'))
+let g:asclib#core#has_win_exe = exists('*win_execute')
+let g:asclib#core#has_vim9script = (v:version >= 900) && has('vim9script')
 
 
 "----------------------------------------------------------------------
