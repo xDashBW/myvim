@@ -166,4 +166,39 @@ function! module#alternative#get()
 endfunc
 
 
+"----------------------------------------------------------------------
+" switch header
+"----------------------------------------------------------------------
+function! module#alternative#switch(...)
+	let hr = module#alternative#get()
+	let name = expand('%')
+	if hr == ''
+		call asclib#core#errmsg('missing alternative for: ' . hr)
+		return -1
+	elseif !filereadable(hr)
+		call asclib#core#errmsg('can not read: ' . hr)
+		return -2
+	endif
+	let [opts, args] = asclib#common#getopt(a:000)
+	call asclib#core#switch(hr, opts)
+	return 0
+endfunc
+
+
+"----------------------------------------------------------------------
+" command line completion
+"----------------------------------------------------------------------
+function! module#alternative#complete(ArgLead, CmdLine, CursorPos)
+	let candidate = []
+	let names = ['useopen', 'usetab', 'edit', 'split', 'vsplit']
+	let names += ['newtab', 'auto', 'uselast']
+	call sort(names)
+	for name in names
+		if stridx(name, a:ArgLead) == 0
+			let candidate += [name]
+		endif
+	endfor
+	return candidate
+endfunc
+
 
