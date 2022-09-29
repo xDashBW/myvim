@@ -10,7 +10,7 @@
 
 
 "----------------------------------------------------------------------
-" alternative config
+" config
 "----------------------------------------------------------------------
 if !exists('g:alternative')
 	let g:alternative = [
@@ -22,6 +22,16 @@ if !exists('g:alternative')
 				\ "vim:vim",
 				\ "aspx.cs:aspx",
 				\ "aspx.vb:aspx",
+				\ ]
+endif
+
+if !exists('g:alternative_dirs')
+	let g:alternative_dirs = [
+				\ '../include',
+				\ '../inc',
+				\ '../h',
+				\ '../src',
+				\ '../source',
 				\ ]
 endif
 
@@ -53,15 +63,27 @@ endfunc
 "----------------------------------------------------------------------
 " detect certain path
 "----------------------------------------------------------------------
-function! module#alternative#detect_path(path, main, altext)
-
+function! s:detect_path(pattern, altmap)
+	let pattern = a:pattern
+	let altmap = a:altmap
+	" echo pattern
+	for name in split(glob(pattern), '\n')
+		if name != ''
+			let test = fnamemodify(name, ':e')
+			" echo "  - " . name
+			if has_key(altmap, test)
+				return name
+			endif
+		endif
+	endfor
+	return ''
 endfunc
 
 
 "----------------------------------------------------------------------
 " search alternative
 "----------------------------------------------------------------------
-function! module#alternative#search_alter(fullname, ...) abort
+function! module#alternative#search(fullname, ...) abort
 	let fullname = (a:fullname == '')? expand('%:p') : a:fullname
 	let fullname = (a:fullname == '%')? expand('%:p') : fullname
 	let fullname = asclib#path#abspath(fullname)
@@ -75,26 +97,36 @@ function! module#alternative#search_alter(fullname, ...) abort
 		return ''
 	endif
 	let alter_exts = module#alternative#alter_extname(extname)
+	let alter_exts = filter(alter_exts, 'v:val != extname')
+	" echo alter_exts
 	let alter_dict = {}
 	for name in alter_exts
 		let alter_dict[name] = 1
+	endfor
+	let pattern = dirname . '/' . mainname . '.*'
+	let t = s:detect_path(pattern, alter_dict)
+	if t != ''
+		return t
+	endif
+	for name in g:alternative_dirs
+		let test = asclib#path#join(dirname, name)
+		let test = asclib#path#normalize(test)
+		if isdirectory(test) || 1
+			let pattern = test . '/' . mainname . '.*'
+			let t = s:detect_path(pattern, alter_dict)
+			if t != ''
+				return t
+			endif
+		endif
 	endfor
 	let level = 0
 	let maxlevel = (a:0 > 0)? (a:1) : -1
 	while 1
 		let pattern = dirname . '/**/' . mainname . '.*'
-		echo pattern
-		for name in split(glob(pattern), '\n')
-			if name != ''
-				let test = fnamemodify(name, ':e')
-				echo "  - " . name
-				if test != extname
-					if has_key(alter_dict, test)
-						return name
-					endif
-				endif
-			endif
-		endfor
+		let t = s:detect_path(pattern, alter_dict)
+		if t != ''
+			return t
+		endif
 		let level += 1
 		if asclib#path#equal(dirname, root)
 			break
@@ -111,5 +143,27 @@ function! module#alternative#search_alter(fullname, ...) abort
 	endwhile
 	return ''
 endfunc
+
+
+"----------------------------------------------------------------------
+" get current alternative
+"----------------------------------------------------------------------
+function! module#alternative#get()
+	if exists('b:_alternative_name')
+		if b:_alternative_name != ''
+			if exists(b:_alternative_name)
+				return b:_alternative_name
+			endif
+		endif
+		unlet b:_alternative_name
+	endif
+	let depth = get(g:, 'alternative_depth', -1)
+	let hr = module#alternative#search('', depth)
+	if hr != ''
+		" let b:_alternative_name = hr
+	endif
+	return hr
+endfunc
+
 
 
