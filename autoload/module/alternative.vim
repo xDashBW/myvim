@@ -192,7 +192,7 @@ function! module#alternative#switch(mods, args)
 			let opts.switch = join(a:args, ',')
 		endif
 	endif
-	unsilent echom opts
+	" unsilent echom opts
 	call asclib#core#switch(hr, opts)
 	return 0
 endfunc
@@ -212,6 +212,16 @@ function! module#alternative#complete(ArgLead, CmdLine, CursorPos)
 		endif
 	endfor
 	return candidate
+endfunc
+
+
+"----------------------------------------------------------------------
+" benchmark
+"----------------------------------------------------------------------
+function! module#alternative#benchmark()
+	let t1 = asclib#core#clock()
+	call module#alternative#get()
+	return asclib#core#clock() - t1
 endfunc
 
 
