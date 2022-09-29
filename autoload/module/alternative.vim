@@ -169,7 +169,7 @@ endfunc
 "----------------------------------------------------------------------
 " switch header
 "----------------------------------------------------------------------
-function! module#alternative#switch(...)
+function! module#alternative#switch(mods, args)
 	let hr = module#alternative#get()
 	let name = expand('%')
 	if hr == ''
@@ -179,7 +179,20 @@ function! module#alternative#switch(...)
 		call asclib#core#errmsg('can not read: ' . hr)
 		return -2
 	endif
-	let [opts, args] = asclib#common#getopt(a:000)
+	let opts = {}
+	if a:mods != ''
+		let opts.mods = a:mods
+	endif
+	if type(a:args) == type('')
+		if a:args != ''
+			let opts.switch = a:args
+		endif
+	elseif type(a:args) == type([])
+		if len(a:args) > 0
+			let opts.switch = join(a:args, ',')
+		endif
+	endif
+	unsilent echom opts
 	call asclib#core#switch(hr, opts)
 	return 0
 endfunc

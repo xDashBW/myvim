@@ -3,7 +3,7 @@
 " commands.vim - 
 "
 " Created by skywind on 2021/12/22
-" Last Modified: 2021/12/22 22:18:11
+" Last Modified: 2022/09/30 03:36
 "
 "======================================================================
 
@@ -15,17 +15,22 @@
 "     :FileSwitch -switch=useopen,usetab,auto abc.txt
 "     :FileSwitch -switch=useopen -mods=botright abc.txt
 "----------------------------------------------------------------------
-command! -nargs=+ -complete=file FileSwitch call s:FileSwitch(<f-args>)
-function! s:FileSwitch(...)
-	let args = deepcopy(a:000)
-	call asclib#utils#file_switch(a:000)
+command! -nargs=+ -complete=file FileSwitch 
+	\ call s:FileSwitch('<mods>', [<f-args>])
+function! s:FileSwitch(mods, args)
+	let args = deepcopy(a:args)
+	if a:mods != ''
+		let args = ['-mods=' . a:mods] + args
+	endif
+	call asclib#utils#file_switch(args)
 endfunc
 
 
 "----------------------------------------------------------------------
 " Switch cpp/h file
 "----------------------------------------------------------------------
-command! -nargs=? SwitchHeader call module#cpp#switch_header(<f-args>) 
+command! -nargs=* -complete=customlist,module#alternative#complete
+	\ SwitchHeader call module#alternative#switch('<mods>', [<f-args>])
 
 
 "----------------------------------------------------------------------
