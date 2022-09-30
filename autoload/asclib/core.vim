@@ -3,7 +3,7 @@
 " core.vim - 
 "
 " Created by skywind on 2020/02/06
-" Last Modified: 2022/09/30 18:12
+" Last Modified: 2022/09/30 18:39
 "
 "======================================================================
 
@@ -97,6 +97,36 @@ function! asclib#core#input(prompt, text)
 	endtry
 	call inputrestore()
 	return t
+endfunc
+
+
+"----------------------------------------------------------------------
+" Safe confirm
+"----------------------------------------------------------------------
+function! asclib#core#confirm(msg, choices, default)
+	call inputsave()
+	try
+		let hr = confirm(a:msg, choices, default)
+	catch /^Vim:Interrupt$/
+		let hr = 0
+	endtry
+	call inputrestore()
+	return hr
+endfunc
+
+
+"----------------------------------------------------------------------
+" Safe inputlist
+"----------------------------------------------------------------------
+function! asclib#core#inputlist(textlist)
+	call inputsave()
+	try
+		let hr = inputlist(a:textlist)
+	catch /^Vim:Interrupt$/
+		let hr = -1
+	endtry
+	call inputrestore()
+	return hr
 endfunc
 
 
