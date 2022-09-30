@@ -120,11 +120,10 @@ endfunc
 function! asclib#platform#has_wsl()
 	if exists('s:has_wsl')
 		return s:has_wsl
-	endif
-	let s:has_wsl = 0
-	if s:uname != 'linux'
+	elseif s:uname != 'linux'
 		return 0
 	endif
+	let s:has_wsl = 0
 	let cmd = '/mnt/c/Windows/System32/cmd.exe'
 	if !executable(cmd)
 		return 0
