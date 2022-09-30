@@ -104,7 +104,7 @@ endfunc
 "----------------------------------------------------------------------
 function! asclib#python#exec(script) abort
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 	elseif type(a:script) == 1
 		exec s:py_cmd a:script
 	elseif type(a:script) == 3
@@ -115,7 +115,7 @@ endfunc
 
 function! asclib#python#eval(script) abort
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 		return -1
 	else
 		if type(a:script) == 1
@@ -135,7 +135,7 @@ endfunc
 
 function! asclib#python#file(filename) abort
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 	else
 		exec s:py_file . ' ' . fnameescape(a:filename)
 	endif
@@ -143,7 +143,7 @@ endfunc
 
 function! asclib#python#call(funcname, args) abort
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 		return
 	else
 		if s:py_ensure == 0
@@ -185,7 +185,7 @@ endfunc
 "----------------------------------------------------------------------
 function! asclib#python#path_add(path)
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 		return 0
 	endif
 	exec s:py_cmd "import sys, os, vim"
@@ -196,7 +196,7 @@ endfunc
 
 function! asclib#python#reload(module_name)
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 		return 0
 	endif
 	if s:py_version == 3
@@ -212,7 +212,7 @@ endfunc
 
 function! asclib#python#import(module_name)
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 		return 0
 	endif
 	if s:py_inited == 0
@@ -228,7 +228,7 @@ endfunc
 "----------------------------------------------------------------------
 function! asclib#python#init()
 	if s:py_version == 0
-		call asclib#common#checkhealth()
+		call asclib#python#checkhealth()
 		return 0
 	elseif s:py_inited != 0
 		return 1
