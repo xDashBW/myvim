@@ -104,7 +104,7 @@ endfunc
 "----------------------------------------------------------------------
 function! asclib#python#exec(script) abort
 	if s:py_version == 0
-		call asclib#common#errmsg('vim does not support python')
+		call asclib#common#checkhealth()
 	elseif type(a:script) == 1
 		exec s:py_cmd a:script
 	elseif type(a:script) == 3
