@@ -155,7 +155,7 @@ endfunc
 function! asclib#platform#benchmark()
 	let t1 = asclib#core#clock()
 	call asclib#platform#has_python()
-	call asclib#python#init()
+	silent call asclib#python#init()
 	return asclib#core#clock() - t1
 endfunc
 
