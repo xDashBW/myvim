@@ -195,3 +195,23 @@ let g:quickui_tags_indent = {
 
 
 
+"----------------------------------------------------------------------
+" completion
+"----------------------------------------------------------------------
+let g:apc_enable_ft = get(g:, 'apc_enable_ft', {})
+let g:apc_enable_ft.text = 1
+let g:apc_enable_ft.markdown = 1
+
+let g:ycm_filetype_blacklist = get(g:, 'ycm_filetype_blacklist', {})
+let g:ycm_filetype_blacklist['lua'] = 1
+
+let g:ycm_collect_identifiers_from_tags_files  = 1
+" let g:ycm_filetype_blacklist = {}
+" let g:ycm_filetype_whitelist['text'] = 1
+
+
+if has('win32') || has('win16') || has('win64') || has('win95')
+	let g:vimwiki_path = '~/OneDrive/Documents/notes/VimWiki'
+endif
+
+

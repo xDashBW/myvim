@@ -27,6 +27,7 @@ let s:py_file = ''
 let s:py_version = 0
 let s:py_ensure = 0
 let s:py_inited = 0
+let s:py_health = ''
 
 if g:asclib#python#version == 0
 	if has('python3')
@@ -40,7 +41,7 @@ if g:asclib#python#version == 0
 		let s:py_file = 'pyfile'
 		let s:py_version = 2
 	else
-		call asclib#common#errmsg('vim does not support +python/+python3 feature')
+		let s:py_health = 'require +python/+python3 feature'
 	endif
 elseif g:asclib#python#version == 2
 	if has('python')
@@ -49,7 +50,7 @@ elseif g:asclib#python#version == 2
 		let s:py_file = 'pyfile'
 		let s:py_version = 2
 	else
-		call asclib#common#errmsg('vim does not support +python feature')
+		let s:py_health = 'require +python feature'
 	endif
 else
 	if has('python3')
@@ -58,7 +59,7 @@ else
 		let s:py_file = 'py3file'
 		let s:py_version = 3
 	else
-		call asclib#common#errmsg('vim does not support +python3 feature')
+		let s:py_health = 'require +python3 feature'
 	endif
 endif
 
@@ -74,6 +75,19 @@ let g:asclib#python#shell_error = 0
 
 let g:asclib#python#locate = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let g:asclib#python#rtp = fnamemodify(g:asclib#python#locate, ':h:h')
+
+
+"----------------------------------------------------------------------
+" health check
+"----------------------------------------------------------------------
+function! asclib#python#checkhealth()
+	if s:py_version == 0
+		call asclib#core#errmsg(s:py_health)
+	else
+		echo "Python" . s:py_version . ' is enabled.'
+	endif
+	return s:py_health
+endfunc
 
 
 "----------------------------------------------------------------------
