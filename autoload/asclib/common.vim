@@ -20,49 +20,6 @@ endfunc
 
 
 "----------------------------------------------------------------------
-" write script
-"----------------------------------------------------------------------
-function! asclib#common#writefile(lines, name)
-	if v:version >= 700
-		call writefile(a:lines, a:name)
-	else
-		exe 'redir ! > '.fnameescape(a:name)
-		for index in range(len(a:line))
-			silent echo a:line[index]
-		endfor
-		redir END
-	endif
-endfunc
-
-
-"----------------------------------------------------------------------
-" returns [opts, args]
-"----------------------------------------------------------------------
-function! asclib#common#getopt(args)
-	let opts = {}
-	let args = []
-	let mode = 0
-	for p in a:args
-		let p = asclib#string#strip(p)
-		if mode == 0
-			if strpart(p, 0, 1) == '-'
-				let text = strpart(p, 1)
-				let [opt, sep, val] = asclib#string#partition(text, '=')
-				let opt = asclib#string#strip(opt)
-				let opts[opt] = asclib#string#strip(val)
-			else
-				let args += [p]
-				let mode = 1
-			endif
-		else
-			let args += [p]
-		endif
-	endfor
-	return [opts, args]
-endfunc
-
-
-"----------------------------------------------------------------------
 " class.word
 "----------------------------------------------------------------------
 function! asclib#common#class_word()

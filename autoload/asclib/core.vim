@@ -3,7 +3,7 @@
 " core.vim - 
 "
 " Created by skywind on 2020/02/06
-" Last Modified: 2022/09/23 14:19
+" Last Modified: 2022/09/30 18:12
 "
 "======================================================================
 
@@ -69,6 +69,19 @@ function! asclib#core#chdir(path)
 		let cmd = haslocaldir()? ((haslocaldir() == 1)? 'lcd' : 'tcd') : 'cd'
 	endif
 	silent execute cmd . ' '. fnameescape(a:path)
+endfunc
+
+
+"----------------------------------------------------------------------
+" CD command
+"----------------------------------------------------------------------
+function! asclib#core#getcd()
+	if has('nvim')
+		let cmd = haslocaldir()? 'lcd' : (haslocaldir(-1, 0)? 'tcd' : 'cd')
+	else
+		let cmd = haslocaldir()? ((haslocaldir() == 1)? 'lcd' : 'tcd') : 'cd'
+	endif
+	return cmd
 endfunc
 
 
@@ -302,6 +315,49 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" safe shell escape for neovim
+"----------------------------------------------------------------------
+function! asclib#core#shellescape(path)
+	if s:windows == 0
+		return shellescape(a:path)
+	endif
+	let hr = shellescape(a:path)
+	if &ssl != 0
+		let parts = split(hr, "'", 1)
+		let hr = join(parts, '"')
+	endif
+	return hr
+endfunc
+
+
+"----------------------------------------------------------------------
+" start shell command in background: start(cmd [, cwd])
+"----------------------------------------------------------------------
+function! asclib#core#start(cmd, ...)
+	let cmd = a:cmd
+	let cwd = ((a:0) > 0)? (a:1) : ''
+	if cwd != ''
+		let previous = getcwd()
+		call asclib#core#chdir(cwd)
+	endif
+	if s:windows == 0
+		call system(a:cmd . ' &')
+	else
+		let winsafe = get(g:, 'asclib#core#winsafe', 1)
+		if winsafe != 0
+			let ccc = asclib#core#script_write('asclib1', cmd, 0)
+			let cmd = asclib#core#shellescape(ccc)
+		endif
+		silent exec '!start /b cmd /C ' . cmd
+	endif
+	if cwd != ''
+		call asclib#core#chdir(previous)
+	endif
+	return 0
+endfunc
+
+
+"----------------------------------------------------------------------
 " prototype: 
 "     text_process(command, stdin [, cwd [, encoding]])
 "
@@ -395,6 +451,59 @@ function! asclib#core#extract(command)
 	let cmd = substitute(cmd, '^\s*\(.\{-}\)\s*$', '\1', '')
 	let cmd = substitute(cmd, '^@\s*', '', '')
 	return [cmd, opts]
+endfunc
+
+
+"----------------------------------------------------------------------
+" returns [opts, args]
+"----------------------------------------------------------------------
+function! asclib#core#getopt(args)
+	let opts = {}
+	let args = []
+	let mode = 0
+	for p in a:args
+		let p = substitute(p, '^\s*\(.\{-}\)\s*$', '\1', '')
+		if mode == 0
+			if p == '--'
+				let mode = 1
+			elseif p =~ '^[+-]'
+				let key = p
+				let val = ''
+				let pos = stridx(p, '=')
+				if pos >= 0
+					let key = strpart(p, 0, pos)
+					let val = strpart(p, pos + 1)
+				endif
+				let key = substitute(key, '^\s*\(.\{-}\)\s*$', '\1', '')
+				let val = substitute(val, '^\s*\(.\{-}\)\s*$', '\1', '')
+				if len(key) > 1
+					let opts[key] = val
+				endif
+			else
+				let args += [p]
+				let mode = 1
+			endif
+		else
+			let args += [p]
+		endif
+	endfor
+	return [opts, args]
+endfunc
+
+
+"----------------------------------------------------------------------
+" write script
+"----------------------------------------------------------------------
+function! asclib#core#writefile(lines, name)
+	if v:version >= 700
+		call writefile(a:lines, a:name)
+	else
+		exe 'redir ! > '.fnameescape(a:name)
+		for index in range(len(a:line))
+			silent echo a:line[index]
+		endfor
+		redir END
+	endif
 endfunc
 
 
@@ -531,6 +640,7 @@ function! asclib#core#clock()
 	endif
 	return asclib#core#time() - s:__clock_start
 endfunc
+
 
 
 
