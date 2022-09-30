@@ -77,6 +77,15 @@ let g:asclib#python#locate = fnamemodify(resolve(expand('<sfile>:p')), ':h')
 let g:asclib#python#rtp = fnamemodify(g:asclib#python#locate, ':h:h')
 
 
+
+"----------------------------------------------------------------------
+" returns 0 for no python, 2 for +python2, 3 for +python3
+"----------------------------------------------------------------------
+function! asclib#python#has_python()
+	return s:py_version
+endfunc
+
+
 "----------------------------------------------------------------------
 " health check
 "----------------------------------------------------------------------

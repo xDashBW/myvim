@@ -145,7 +145,7 @@ endfunc
 " check python: returns 0, 2, 3
 "----------------------------------------------------------------------
 function! asclib#platform#has_python()
-	return g:asclib#python#py_ver
+	return asclib#python#has_python()
 endfunc
 
 
