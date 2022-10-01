@@ -46,7 +46,7 @@ endfor
 
 
 "----------------------------------------------------------------------
-" window control
+" window 
 "----------------------------------------------------------------------
 noremap <silent><space>= :resize +3<cr>
 noremap <silent><space>- :resize -3<cr>
@@ -89,15 +89,6 @@ inoremap <m-s> <esc>:w<cr>
 "----------------------------------------------------------------------
 " tasks
 "----------------------------------------------------------------------
-noremap <space>te :AsyncTaskEdit<cr>
-noremap <space>tg :AsyncTaskEdit!<cr>
-noremap <space>tfb :AsyncTask file-build<cr>
-noremap <space>tfr :AsyncTask file-run<cr>
-noremap <space>tfd :AsyncTask file-debug<cr>
-noremap <space>tpi :AsyncTask project-init<cr>
-noremap <space>tpb :AsyncTask project-build<cr>
-noremap <space>tpr :AsyncTask project-run<cr>
-noremap <space>tpd :AsyncTask project-debug<cr>
 
 
 "----------------------------------------------------------------------
@@ -242,8 +233,21 @@ noremap <silent><space>jm :call Tools_SwitchMakeFile()<cr>
 "----------------------------------------------------------------------
 " tasks
 "----------------------------------------------------------------------
+noremap <space>te :AsyncTaskEdit<cr>
+noremap <space>tg :AsyncTaskEdit!<cr>
+noremap <space>tl :AsyncTaskList<cr>
+noremap <space>tfb :AsyncTask file-build<cr>
+noremap <space>tfr :AsyncTask file-run<cr>
+noremap <space>tfd :AsyncTask file-debug<cr>
+noremap <space>tpi :AsyncTask project-init<cr>
+noremap <space>tpb :AsyncTask project-build<cr>
+noremap <space>tpr :AsyncTask project-run<cr>
+noremap <space>tpd :AsyncTask project-debug<cr>
+
 noremap <silent><c-f9> :AsyncTaskEdit<cr>
 inoremap <silent><c-f9> <ESC>:AsyncTaskEdit<cr>
+noremap <silent><c-f10> :AsyncTaskList<cr>
+inoremap <silent><c-f10> <ESC>:AsyncTaskList<cr>
 
 noremap <silent><F5> :AsyncTask file-run<cr>
 noremap <silent><F6> :AsyncTask make<cr>
