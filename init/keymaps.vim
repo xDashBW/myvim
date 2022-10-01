@@ -240,6 +240,83 @@ noremap <silent><space>jm :call Tools_SwitchMakeFile()<cr>
 
 
 "----------------------------------------------------------------------
+" tasks
+"----------------------------------------------------------------------
+noremap <silent><c-f9> :AsyncTaskEdit<cr>
+inoremap <silent><c-f9> <ESC>:AsyncTaskEdit<cr>
+
+noremap <silent><F5> :AsyncTask file-run<cr>
+noremap <silent><F6> :AsyncTask make<cr>
+noremap <silent><F7> :AsyncTask emake<cr>
+noremap <silent><F8> :AsyncTask emake-exe<cr>
+noremap <silent><F9> :AsyncTask file-build<cr>
+noremap <silent><F10> :call asyncrun#quickfix_toggle(6)<cr>
+noremap <silent><s-f5> :AsyncTask project-run<cr>
+noremap <silent><s-f6> :AsyncTask project-test<cr>
+noremap <silent><s-f7> :AsyncTask project-init<cr>
+noremap <silent><s-f8> :AsyncTask project-install<cr>
+noremap <silent><s-f9> :AsyncTask project-build<cr>
+
+inoremap <silent><F5> <ESC>:AsyncTask file-run<cr>
+inoremap <silent><F6> <ESC>:AsyncTask make<cr>
+inoremap <silent><F7> <ESC>:AsyncTask emake<cr>
+inoremap <silent><F8> <ESC>:AsyncTask emake-exe<cr>
+inoremap <silent><F9> <ESC>:AsyncTask file-build<cr>
+inoremap <silent><F10> <ESC>:call asyncrun#quickfix_toggle(6)<cr>
+inoremap <silent><s-f5> <ESC>:AsyncTask project-run<cr>
+inoremap <silent><s-f6> <ESC>:AsyncTask project-test<cr>
+inoremap <silent><s-f7> <ESC>:AsyncTask project-init<cr>
+inoremap <silent><s-f8> <ESC>:AsyncTask project-install<cr>
+inoremap <silent><s-f9> <ESC>:AsyncTask project-build<cr>
+
+noremap <silent><f1> :AsyncTask task-f1<cr>
+noremap <silent><f2> :AsyncTask task-f2<cr>
+noremap <silent><f3> :AsyncTask task-f3<cr>
+noremap <silent><f4> :AsyncTask task-f4<cr>
+inoremap <silent><f1> <ESC>:AsyncTask task-shift-f1<cr>
+inoremap <silent><f2> <ESC>:AsyncTask task-shift-f2<cr>
+inoremap <silent><f3> <ESC>:AsyncTask task-shift-f3<cr>
+inoremap <silent><f4> <ESC>:AsyncTask task-shift-f4<cr>
+
+
+"----------------------------------------------------------------------
+" set keymap to GrepCode
+"----------------------------------------------------------------------
+noremap <silent><leader>cq :VimStop<cr>
+noremap <silent><leader>cQ :VimStop!<cr>
+noremap <silent><leader>cv :GrepCode <C-R>=expand("<cword>")<cr><cr>
+noremap <silent><leader>cx :GrepCode! <C-R>=expand("<cword>")<cr><cr>
+
+
+"----------------------------------------------------------------------
+" cscope
+"----------------------------------------------------------------------
+if has("cscope")
+	noremap <silent> <leader>cs :VimScope s <C-R><C-W><CR>
+	noremap <silent> <leader>cg :VimScope g <C-R><C-W><CR>
+	noremap <silent> <leader>cc :VimScope c <C-R><C-W><CR>
+	noremap <silent> <leader>ct :VimScope t <C-R><C-W><CR>
+	noremap <silent> <leader>ce :VimScope e <C-R><C-W><CR>
+	noremap <silent> <leader>cd :VimScope d <C-R><C-W><CR>
+	noremap <silent> <leader>ca :VimScope a <C-R><C-W><CR>
+	noremap <silent> <leader>cf :VimScope f <C-R><C-W><CR>
+	noremap <silent> <leader>ci :VimScope i <C-R><C-W><CR>
+	if v:version >= 800 || has('patch-7.4.2038')
+		set cscopequickfix=s+,c+,d+,i+,t+,e+,g+,f+,a+
+	else
+		set cscopequickfix=s+,c+,d+,i+,t+,e+,g+,f+
+	endif
+endif
+
+noremap <leader>cb1 :call vimmake#update_tags('', 'ctags', '.tags')<cr>
+noremap <leader>cb2 :call vimmake#update_tags('', 'cs', '.cscope')<cr>
+noremap <leader>cb3 :call vimmake#update_tags('!', 'ctags', '.tags')<cr>
+noremap <leader>cb4 :call vimmake#update_tags('!', 'cs', '.cscope')<cr>
+noremap <leader>cb5 :call vimmake#update_tags('', 'py', '.cscopy')<cr>
+noremap <leader>cb6 :call vimmake#update_tags('!', 'py', '.cscopy')<cr>
+
+
+"----------------------------------------------------------------------
 " space + t : toggle plugins
 "----------------------------------------------------------------------
 "noremap <silent><C-F10> :call Toggle_Taglist()<cr>
@@ -387,19 +464,7 @@ noremap <silent><space>lt :call asclib#html_prettify()<cr>
 
 
 "----------------------------------------------------------------------
-" more personal in gvim
-"----------------------------------------------------------------------
-if has('gui_running') && (has('win32') || has('win64'))
-	noremap <S-F11> :AsyncRun -mode=4 -cwd=$(VIM_FILEDIR) -save=1 d:\\software\\anaconda3\\python.exe "$(VIM_FILENAME)"<cr>
-	inoremap <S-F11> <ESC>:AsyncRun -mode=4 -cwd=$(VIM_FILEDIR) d:\\software\\anaconda3\\python.exe "$(VIM_FILENAME)"<cr>
-	noremap <S-F12> :AsyncRun -mode=4 -save=1 -cwd=$(VIM_FILEDIR) d:\\dev\\python64\\python.exe "$(VIM_FILENAME)"<cr>
-endif
-
-noremap <C-F10> :VimBuild gcc -pg<cr>
-
-
-"----------------------------------------------------------------------
-" vimmake faster
+" quickmenu
 "----------------------------------------------------------------------
 noremap <silent><F12> :call quickmenu#toggle(0)<cr>
 inoremap <silent><F12> <ESC>:call quickmenu#toggle(0)<cr>
@@ -412,14 +477,7 @@ noremap <silent><c-f11> :call quickmenu#toggle(2)<cr>
 inoremap <silent><c-f11> <ESC>:call quickmenu#toggle(2)<cr>
 " noremap <silent><c-f12> :call asclib#utils#script_menu()<cr>
 " inoremap <silent><c-f12> <ESC>:call asclib#utils#script_menu()<cr>
-noremap <silent><c-f9> :AsyncTaskEdit<cr>
-inoremap <silent><c-f9> <ESC>:AsyncTaskEdit<cr>
-
 nnoremap <silent>g5 :PreviewTag<cr>
-nnoremap <silent>g6 :call vimmake#update_tags('!', 'cs', '.cscope')<cr>
-nnoremap <silent>g7 :call vimmake#update_tags('!', 'py', '.cscopy')<cr>
-nnoremap <silent>g9 :call vimmake#update_tags('!', 'ctags', '.tags')<cr>
-
 nnoremap <silent><space>ww :call asclib#touch_file('wsgi')<cr>
 
 noremap <space>m0 :call quickmenu#toggle(0)<cr>
