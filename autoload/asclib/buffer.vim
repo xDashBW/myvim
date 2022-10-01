@@ -8,6 +8,7 @@
 "
 "======================================================================
 
+
 "----------------------------------------------------------------------
 " alloc a new buffer
 "----------------------------------------------------------------------
@@ -50,4 +51,25 @@ function! asclib#buffer#release(bid)
 	call deletebufline(a:bid, 1, '$')
 	call setbufvar(a:bid, '&modified', 0)
 endfunc
+
+
+"----------------------------------------------------------------------
+" list buffer bid
+"----------------------------------------------------------------------
+function! asclib#buffer#list()
+    let l:ls_cli = get(g:, 'asclib#buffer#list_cli', 'ls t')
+    redir => buflist
+    silent execute l:ls_cli
+    redir END
+    let bids = []
+    for curline in split(buflist, '\n')
+        if curline =~ '^\s*\d\+'
+            let bid = str2nr(matchstr(curline, '^\s*\zs\d\+'))
+            let bids += [bid]
+        endif
+    endfor
+    return bids
+endfunc
+
+
 
