@@ -57,3 +57,26 @@ function! asclib#string#partition(text, sep)
 	endif
 endfunc
 
+
+"----------------------------------------------------------------------
+" starts with prefix
+"----------------------------------------------------------------------
+function! asclib#string#startswith(text, prefix)
+	return (empty(a:prefix) || (stridx(a:text, a:prefix) == 0))
+endfunc
+
+
+"----------------------------------------------------------------------
+" ends with suffix
+"----------------------------------------------------------------------
+function! asclib#string#endswith(text, suffix)
+	let s1 = len(a:text)
+	let s2 = len(a:suffix)
+	let ss = s1 - s2
+	if s1 < s2
+		return 0
+	endif
+	return (empty(a:suffix) || (stridx(a:text, a:suffix, ss) == ss))
+endfunc
+
+
