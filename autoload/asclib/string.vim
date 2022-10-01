@@ -80,3 +80,34 @@ function! asclib#string#endswith(text, suffix)
 endfunc
 
 
+"----------------------------------------------------------------------
+" eval & expand: '%{script}' in string
+"----------------------------------------------------------------------
+function! asclib#string#expand(string) abort
+	let partial = []
+	let index = 0
+	while 1
+		let pos = stridx(a:string, '%{', index)
+		if pos < 0
+			let partial += [strpart(a:string, index)]
+			break
+		endif
+		let head = ''
+		if pos > index
+			let partial += [strpart(a:string, index, pos - index)]
+		endif
+		let endup = stridx(a:string, '}', pos + 2)
+		if endup < 0
+			let partial += [strpart(a:stirng, index)]
+			break
+		endif
+		let index = endup + 1
+		if endup > pos + 2
+			let script = strpart(a:string, pos + 2, endup - (pos + 2))
+			let script = substitute(script, '^\s*\(.\{-}\)\s*$', '\1', '')
+			let result = eval(script)
+			let partial += [result]
+		endif
+	endwhile
+	return join(partial, '')
+endfunc

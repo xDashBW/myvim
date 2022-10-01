@@ -126,6 +126,50 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" alloc a new buffer
+"----------------------------------------------------------------------
+function! asclib#core#buffer_alloc()
+	if !exists('s:buffer_array')
+		let s:buffer_array = {}
+	endif
+	let index = len(s:buffer_array) - 1
+	if index >= 0
+		let bid = s:buffer_array[index]
+		unlet s:buffer_array[index]
+	else
+		if g:quickui#core#has_nvim == 0
+			let bid = bufadd('')
+			call bufload(bid)
+			call setbufvar(bid, '&buflisted', 0)
+			call setbufvar(bid, '&bufhidden', 'hide')
+		else
+			let bid = nvim_create_buf(v:false, v:true)
+		endif
+	endif
+	call setbufvar(bid, '&modifiable', 1)
+	call deletebufline(bid, 1, '$')
+	call setbufvar(bid, '&modified', 0)
+	call setbufvar(bid, '&filetype', '')
+	return bid
+endfunc
+
+
+"----------------------------------------------------------------------
+" free a buffer
+"----------------------------------------------------------------------
+function! asclib#core#buffer_free(bid)
+	if !exists('s:buffer_array')
+		let s:buffer_array = {}
+	endif
+	let index = len(s:buffer_array)
+	let s:buffer_array[index] = a:bid
+	call setbufvar(a:bid, '&modifiable', 1)
+	call deletebufline(a:bid, 1, '$')
+	call setbufvar(a:bid, '&modified', 0)
+endfunc
+
+
+"----------------------------------------------------------------------
 " python simulate system() on window to prevent temporary window
 "----------------------------------------------------------------------
 function! s:python_system(cmd, version)
@@ -667,5 +711,37 @@ function! asclib#core#clock()
 endfunc
 
 
+"----------------------------------------------------------------------
+" safe print
+"----------------------------------------------------------------------
+function! asclib#core#print(content, highlight, ...)
+	let saveshow = &showmode
+	set noshowmode
+    let wincols = &columns
+    let statusline = (&laststatus==1 && winnr('$')>1) || (&laststatus==2)
+    let reqspaces_lastline = (statusline || !&ruler) ? 12 : 29
+    let width = len(a:content)
+    let limit = wincols - reqspaces_lastline
+	let l:content = a:content
+	if width + 1 > limit
+		let l:content = strpart(l:content, 0, limit - 1)
+		let width = len(l:content)
+	endif
+	" prevent scrolling caused by multiple echo
+	let needredraw = (a:0 >= 1)? a:1 : 1
+	if needredraw != 0
+		redraw 
+	endif
+	if a:highlight != 0
+		echohl Type
+		echo l:content
+		echohl NONE
+	else
+		echo l:content
+	endif
+	if saveshow != 0
+		set showmode
+	endif
+endfunc
 
 
