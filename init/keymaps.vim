@@ -233,17 +233,6 @@ noremap <silent><space>jm :call Tools_SwitchMakeFile()<cr>
 "----------------------------------------------------------------------
 " tasks
 "----------------------------------------------------------------------
-noremap <space>te :AsyncTaskEdit<cr>
-noremap <space>tg :AsyncTaskEdit!<cr>
-noremap <space>tl :AsyncTaskList<cr>
-noremap <space>tfb :AsyncTask file-build<cr>
-noremap <space>tfr :AsyncTask file-run<cr>
-noremap <space>tfd :AsyncTask file-debug<cr>
-noremap <space>tpi :AsyncTask project-init<cr>
-noremap <space>tpb :AsyncTask project-build<cr>
-noremap <space>tpr :AsyncTask project-run<cr>
-noremap <space>tpd :AsyncTask project-debug<cr>
-
 noremap <silent><c-f9> :AsyncTaskEdit<cr>
 inoremap <silent><c-f9> <ESC>:AsyncTaskEdit<cr>
 noremap <silent><c-f10> :AsyncTaskList<cr>
@@ -277,10 +266,10 @@ noremap <silent><f1> :AsyncTask task-f1<cr>
 noremap <silent><f2> :AsyncTask task-f2<cr>
 noremap <silent><f3> :AsyncTask task-f3<cr>
 noremap <silent><f4> :AsyncTask task-f4<cr>
-inoremap <silent><f1> <ESC>:AsyncTask task-shift-f1<cr>
-inoremap <silent><f2> <ESC>:AsyncTask task-shift-f2<cr>
-inoremap <silent><f3> <ESC>:AsyncTask task-shift-f3<cr>
-inoremap <silent><f4> <ESC>:AsyncTask task-shift-f4<cr>
+inoremap <silent><f1> <ESC>:AsyncTask task-f1<cr>
+inoremap <silent><f2> <ESC>:AsyncTask task-f2<cr>
+inoremap <silent><f3> <ESC>:AsyncTask task-f3<cr>
+inoremap <silent><f4> <ESC>:AsyncTask task-f4<cr>
 
 
 "----------------------------------------------------------------------
