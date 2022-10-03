@@ -25,6 +25,5 @@ let opts = {}
 let opts.index = 2
 let opts.border = 1
 let opts.direct = 1
-let hr = quickui#context#wait(textlist, opts)
-echom "HR: " . hr
+call quickui#context#open_nested(textlist, opts)
 

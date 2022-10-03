@@ -868,6 +868,17 @@ function! quickui#context#wait(textlist, opts) abort
 endfunc
 
 
+"----------------------------------------------------------------------
+" open context menu and execute commands
+"----------------------------------------------------------------------
+function! quickui#context#open_nested(textlist, opts) abort
+	let cmd = s:context_wait(a:textlist, a:opts)
+	if cmd != ''
+		exec cmd
+	endif
+endfunc
+
+
 
 "----------------------------------------------------------------------
 " testing suit 
