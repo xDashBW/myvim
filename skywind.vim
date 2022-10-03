@@ -44,6 +44,13 @@ if has('patch-8.2.4500')
 	" cnoremap <expr> <esc> pumvisible() ? "\<c-e>" : "\<esc>"
 endif
 
+if executable('playwav.exe')
+	let f = 'c:/share/vim/tools/sample/sample-6.wav'
+	if filereadable(f)
+		let g:asyncrun_exit = printf('silent !start playwav.exe "%s" 200', f)
+	endif
+endif
+
 
 "----------------------------------------------------------------------
 " asclib settings
@@ -56,7 +63,7 @@ let s:settings = {
 let s:settings_win = {
 	\ 'emacs': 'd:/dev/emacs/bin/runemacs.exe',
 	\ 'gdb' : 'd:/dev/mingw32/bin/gdb.exe',
-	\ 'browser' : '"C:\Program Files\Mozilla Firefox\firefox"',
+	\ 'browser' : '"C:\Program Files\Mozilla Firefox\firefox" --new-tab',
 	\ 'junk' : '~/OneDrive/Documents/notes/VimJunk',
 	\ }
 
@@ -135,7 +142,6 @@ command! -bang -bar -nargs=* Gpush execute 'AsyncRun<bang> -cwd=' .
 command! -bang -bar -nargs=* Gfetch execute 'AsyncRun<bang> -cwd=' .
 	  \ fnameescape(FugitiveGitDir()) 'git fetch' <q-args>
 
-" let g:terminal_shell='cmd /s /k "c:\drivers\clink\clink.cmd inject"'
 set timeoutlen=2000
 
 command! Ghistory :0Gclog! -- %
@@ -193,6 +199,7 @@ let g:quickui_tags_indent = {
 			\ 'm': '  ',
 			\ }
 
+let g:quickui_color_scheme = 'papercol-light'
 
 
 "----------------------------------------------------------------------
@@ -204,6 +211,8 @@ let g:apc_enable_ft.markdown = 1
 
 let g:ycm_filetype_blacklist = get(g:, 'ycm_filetype_blacklist', {})
 let g:ycm_filetype_blacklist['lua'] = 1
+" let g:ycm_filetype_blacklist['text'] = 1
+" let g:ycm_filetype_blacklist['markdown'] = 1
 
 let g:ycm_collect_identifiers_from_tags_files  = 1
 " let g:ycm_filetype_blacklist = {}
@@ -212,6 +221,11 @@ let g:ycm_collect_identifiers_from_tags_files  = 1
 
 if has('win32') || has('win16') || has('win64') || has('win95')
 	let g:vimwiki_path = '~/OneDrive/Documents/notes/VimWiki'
+	set tbis=large
+	if executable('c:/drivers/clink/clink.cmd')
+		let g:terminal_shell='cmd /s /k "c:\drivers\clink\clink.cmd inject"'
+	endif
 endif
+
 
 
