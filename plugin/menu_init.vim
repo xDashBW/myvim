@@ -189,7 +189,7 @@ call quickui#menu#install('Help (&?)', [
 "----------------------------------------------------------------------
 " context menu
 "----------------------------------------------------------------------
-let g:context_menu_k = [
+let g:quickui_context = [
 			\ ["&Peek Definition\tAlt+;", 'call quickui#tools#preview_tag("")'],
 			\ ["S&earch in Project\t\\cx", 'exec "silent! GrepCode! " . expand("<cword>")'],
 			\ [ "--", ],
@@ -204,12 +204,11 @@ let g:context_menu_k = [
 			\ [ "Cursor Ho&ver\t(YCM)", 'exec "normal \<plug>(YCMHover)"'],
 			\ [ "Get D&oc\t(YCM)", 'YcmCompleter GetDoc'],
 			\ [ "Get &Type\t(YCM)", 'YcmCompleter GetTypeImprecise'],
-			\ [ "--", ],
-			\ ['Dash &Help', 'call asclib#utils#dash_ft(&ft, expand("<cword>"))'],
-			\ ['Cpp&man', 'exec "Cppman " . expand("<cword>")', '', "c,cpp"],
+			\ ]
+
+let g:quickui_context_foot = [
 			\ ['P&ython Doc', 'call quickui#tools#python_help("")', '', 'python'],
-			\ ["S&witch Header\t<SPC>fw", 'SwitchHeader vsplit', '', "c,cpp"],
-			\ ["Display Highlight", 'call feedkeys(":hi \<c-r>\<c-w>\<cr>")', '', 'vim'],
+			\ ['Dash &Help', 'call asclib#utils#dash_ft(&ft, expand("<cword>"))'],
 			\ ]
 
 " Keyword
@@ -219,7 +218,7 @@ let g:context_menu_k = [
 "----------------------------------------------------------------------
 nnoremap <silent><space><space> :call quickui#menu#open()<cr>
 
-nnoremap <silent>K :call quickui#tools#clever_context('k', g:context_menu_k, {})<cr>
+nnoremap <silent>K :QuickUI context<cr>
 
 if has('gui_running') || has('nvim')
 	noremap <c-f10> :TaskFinder<cr>
