@@ -726,6 +726,21 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" refresh redraw
+"----------------------------------------------------------------------
+function! s:window.refresh()
+	let winid = self.winid
+	if g:quickui#core#has_nvim == 0
+		if winid >= 0
+			call popup_setoptions(winid, {})
+		endif
+	else
+	endif
+	redraw
+endfunc
+
+
+"----------------------------------------------------------------------
 " constructor
 "----------------------------------------------------------------------
 function! quickui#window#new()
