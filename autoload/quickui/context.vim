@@ -853,8 +853,8 @@ function! s:context_wait(textlist, opts) abort
 		endif
 	endif
 	let g:quickui#context#cursor = hwnd.index
+	let g:quickui#context#current = hwnd
 	call cwnd.close()
-	unlet hwnd
 	unlet cwnd
 	return hr
 endfunc
@@ -873,6 +873,9 @@ endfunc
 "----------------------------------------------------------------------
 function! quickui#context#open_nested(textlist, opts) abort
 	let cmd = s:context_wait(a:textlist, a:opts)
+	if has_key(a:opts, 'callback')
+		call a:opts.callback(0)
+	endif
 	if cmd != ''
 		exec cmd
 	endif
