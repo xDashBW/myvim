@@ -692,6 +692,40 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" click window
+"----------------------------------------------------------------------
+function! s:window.mouse_click()
+	let winid = self.winid
+	let retval = {'x':-1, 'y':-1}
+	if g:quickui#core#has_nvim == 0
+		let pos = getmousepos()
+		if pos.winid != winid
+			return retval
+		endif
+		if self.info.has_border == 0
+			let retval.x = pos.column - 1
+			let retval.y = pos.line - 1
+		else
+			let retval.x = pos.column - 2
+			let retval.y = pos.line - 2
+		endif
+	else
+		if v:mouse_winid != winid
+			return retval
+		endif
+		if self.info.has_border == 0
+			let retval.x = v:mouse_col - 1
+			let retval.y = v:mouse_lnum - 1
+		else
+			let retval.x = v:mouse_col - 2
+			let retval.y = v:mouse_lnum - 2
+		endif
+	endif
+	return retval
+endfunc
+
+
+"----------------------------------------------------------------------
 " constructor
 "----------------------------------------------------------------------
 function! quickui#window#new()
