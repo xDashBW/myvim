@@ -73,11 +73,12 @@ function! s:window.__prepare_opts(textlist, opts)
 	let sum_pad = pad[0] + pad[1] + pad[2] + pad[3]
 	let info.has_padding = (sum_pad > 0)? 1 : 0
 	let border = quickui#core#border_auto(self.opts.border)
-	let info.has_border = (len(border) > 0)? 1 : 0
+	let info.has_border = (self.opts.border > 0)? 1 : 0
 	if info.has_border != 0
 		let info.tw += 2
 		let info.th += 2
 	endif
+	" echom info
 	call self.set_text(a:textlist)
 	if opts.h < 0
 		let opts.h = len(self.text)
@@ -179,7 +180,7 @@ function! s:window.__vim_create()
 	let opts.callback = function('s:popup_exit')
 	let opts.highlight = self.opts.color
 	let border = quickui#core#border_auto(self.opts.border)
-	if len(border) > 0
+	if self.info.has_border
 		let opts.borderchars = border
 		let opts.border = [1,1,1,1,1,1,1,1,1]
 		let bc = get(self.opts, 'bordercolor', 'QuickBorder')
