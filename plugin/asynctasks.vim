@@ -4,8 +4,8 @@
 "
 " Maintainer: skywind3000 (at) gmail.com, 2020-2021
 "
-" Last Modified: 2022/09/29 23:47
-" Verision: 1.9.6
+" Last Modified: 2022/10/06 05:27
+" Verision: 1.9.7
 "
 " For more information, please visit:
 " https://github.com/skywind3000/asynctasks.vim
@@ -1146,7 +1146,7 @@ function! s:handle_environ(text)
 		endif
 	endif
 	for scope in ['b:', 'w:', 't:']
-		let dictname = scope . 'asynctasks_environ')
+		let dictname = scope . 'asynctasks_environ'
 		if exists(dictname)
 			let dictvar = eval(dictname)
 			if type(dictvar) == type({})
