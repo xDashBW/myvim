@@ -1145,6 +1145,17 @@ function! s:handle_environ(text)
 			return shadow[key]
 		endif
 	endif
+	for scope in ['b:', 'w:', 't:']
+		let dictname = scope . 'asynctasks_environ')
+		if exists(dictname)
+			let dictvar = eval(dictname)
+			if type(dictvar) == type({})
+				if has_key(dictvar, key)
+					return dictvar[key]
+				endif
+			endif
+		endif
+	endfor
 	if has_key(g:asynctasks_environ, key) == 0
 		if has_key(s:private.tasks.environ, key) == 0
 			if s:strip(sep) == ''

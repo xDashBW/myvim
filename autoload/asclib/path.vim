@@ -58,8 +58,16 @@ function! asclib#path#abspath(path)
 	endif
 	if f == '%'
 		let f = expand('%')
-		if &bt == 'terminal' || &bt == 'nofile'
+		if &bt == 'terminal'
 			let f = ''
+		elseif &bt == 'nofile'
+			let is_directory = 0
+			if f =~ '[\/\\]$'
+				if f =~ '^[\/\\]' || f =~ '^.:[\/\\]'
+					let is_directory = isdirectory(f)
+				endif
+			endif
+			let f = (is_directory)? f : ''
 		endif
 	elseif f =~ '^\~[\/\\]'
 		let f = expand(f)
