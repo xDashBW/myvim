@@ -38,7 +38,8 @@ let g:colors_name = "oceanblack2"
  highlight  MoreMsg       cterm=bold            ctermfg=72       ctermbg=0    gui=bold            guifg=#5faf87  guibg=#000000
  highlight  WarningMsg    cterm=bold            ctermfg=203      ctermbg=0    gui=bold            guifg=#ff5f5f  guibg=#000000
 
- highlight  LineNr        ctermfg=243           ctermbg=233                   guifg=#767676       guibg=#121212
+ highlight  LineNr        ctermfg=243           guifg=#767676
+ highlight  CursorLineNr  ctermfg=11            guifg=yellow
  highlight  Folded        cterm=none            ctermfg=152      ctermbg=66   gui=none            guifg=#afd7d7  guibg=#5f8787
  highlight  FoldColumn    cterm=none            ctermfg=152      ctermbg=66   gui=none            guifg=#afd7d7  guibg=#5f8787
 
