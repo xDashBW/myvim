@@ -221,7 +221,9 @@ let g:ycm_collect_identifiers_from_tags_files  = 1
 
 if has('win32') || has('win16') || has('win64') || has('win95')
 	let g:vimwiki_path = '~/OneDrive/Documents/notes/VimWiki'
-	set tbis=large
+	if has('gui_running')
+		set tbis=large
+	endif
 	if executable('c:/drivers/clink/clink.cmd')
 		let g:terminal_shell='cmd /s /k "c:\drivers\clink\clink.cmd inject"'
 	endif
