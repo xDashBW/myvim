@@ -67,7 +67,7 @@ function! s:detect_path(pattern, altmap)
 	let pattern = a:pattern
 	let altmap = a:altmap
 	" echo pattern
-	for name in split(glob(pattern), '\n')
+	for name in split(asclib#path#glob(pattern, 1), '\n')
 		if name != ''
 			let test = fnamemodify(name, ':e')
 			" echo "  - " . name

@@ -120,7 +120,7 @@ function! s:open(cmd) abort
 	elseif expand('%') =~# '^$\|^term:[\/][\/]'	
 		exec a:cmd '.'
 	else
-        if exists(':Dirvish') == 2
+        if exists(':Dirvish') == 2 && a:cmd == 'edit'
             exec 'Dirvish'
         else
             exec a:cmd ' %:p:h'

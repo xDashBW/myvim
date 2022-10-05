@@ -617,4 +617,25 @@ function! asclib#path#globpath(...)
 endfunc
 
 
+"----------------------------------------------------------------------
+" list path
+"----------------------------------------------------------------------
+function! asclib#path#list(path, ...)
+	let nosuf = (a:0 > 0)? (a:1) : 0
+	if !isdirectory(a:path)
+		return []
+	endif
+	let path = asclib#path#join(a:path, '*')
+	let part = asclib#path#glob(path, nosuf)
+	let candidate = []
+	for n in split(part, "\n")
+		let f = fnamemodify(n, ':t')
+		if !empty(f)
+			let candidate += [f]
+		endif
+	endfor
+	return candidate
+endfunc
+
+
 
