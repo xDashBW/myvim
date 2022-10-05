@@ -21,9 +21,22 @@ function! asclib#path#chdir(path)
 	if has('nvim')
 		let cmd = haslocaldir()? 'lcd' : (haslocaldir(-1, 0)? 'tcd' : 'cd')
 	else
-		let cmd = haslocaldir()? 'lcd' : 'cd'
+		let cmd = haslocaldir()? ((haslocaldir() == 1)? 'lcd' : 'tcd') : 'cd'
 	endif
 	silent execute cmd . ' '. fnameescape(a:path)
+endfunc
+
+
+"----------------------------------------------------------------------
+" CD command
+"----------------------------------------------------------------------
+function! asclib#path#getcd()
+	if has('nvim')
+		let cmd = haslocaldir()? 'lcd' : (haslocaldir(-1, 0)? 'tcd' : 'cd')
+	else
+		let cmd = haslocaldir()? ((haslocaldir() == 1)? 'lcd' : 'tcd') : 'cd'
+	endif
+	return cmd
 endfunc
 
 
@@ -177,6 +190,9 @@ endfunc
 " returns 1 for equal, 0 for not equal
 "----------------------------------------------------------------------
 function! asclib#path#equal(path1, path2)
+	if a:path1 == a:path2
+		return 1
+	endif
 	let p1 = asclib#path#normcase(asclib#path#abspath(a:path1))
 	let p2 = asclib#path#normcase(asclib#path#abspath(a:path2))
 	return (p1 == p2)? 1 : 0
@@ -328,6 +344,10 @@ function! asclib#path#exists(path)
 		return 1
 	elseif filereadable(a:path)
 		return 1
+	else
+		if !empty(asclib#path#glob(a:path, 1))
+			return 1
+		endif
 	endif
 	return 0
 endfunc
@@ -517,5 +537,84 @@ function! asclib#path#expand_macros()
 	endif
 	return macros
 endfunc
+
+
+"----------------------------------------------------------------------
+" glob() / globpath()
+"----------------------------------------------------------------------
+if v:version == 704 && has('patch279') || v:version > 704
+	" This one has both {nosuf} and {list}.
+	function! s:glob( ... )
+		return call('glob', a:000)
+	endfunc
+	function! s:globpath( ... )
+		return call('globpath', a:000)
+	endfunc
+elseif v:version == 703 && has('patch465') || v:version > 703
+	" This one has glob() with both {nosuf} and {list}.
+	function! s:glob( ... )
+		return call('glob', a:000)
+	endfunc
+	function! s:globpath( ... )
+		let l:list = (a:0 > 3 && a:4)
+		let l:result = call('globpath', a:000[0:2])
+		return (l:list ? split(l:result, '\n') : l:result)
+	endfunc
+elseif v:version == 702 && has('patch051') || v:version > 702
+	" This one has {nosuf}.
+	function! s:glob( ... )
+		let l:list = (a:0 > 2 && a:3)
+		let l:result = call('glob', a:000[0:1])
+		return (l:list ? split(l:result, '\n') : l:result)
+	endfunc
+	function! s:globpath( ... )
+		let l:list = (a:0 > 3 && a:4)
+		let l:result = call('globpath', a:000[0:2])
+		return (l:list ? split(l:result, '\n') : l:result)
+	endfunc
+else
+	" This one has neither {nosuf} nor {list}.
+	function! s:glob( ... )
+		let l:nosuf = (a:0 > 1 && a:2)
+		let l:list = (a:0 > 2 && a:3)
+		if l:nosuf
+			let l:save_wildignore = &wildignore
+			set wildignore=
+		endif
+		try
+			let l:result = call('glob', [a:1])
+			return (l:list ? split(l:result, '\n') : l:result)
+		finally
+			if exists('l:save_wildignore')
+				let &wildignore = l:save_wildignore
+			endif
+		endtry
+	endfunc
+	function! s:globpath( ... )
+		let l:nosuf = (a:0 > 2 && a:3)
+		let l:list = (a:0 > 3 && a:4)
+		if l:nosuf
+			let l:save_wildignore = &wildignore
+			set wildignore=
+		endif
+		try
+			let l:result = call('globpath', a:000[0:1])
+			return (l:list ? split(l:result, '\n') : l:result)
+		finally
+			if exists('l:save_wildignore')
+				let &wildignore = l:save_wildignore
+			endif
+		endtry
+	endfunc
+endif
+
+function! asclib#path#glob(...)
+	return call('s:glob', a:000)
+endfunc
+
+function! asclib#path#globpath(...)
+	return call('s:globpath', a:000)
+endfunc
+
 
 

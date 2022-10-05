@@ -95,7 +95,6 @@ if has_key(s:enabled, 'basic')
 
 	Plug 'pprovost/vim-ps1', { 'for': 'ps1' }
 	Plug 'tbastos/vim-lua', { 'for': 'lua' }
-	Plug 'octol/vim-cpp-enhanced-highlight', { 'for': ['c', 'cpp'] }
 	Plug 'vim-python/python-syntax', { 'for': ['python'] }
 	Plug 'pboettch/vim-cmake-syntax', { 'for': ['cmake'] }
 	Plug 'beyondmarc/hlsl.vim'
@@ -113,7 +112,11 @@ if has_key(s:enabled, 'basic')
 	Plug 'jceb/vim-textobj-uri'
 
 
-	" Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'bison', 'flex', 'cpp'] }
+	if !has_key(s:enabled, 'syntax-extra')
+		Plug 'octol/vim-cpp-enhanced-highlight', { 'for': ['c', 'cpp'] }
+	else
+		Plug 'justinmk/vim-syntax-extra', { 'for': ['c', 'bison', 'flex', 'cpp'] }
+	endif
 	
 	if has('python3') || has('python')
 		Plug 'Yggdroot/LeaderF'
@@ -138,7 +141,7 @@ if has_key(s:enabled, 'basic')
 	let g:cpp_class_decl_highlight = 1
 	" let g:cpp_experimental_simple_template_highlight = 1
 	let g:cpp_concepts_highlight = 1
-	let g:cpp_no_function_highlight = 1
+	" let g:cpp_no_function_highlight = 1
 	let g:cpp_posix_standard = 1
 
 	let g:python_highlight_builtins = 1

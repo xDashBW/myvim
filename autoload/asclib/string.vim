@@ -81,6 +81,14 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" check if text contains part
+"----------------------------------------------------------------------
+function! asclib#string#contains(text, part)
+	return (stridx(a:text, a:part) >= 0)? 1 : 0
+endfunc
+
+
+"----------------------------------------------------------------------
 " eval & expand: '%{script}' in string
 "----------------------------------------------------------------------
 function! asclib#string#expand(string) abort
