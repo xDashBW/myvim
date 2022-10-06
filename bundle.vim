@@ -448,6 +448,9 @@ if has_key(s:enabled, 'colors')
 	Plug 'arzg/vim-colors-xcode'
     Plug 'wuelnerdotexe/vim-enfocado'
 	Plug 'kaicataldo/material.vim'
+	Plug 'cocopon/iceberg.vim'
+	Plug 'mcchrish/zenbones.nvim'
+	Plug 'rafi/awesome-vim-colorschemes'
 	Plug 'flazz/vim-colorschemes'
 	let g:enfocado_style = "neon"
 endif
@@ -516,5 +519,16 @@ if exists('g:bundle_post')
 endif
 
 call plug#end()
+
+
+"----------------------------------------------------------------------
+" move s:home to the top of rtp
+"----------------------------------------------------------------------
+if get(g:, 'reorder_rtp', 0)
+	let rtps = split(&rtp, ',')
+	let rtps = [s:home] + rtps
+	let &rtp = ''
+	for n in rtps | exec 'set rtp+=' . fnameescape(n) | endfor
+endif
 
 
