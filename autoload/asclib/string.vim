@@ -119,3 +119,6 @@ function! asclib#string#expand(string) abort
 	endwhile
 	return join(partial, '')
 endfunc
+
+
+
