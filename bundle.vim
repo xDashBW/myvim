@@ -233,8 +233,6 @@ if has_key(s:enabled, 'opt')
 	Plug 'dyng/ctrlsf.vim'
 	Plug 'tpope/vim-speeddating'
 	Plug 'voldikss/vim-translator'
-	Plug 'mhartington/oceanic-next'
-	Plug 'soft-aesthetic/soft-era-vim'
 	" Plug 'tpope/vim-apathy'
 	" Plug 'mh21/errormarker.vim'
 
@@ -440,6 +438,8 @@ if has_key(s:enabled, 'tabnine')
 endif
 
 if has_key(s:enabled, 'colors')
+	Plug 'mhartington/oceanic-next'
+	Plug 'soft-aesthetic/soft-era-vim'
 	Plug 'sonph/onehalf', {'rtp': 'vim/'}
 	Plug 'sainnhe/sonokai'
 	Plug 'chuling/ci_dark'
