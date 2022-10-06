@@ -4,8 +4,8 @@
 "
 " Maintainer: skywind3000 (at) gmail.com, 2020-2021
 "
-" Last Modified: 2022/10/06 05:27
-" Verision: 1.9.7
+" Last Modified: 2022/10/06 11:07
+" Verision: 1.9.8
 "
 " For more information, please visit:
 " https://github.com/skywind3000/asynctasks.vim
@@ -235,48 +235,6 @@ function! s:readini(source)
 		endif
 	endfor
 	return sections
-endfunc
-
-" returns nearest parent directory contains one of the markers
-function! s:find_root(name, markers, strict)
-	let name = fnamemodify((a:name != '')? a:name : bufname('%'), ':p')
-	let finding = ''
-	" iterate all markers
-	for marker in a:markers
-		if marker != ''
-			" search as a file
-			let x = findfile(marker, name . '/;')
-			let x = (x == '')? '' : fnamemodify(x, ':p:h')
-			" search as a directory
-			let y = finddir(marker, name . '/;')
-			let y = (y == '')? '' : fnamemodify(y, ':p:h:h')
-			" which one is the nearest directory ?
-			let z = (strchars(x) > strchars(y))? x : y
-			" keep the nearest one in finding
-			let finding = (strchars(z) > strchars(finding))? z : finding
-		endif
-	endfor
-	if finding == ''
-		let path = (a:strict == 0)? fnamemodify(name, ':h') : ''
-	else
-		let path = fnamemodify(finding, ':p')
-	endif
-	if has('win32') || has('win16') || has('win64') || has('win95')
-		let path = substitute(path, '\/', '\', 'g')
-	endif
-	if path =~ '[\/\\]$'
-		let path = fnamemodify(path, ':h')
-	endif
-	return path
-endfunc
-
-" find project root
-function! s:project_root(name, strict)
-	let markers = ['.project', '.git', '.hg', '.svn', '.root']
-	if exists('g:asyncrun_rootmarks')
-		let markers = g:asyncrun_rootmarks
-	endif
-	return s:find_root(a:name, markers, a:strict)
 endfunc
 
 " change directory in a proper way
@@ -757,14 +715,6 @@ function! asynctasks#collect_config(path, force)
 	let s:private.tasks = tasks
 	" echo s:private.tasks.environ
 	return (s:index == 0)? 0 : -1
-endfunc
-
-
-"----------------------------------------------------------------------
-" get project root
-"----------------------------------------------------------------------
-function! asynctasks#project_root(name, ...)
-	return s:project_root(a:name, (a:0 == 0)? 0 : (a:1))
 endfunc
 
 
