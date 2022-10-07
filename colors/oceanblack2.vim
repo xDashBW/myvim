@@ -16,8 +16,8 @@ endif
 
 let g:colors_name = "oceanblack2"
 
- highlight  Normal        ctermfg=7             ctermbg=0                     guifg=honeydew2       guibg=#000000
- highlight  NonText       ctermfg=117           ctermbg=0                     guifg=lightskyblue       guibg=#000000
+ highlight  Normal        cterm=none            ctermfg=7        ctermbg=0    gui=none  guifg=honeydew2      guibg=#000000
+ highlight  NonText       cterm=none            ctermfg=117      ctermbg=0    gui=none  guifg=lightskyblue   guibg=#000000
 
  highlight  Visual        cterm=reverse         ctermfg=72       ctermbg=15   gui=reverse         guifg=#5faf87  guibg=#ffffff
  highlight  VisualNOS     cterm=bold,underline  ctermfg=151      ctermbg=0    gui=bold,underline  guifg=#afd7af  guibg=#000000
@@ -39,7 +39,7 @@ let g:colors_name = "oceanblack2"
  highlight  WarningMsg    cterm=bold            ctermfg=203      ctermbg=0    gui=bold            guifg=#ff5f5f  guibg=#000000
 
  highlight  LineNr        ctermfg=243           guifg=#767676
- highlight  CursorLineNr  ctermfg=11            guifg=yellow
+ highlight  CursorLineNr  ctermfg=11            guifg=yellow     cterm=none   gui=none
  highlight  Folded        cterm=none            ctermfg=152      ctermbg=66   gui=none            guifg=#afd7d7  guibg=#5f8787
  highlight  FoldColumn    cterm=none            ctermfg=152      ctermbg=66   gui=none            guifg=#afd7d7  guibg=#5f8787
 
