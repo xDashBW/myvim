@@ -433,3 +433,40 @@ function! asclib#utils#script_shebang(script)
 endfunc
 
 
+"----------------------------------------------------------------------
+" returns nearest parent directory contains one of the markers
+"----------------------------------------------------------------------
+function! asclib#utils#search_parent(name, markers, strict)
+	let name = fnamemodify((a:name != '')? a:name : bufname('%'), ':p')
+	let finding = ''
+	" iterate all markers
+	for marker in a:markers
+		if marker != ''
+			" search as a file
+			let x = findfile(marker, name . '/;')
+			let x = (x == '')? '' : fnamemodify(x, ':p:h')
+			" search as a directory
+			let y = finddir(marker, name . '/;')
+			let y = (y == '')? '' : fnamemodify(y, ':p:h:h')
+			" which one is the nearest directory ?
+			let z = (strchars(x) > strchars(y))? x : y
+			" keep the nearest one in finding
+			let finding = (strchars(z) > strchars(finding))? z : finding
+		endif
+	endfor
+	if finding == ''
+		let path = (a:strict == 0)? fnamemodify(name, ':h') : ''
+	else
+		let path = fnamemodify(finding, ':p')
+	endif
+	if has('win32') || has('win16') || has('win64') || has('win95')
+		let path = substitute(path, '\/', '\', 'g')
+	endif
+	if path =~ '[\/\\]$'
+		let path = fnamemodify(path, ':h')
+	endif
+	return path
+endfunc
+
+
+
