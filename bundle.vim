@@ -249,8 +249,8 @@ if has_key(s:enabled, 'opt')
 		let g:gutentags_modules += ['gtags_cscope']
 	endif
 	if len(g:gutentags_modules) > 0
-		Plug 'ludovicchabant/vim-gutentags'
-		" Plug 'skywind3000/vim-gutentags'
+		" Plug 'ludovicchabant/vim-gutentags'
+		Plug 'skywind3000/vim-gutentags'
 	endif
 
 	if s:uname == 'windows' 
