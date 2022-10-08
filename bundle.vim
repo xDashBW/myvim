@@ -102,6 +102,7 @@ if has_key(s:enabled, 'basic')
 	Plug 'tpope/vim-eunuch'
 	Plug 'dag/vim-fish'
 	Plug 'jamessan/vim-gnupg'
+	Plug 'preservim/vim-markdown'
 
 	Plug 'kana/vim-textobj-user'
 	" Plug 'kana/vim-textobj-indent'
