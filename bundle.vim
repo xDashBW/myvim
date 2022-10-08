@@ -452,7 +452,7 @@ if has_key(s:enabled, 'colors')
 	Plug 'mcchrish/zenbones.nvim'
 	Plug 'rafi/awesome-vim-colorschemes'
 	Plug 'flazz/vim-colorschemes'
-	let g:enfocado_style = "neon"
+	IncScript site/bundle/colors.vim
 endif
 
 if has_key(s:enabled, 'games')
