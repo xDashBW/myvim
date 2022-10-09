@@ -72,3 +72,18 @@ function! asclib#common#get_selected_text(...)
 endfunc
 
 
+"----------------------------------------------------------------------
+" keywords complete
+"----------------------------------------------------------------------
+function! asclib#common#complete(ArgLead, CmdLine, CursorPos, Keywords)
+	let candidate = []
+	for word in Keywords
+		if asclib#string#startswith(word, a:ArgLead)
+			let candidate += [word]
+		endif
+	endfor
+	return candidate
+endfunc
+
+
+
