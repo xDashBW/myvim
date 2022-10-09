@@ -26,25 +26,32 @@ let s:default_config = {
 "----------------------------------------------------------------------
 " get config
 "----------------------------------------------------------------------
-function! quickui#dashboard#config#get(opts, key) abort
+function! starter#config#get(opts, key) abort
 	if type(a:opts) == v:t_dict
 		let opts = a:opts
 	elseif type(a:opts) == v:t_none
-		let opts = get(g:, 'quickui_dashboard', {})
+		let opts = get(g:, 'quickui_starter', {})
 	endif
 	return get(opts, a:key, s:default_config[a:key])
 endfunc
 
 
 "----------------------------------------------------------------------
-" 
+" visit tree node
 "----------------------------------------------------------------------
-function! quickui#dashboard#config#visit(cmdtree, path) abort
-	let cmdtree = a:cmdtree
+function! starter#config#visit(keymap, path) abort
+	let keymap = a:keymap
 	let path = a:path
-	if type(cmdtree) == v:t_none || type(path) == v:t_none
+	if type(keymap) == v:t_none || type(path) == v:t_none
 		return v:none
 	endif
+	for key in path
+		if !has_key(keymap, key)
+			return v:none
+		endif
+		let keymap = keymap[key]
+	endfor
+	return keymap
 endfunc
 
 

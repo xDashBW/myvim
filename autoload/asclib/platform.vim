@@ -59,6 +59,8 @@ elseif has('linux') || has('wsl')
 	let s:uname = 'linux'
 elseif has('mac') || has('macunix') || has('macvim') || has('gui_macvim')
 	let s:uname = 'darwin'
+elseif has('gui_mac')
+	let s:uname = 'darwin'
 elseif has('dos16') || has('dos32')
 	let s:uname = 'dos'
 elseif has('bsd')
