@@ -863,7 +863,7 @@ function! s:AsyncRun_Job_Start(cmd)
 		let l:arguments = "[".l:name."]"
 		let l:title = ':AsyncRun '.l:name
 		if get(g:, 'asyncrun_show_time', 0)
-			let t = strftime('%Y/%m%d %T', s:async_start)
+			let t = strftime('%Y/%m/%d %T', s:async_start)
 			let l:arguments .= ' (' . t . ')'
 		endif
 		if !s:async_info.append
