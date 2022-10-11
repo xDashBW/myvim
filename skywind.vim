@@ -51,6 +51,8 @@ if executable('playwav.exe')
 	endif
 endif
 
+let g:asyncrun_show_time = 1
+
 
 "----------------------------------------------------------------------
 " asclib settings

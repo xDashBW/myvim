@@ -160,7 +160,7 @@ let g:vim_json_conceal = 0
 "----------------------------------------------------------------------
 " asyncrun / vimmake
 "----------------------------------------------------------------------
-let g:asyncrun_timer = 64
+let g:asyncrun_timer = 200
 let s:python = executable('python3')? 'python3' : 'python'
 let s:script = fnamemodify(resolve(expand('<sfile>:p')), ':h:h')
 let s:launch = s:script . '/lib/launch.py'

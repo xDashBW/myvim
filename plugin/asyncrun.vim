@@ -144,7 +144,7 @@ let g:asyncrun_hook = get(g:, 'asyncrun_hook', '')
 let g:asyncrun_last = get(g:, 'asyncrun_last', 0)
 
 " speed for each timer
-let g:asyncrun_timer = get(g:, 'asyncrun_timer', 50)
+let g:asyncrun_timer = get(g:, 'asyncrun_timer', 100)
 
 " previous exit code
 let g:asyncrun_code = get(g:, 'asyncrun_code', '')
