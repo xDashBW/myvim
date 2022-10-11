@@ -3,7 +3,7 @@
 " Maintainer: skywind3000 (at) gmail.com, 2016-2022
 " Homepage: https://github.com/skywind3000/asyncrun.vim
 "
-" Last Modified: 2022/10/06 04:40
+" Last Modified: 2022/10/11 23:14
 "
 " Run shell command in background and output to quickfix:
 "     :AsyncRun[!] [options] {cmd} ...
@@ -234,9 +234,9 @@ endfunc
 function! s:AutoCmd(name)
 	if has('autocmd') && ((g:asyncrun_skip / 2) % 2) == 0
 		if g:asyncrun_silent
-			exec 'silent doautocmd User AsyncRun'.a:name
+			exec 'silent doautocmd <nomodeline> User AsyncRun'.a:name
 		else
-			exec 'doautocmd User AsyncRun'.a:name
+			exec 'doautocmd <nomodeline> User AsyncRun'.a:name
 		endif
 	endif
 endfunc
@@ -529,15 +529,15 @@ function! s:AsyncRun_Job_AutoCmd(mode, auto)
 	endif
 	if a:mode == 0
 		if g:asyncrun_silent
-			silent exec 'doautocmd QuickFixCmdPre '. name
+			silent exec 'doautocmd <nomodeline> QuickFixCmdPre '. name
 		else
-			exec 'doautocmd QuickFixCmdPre '. name
+			exec 'doautocmd <nomodeline> QuickFixCmdPre '. name
 		endif
 	else
 		if g:asyncrun_silent
-			silent exec 'doautocmd QuickFixCmdPost '. name
+			silent exec 'doautocmd <nomodeline> QuickFixCmdPost '. name
 		else
-			exec 'doautocmd QuickFixCmdPost '. name
+			exec 'doautocmd <nomodeline> QuickFixCmdPost '. name
 		endif
 	endif
 endfunc
@@ -2083,7 +2083,7 @@ endfunc
 " asyncrun - version
 "----------------------------------------------------------------------
 function! asyncrun#version()
-	return '2.10.0'
+	return '2.10.1'
 endfunc
 
 
