@@ -89,6 +89,24 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" get range
+"----------------------------------------------------------------------
+function! asclib#string#between(text, begin, endup, ...)
+	let pos = (a:0 > 0)? (a:1) : 0
+	let p1 = stridx(a:text, a:begin, pos)
+	if p1 < 0
+		return [-1, -1]
+	endif
+	let p1 = p1 + len(a:begin)
+	let p2 = stridx(a:text, a:endup, p1)
+	if p2 < 0
+		return [-1, -1]
+	endif
+	return [p1, p2]
+endfunc
+
+
+"----------------------------------------------------------------------
 " eval & expand: '%{script}' in string
 "----------------------------------------------------------------------
 function! asclib#string#expand(string) abort
