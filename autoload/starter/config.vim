@@ -20,6 +20,8 @@ let s:default_config = {
 			\ 'min_height': 5,
 			\ 'padding': [2, 0, 2, 0],
 			\ 'spacing': 3,
+			\ 'position': 'bottom',
+			\ 'splitmod': '',
 			\ }
 
 
@@ -46,12 +48,64 @@ function! starter#config#visit(keymap, path) abort
 		return v:none
 	endif
 	for key in path
+		if type(keymap) == v:t_func
+			let keymap = call(keymap, [])
+		endif
 		if !has_key(keymap, key)
 			return v:none
 		endif
 		let keymap = keymap[key]
 	endfor
 	return keymap
+endfunc
+
+
+"----------------------------------------------------------------------
+" compile keymap into ctx
+"----------------------------------------------------------------------
+function! starter#config#compile(keymap, opts) abort
+	let keymap = a:keymap
+	let opts = a:opts
+	let ctx = {}
+	let ctx.items = {}
+	let ctx.keys = []
+	let ctx.strlen_key = 1
+	let ctx.strlen_txt = 8
+	for key in keylist
+		if key == '' || key == 'name'
+			continue
+		endif
+		let ctx.keys += [key]
+		let item = {}
+		let item.key = key
+		let item.cap = key
+		let item.cmd = ''
+		let item.text = ''
+		let item.child = 0
+		let ctx.items[key] = item
+		let value = keymap[key]
+		if type(value) == v:t_func
+			value = call(value, [])
+		endif
+		if type(value) == v:t_str
+			let item.cmd = value
+			let item.text = value
+		elseif type(value) == v:t_list
+			let item.cmd = (len(value) > 0)? value[0] : ''
+			let item.text = (len(value) > 1)? value[1] : ''
+		elseif type(value) == v:t_dict
+			let item.child = 1
+			let item.text = get(value, 'name', '...')
+		endif
+		if len(item.key) > ctx.strlen_key
+			let ctx.strlen_key = len(item.key)
+		endif
+		if len(item.text) > ctx.strlen_txt
+			let ctx.strlen_text = len(item.text)
+		endif
+	endfor
+	call sort(ctx.keys)
+	return ctx
 endfunc
 
 

@@ -158,7 +158,7 @@ endif
 
 
 "----------------------------------------------------------------------
-" gui hotkeys - alt + ?
+" GUI hotkeys
 "----------------------------------------------------------------------
 if has('gui_running') || (has('nvim') && (has('win32') || has('win64')))
 	noremap <silent><A-o> :call Open_Browse(2)<cr>
@@ -176,6 +176,12 @@ if has('gui_running') || (has('nvim') && (has('win32') || has('win64')))
 	else
 		noremap <m-\|> :call Toggle_Transparency(15)<cr>
 	endif
+endif
+
+if has('gui_running') || has('gui_macvim') || has('gui_mac')
+	" new digraph
+	inoremap <c--> <c-k>
+	inoremap <c-_> <c-k>
 endif
 
 nnoremap <m-z> za

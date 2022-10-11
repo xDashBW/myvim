@@ -39,3 +39,4 @@ tags
 /site/text/test_*
 /site/escript/test_*
 
+/abc.py
