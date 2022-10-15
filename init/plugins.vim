@@ -256,6 +256,7 @@ let g:gutentags_ctags_extra_args += ['--c++-kinds=+px']
 let g:gutentags_ctags_extra_args += ['--c-kinds=+px']
 
 let g:gutentags_auto_add_gtags_cscope = 0
+let g:gutentags_define_advanced_commands = 1
 
 " let g:gutentags_define_advanced_commands = 1
 
