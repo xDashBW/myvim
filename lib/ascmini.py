@@ -6,7 +6,7 @@
 # ascmini.py - mini library
 #
 # Created by skywind on 2017/03/24
-# Version: 8, Last Modified: 2022/10/18 23:10
+# Version: 8, Last Modified: 2022/10/18 23:22
 #
 #======================================================================
 from __future__ import print_function, unicode_literals
@@ -1711,7 +1711,6 @@ def mlog(*args):
         name = os.path.abspath(sys.argv[0])
         name = os.path.splitext(name)[0] + '.log'
         logfile = codecs.open(name, 'a', encoding = encoding, errors = 'ignore')
-        print(name)
         sys.modules[__name__]._mlog_file = logfile
     content = '[%s] %s'%(now, text)
     if logfile:
