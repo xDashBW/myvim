@@ -31,6 +31,11 @@ if isdirectory(g:asyncrun_msys)
 	let g:asyncrun_msys = 'd:/Linux'
 endif
 
+let g:asyncrun_show_time = 1
+let g:asyncrun_rootmarks = ['.project', '.root', '.git', '.git', '.svn']
+let g:asyncrun_rootmarks = ['.hg', '.obsidian']
+let g:asclib_path_rootmarks = g:asyncrun_rootmarks
+
 if has('patch-8.0.0')
 	set shortmess+=c
 endif
@@ -51,7 +56,6 @@ if executable('playwav.exe')
 	endif
 endif
 
-let g:asyncrun_show_time = 1
 
 
 "----------------------------------------------------------------------
