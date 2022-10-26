@@ -35,6 +35,8 @@ Version History:
 from __future__ import print_function
 
 try:
+    from time import perf_counter as clock
+except ImportError:
     from time import clock
 except ImportError:
     from time import time as clock
