@@ -127,12 +127,14 @@ endfunc
 "----------------------------------------------------------------------
 " python simulate system() on window to prevent temporary window
 "----------------------------------------------------------------------
-function! s:python_system(cmd, version)
+function! s:python_system(cmd, version, ...)
+	let has_input = (a:0 > 0)? ((type(a:1) == type(''))? 1 : 0) : 0
+	let sinput = (has_input)? (a:1) : ''
 	if has('nvim')
-		let hr = system(a:cmd)
+		let hr = (!has_input)? system(a:cmd) : system(a:cmd, sinput)
 	elseif has('win32') || has('win64') || has('win95') || has('win16')
 		if a:version < 0 || (has('python3') == 0 && has('python2') == 0)
-			let hr = system(a:cmd)
+			let hr = (!has_input)? system(a:cmd) : system(a:cmd, sinput)
 			let s:shell_error = v:shell_error
 			return hr
 		elseif a:version == 3
@@ -149,7 +151,15 @@ function! s:python_system(cmd, version)
 		exec pyx . '__argv = {"args":vim.eval("a:cmd"), "shell":True}'
 		exec pyx . '__argv["stdout"] = subprocess.PIPE'
 		exec pyx . '__argv["stderr"] = subprocess.STDOUT'
+		if has_input
+			exec pyx . '__argv["stdin"] = subprocess.PIPE'
+		endif
 		exec pyx . '__pp = subprocess.Popen(**__argv)'
+		if has_input
+			exec pyx . '__si = vim.eval("sinput")'
+			exec pyx . '__pp.stdin.write(__si.encode("latin1"))'
+			exec pyx . '__pp.stdin.close()'
+		endif
 		exec pyx . '__return_text = __pp.stdout.read()'
 		exec pyx . '__pp.stdout.close()'
 		exec pyx . '__return_code = __pp.wait()'
@@ -158,7 +168,7 @@ function! s:python_system(cmd, version)
 		let s:shell_error = l:pc
 		return l:hr
 	else
-		let hr = system(a:cmd)
+		let hr = (!has_input)? system(a:cmd) : system(a:cmd, sinput)
 	endif
 	let s:shell_error = v:shell_error
 	return hr
@@ -166,7 +176,7 @@ endfunc
 
 
 "----------------------------------------------------------------------
-" call system: system(cmd [, cwd [, encoding]])
+" call system: system(cmd [, cwd [, encoding [, input]]])
 "----------------------------------------------------------------------
 function! asclib#core#system(cmd, ...)
 	let cwd = ((a:0) > 0)? (a:1) : ''
@@ -174,7 +184,16 @@ function! asclib#core#system(cmd, ...)
 		let previous = getcwd()
 		call asclib#core#chdir(cwd)
 	endif
-	let hr = s:python_system(a:cmd, get(g:, 'asclib#core#python', 0))
+	if a:0 >= 3
+		if type(a:3) == type('')
+			let sinput = a:3
+		else
+			let sinput = (type(a:3) == type([]))? join(a:3, "\n") : {}
+		endif
+	else
+		let sinput = {}
+	endif
+	let hr = s:python_system(a:cmd, get(g:, 'asclib#core#python', 0), sinput)
 	if cwd != ''
 		call asclib#core#chdir(previous)
 	endif

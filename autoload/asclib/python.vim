@@ -160,23 +160,40 @@ function! asclib#python#call(funcname, args) abort
 	endif
 endfunc
 
-function! asclib#python#system(command)
+function! asclib#python#system(cmd, ...)
+	let has_input = 0
+	if a:0 > 0
+		if type(a:1) == type('')
+			let sinput = a:1
+			let has_input = 1
+		elseif type(a:1) == type([])
+			let sinput = join(a:1, "\n")
+			let has_input = 1
+		endif
+	endif
 	if g:asclib#common#windows == 0 || s:py_version == 0
-		let text = system(a:command)
+		let text = (!has_input)? system(a:cmd) : system(a:cmd, sinput)
 		let g:asclib#python#shell_error = v:shell_error
 		return text
-	else
-		exec s:py_cmd 'import subprocess, vim'
-		exec s:py_cmd '__argv = {"args": vim.eval("a:command")}'
-		exec s:py_cmd '__argv["shell"] = True'
-		exec s:py_cmd '__argv["stdout"] = subprocess.PIPE'
-		exec s:py_cmd '__argv["stderr"] = subprocess.STDOUT'
-		exec s:py_cmd '__pp = subprocess.Popen(**__argv)'
-		exec s:py_cmd '__return_text = __pp.stdout.read()'
-		exec s:py_cmd '__return_code = __pp.wait()'
-		let g:asclib#python#shell_error = asclib#python#eval('__return_code')
-		return asclib#python#eval('__return_text')
 	endif
+	exec s:py_cmd 'import subprocess, vim'
+	exec s:py_cmd '__argv = {"args": vim.eval("a:cmd")}'
+	exec s:py_cmd '__argv["shell"] = True'
+	exec s:py_cmd '__argv["stdout"] = subprocess.PIPE'
+	exec s:py_cmd '__argv["stderr"] = subprocess.STDOUT'
+	if has_input
+		exec s:py_cmd '__argv["stdin"] = subprocess.PIPE'
+	endif
+	exec s:py_cmd '__pp = subprocess.Popen(**__argv)'
+	if has_input
+		exec s:py_cmd . '__si = vim.eval("sinput")'
+		exec s:py_cmd . '__pp.stdin.write(__si.encode("latin1"))'
+		exec s:py_cmd . '__pp.stdin.close()'
+	endif
+	exec s:py_cmd '__return_text = __pp.stdout.read()'
+	exec s:py_cmd '__return_code = __pp.wait()'
+	let g:asclib#python#shell_error = asclib#python#eval('__return_code')
+	return asclib#python#eval('__return_text')
 endfunc
 
 
