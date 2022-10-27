@@ -97,7 +97,7 @@ let s:char_display = {
 
 
 "----------------------------------------------------------------------
-" translate from '<esc>' to '\<esc>'
+" translate from key name '<esc>' to key code '\<esc>'
 "----------------------------------------------------------------------
 function! starter#charname#translate(text)
 	let key = a:text
@@ -120,7 +120,7 @@ endfunc
 
 
 "----------------------------------------------------------------------
-" get names
+" get name from code
 "----------------------------------------------------------------------
 function! starter#charname#name(key)
 	return get(s:special_names, a:key, v:none)

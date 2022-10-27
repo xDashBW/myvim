@@ -53,6 +53,11 @@ if [ -d /usr/local/app/node ]; then
 	export PATH="/usr/local/app/node/bin:$PATH"
 fi
 
+# setup for rust
+if [ -f "$HOME/.cargo/env" ]; then
+	source "$HOME/.cargo/env"
+fi
+
 # setup for own dotfiles
 if [ -d "$HOME/.vim/vim/tools/utils" ]; then
 	export PATH="$HOME/.vim/vim/tools/utils:$PATH"

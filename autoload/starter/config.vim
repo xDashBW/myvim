@@ -75,15 +75,20 @@ function! starter#config#compile(keymap, opts) abort
 		if key == '' || key == 'name'
 			continue
 		endif
+		let key_char = starter#charname#translate(key)
+		if type(key_char) == v:t_none
+			continue
+		endif
 		let ctx.keys += [key]
 		let item = {}
 		let item.key = key
-		let item.cap = key
+		let item.key_char = key_char
+		let item.key_display = starter#charname#display(key)
 		let item.cmd = ''
 		let item.text = ''
 		let item.child = 0
 		let ctx.items[key] = item
-		let value = keymap[key]
+		let value = keymap[keyname]
 		if type(value) == v:t_func
 			value = call(value, [])
 		endif
