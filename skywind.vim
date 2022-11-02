@@ -33,7 +33,7 @@ endif
 
 let g:asyncrun_show_time = 1
 let g:asyncrun_rootmarks = ['.project', '.root', '.git', '.git', '.svn']
-let g:asyncrun_rootmarks = ['.hg', '.obsidian']
+let g:asyncrun_rootmarks += ['.hg', '.obsidian']
 let g:asclib_path_rootmarks = g:asyncrun_rootmarks
 
 if has('patch-8.0.0')
