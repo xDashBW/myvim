@@ -15,10 +15,11 @@ data = "".join(data)
 
 # root = data.tostring(sliderRoot) #convert the generated HTML to a string
 try:
-    soup = bs(data, 'lxml')                # make BeautifulSoup
+    soup = bs(data, 'lxml')           # make BeautifulSoup
 except:
-    soup = bs(data, 'html.parser')                # make BeautifulSoup
-prettyHTML = soup.prettify()   # prettify the html
+    soup = bs(data, 'html.parser')    # make BeautifulSoup
+
+prettyHTML = soup.prettify()          # prettify the html
 
 print(prettyHTML)
 

@@ -66,6 +66,7 @@ if has_key(s:enabled, 'simple')
 	nnoremap gbl :Tabularize /\|<cr>
 	vnoremap gbl :Tabularize /\|<cr>
 	nnoremap gbc :Tabularize /#/l4c1<cr>
+	vnoremap gbc :Tabularize /#/l4c1<cr>
 	nnoremap gb<bar> :Tabularize /\|<cr>
 	vnoremap gb<bar> :Tabularize /\|<cr>
 	nnoremap gbr :Tabularize /\|/r0<cr>
