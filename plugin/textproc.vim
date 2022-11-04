@@ -287,6 +287,7 @@ function! s:script_run(name, args, lnum, count, debug) abort
 		let $VIM_FILEPATH = expand('%:p')
 		let $VIM_FILENAME = expand('%:t')
 		let $VIM_FILEDIR = expand('%:p:h')
+		let $VIM_FILETYPE = &ft
 		execute cmd
 	elseif type(scripts[a:name]) == v:t_func
 		let bid = bufnr('%')
