@@ -38,6 +38,10 @@ function! s:script_roots() abort
 	if location != ''
 		if isdirectory(location)
 			let candidate += [location]
+			let t = location . '/' . &ft
+			if isdirectory(t)
+				let candidate += [t]
+			endif
 		endif
 	endif
 	let rtp_name = get(g:, 'textproc_home', 'text')
@@ -46,6 +50,10 @@ function! s:script_roots() abort
 			let path = rtp . '/' . rtp_name
 			if isdirectory(path)
 				let candidate += [path]
+				let t = path . '/' . &ft
+				if isdirectory(t)
+					let candidate += [t]
+				endif
 			endif
 		endif
 	endfor
@@ -287,6 +295,10 @@ function! s:script_run(name, args, lnum, count, debug) abort
 		let $VIM_FILEPATH = expand('%:p')
 		let $VIM_FILENAME = expand('%:t')
 		let $VIM_FILEDIR = expand('%:p:h')
+		let $VIM_CWD = getcwd()
+		let $VIM_SCRIPT = script
+		let $VIM_SCRIPTNAME = a:name
+		let $VIM_SCRIPTDIR = fnamemodify(script, ':p:h')
 		let $VIM_FILETYPE = &ft
 		execute cmd
 	elseif type(scripts[a:name]) == v:t_func
