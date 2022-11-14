@@ -97,10 +97,10 @@ let s:char_display = {
 
 
 "----------------------------------------------------------------------
-" translate from key name '<esc>' to key code '\<esc>'
+" translate from key-name '<esc>' to key-code '\<esc>'
 "----------------------------------------------------------------------
-function! starter#charname#translate(text)
-	let key = a:text
+function! starter#charname#translate(key)
+	let key = a:key
 	if type(key) == v:t_none
 		return v:none
 	elseif len(key) == 1
@@ -120,33 +120,39 @@ endfunc
 
 
 "----------------------------------------------------------------------
-" get name from code
+" get a proper key-name from key-code
 "----------------------------------------------------------------------
-function! starter#charname#name(key)
-	return get(s:special_names, a:key, v:none)
+function! starter#charname#name(code)
+	return get(s:special_names, a:code, v:none)
 endfunc
 
 
 "----------------------------------------------------------------------
-" get display name
+" get display-name from key-name
 "----------------------------------------------------------------------
 function! starter#charname#display(key)
-	if !has_key(s:special_names, a:key)
-		return ''
+	let code = starter#charname#translate(a:key)
+	if type(code) == v:t_none
+		return 'BADKEY'
 	endif
-	let name = s:special_names[a:key]
-	return get(s:char_display, tolower(name), name)
+	if !has_key(s:special_names, code)
+		return 'BADKEY'
+	endif
+	let displayname = s:special_names[code]
+	return get(s:char_display, tolower(displayname), displayname)
 endfunc
 
 
 "----------------------------------------------------------------------
-" sort by display names
+" input a array of key-names and sort by their display-names
 "----------------------------------------------------------------------
 function! starter#charname#sort(keys)
 	let buckets = {}
 	for key in a:keys
 		let display = starter#charname#display(key)
 		if type(display) == v:t_none
+			continue
+		elseif display == '' && type(display) == v:t_string
 			continue
 		endif
 		let size = len(display)
