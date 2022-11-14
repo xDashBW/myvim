@@ -138,8 +138,8 @@ function! starter#charname#display(key)
 	if !has_key(s:special_names, code)
 		return 'BADKEY'
 	endif
-	let displayname = s:special_names[code]
-	return get(s:char_display, tolower(displayname), displayname)
+	let display = s:special_names[code]
+	return get(s:char_display, tolower(display), display)
 endfunc
 
 
