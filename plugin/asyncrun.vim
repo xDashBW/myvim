@@ -3,7 +3,7 @@
 " Maintainer: skywind3000 (at) gmail.com, 2016-2022
 " Homepage: https://github.com/skywind3000/asyncrun.vim
 "
-" Last Modified: 2022/11/13 01:42
+" Last Modified: 2022/11/19 00:45
 "
 " Run shell command in background and output to quickfix:
 "     :AsyncRun[!] [options] {cmd} ...
@@ -1354,7 +1354,7 @@ function! s:terminal_init(opts)
 		if get(a:opts, 'listed', 1) == 0
 			setlocal nobuflisted
 		endif
-		let hidden = get(g:, 'asyncrun_term_hidden', 'wipe')
+		let hidden = get(g:, 'asyncrun_term_hidden', '')
 		let hidden = get(a:opts, 'hidden', hidden)
 		if type(hidden) == type(0)
 			let t = (hidden)? 'hide' : 'wipe'
@@ -2117,7 +2117,7 @@ endfunc
 " asyncrun - version
 "----------------------------------------------------------------------
 function! asyncrun#version()
-	return '2.11.2'
+	return '2.11.3'
 endfunc
 
 
