@@ -114,4 +114,3 @@ function! starter#config#compile(keymap, opts) abort
 endfunc
 
 
-
