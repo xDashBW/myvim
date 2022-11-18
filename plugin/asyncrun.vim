@@ -3,7 +3,7 @@
 " Maintainer: skywind3000 (at) gmail.com, 2016-2022
 " Homepage: https://github.com/skywind3000/asyncrun.vim
 "
-" Last Modified: 2022/11/19 00:45
+" Last Modified: 2022/11/19 01:07
 "
 " Run shell command in background and output to quickfix:
 "     :AsyncRun[!] [options] {cmd} ...
@@ -1421,9 +1421,16 @@ function! s:terminal_exit(...)
 	unlet s:async_term[pid]
 	let g:asyncrun_code = code
 	let g:asyncrun_name = info.name
-	if info.close != 0
-		let bid = info.bid
-		if bid >= 0
+	let bid = info.bid
+	if bid >= 0
+		let need_wipe = get(g:, 'asyncrun_term_wipe', 0)
+		if need_wipe
+			let bh = getbufvar(bid, '&bufhidden', '')
+			if empty(bh)
+				call setbufvar(bid, '&bufhidden', 'wipe')
+			endif
+		endif
+		if info.close != 0
 			if getbufvar(bid, '&bt', '') == 'terminal'
 				silent! exec "bd! " . bid
 			endif
