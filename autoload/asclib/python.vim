@@ -266,4 +266,71 @@ function! asclib#python#init()
 endfunc
 
 
+"----------------------------------------------------------------------
+" pprint
+"----------------------------------------------------------------------
+function! asclib#python#pprint(obj)
+	call asclib#python#init()
+	exec s:py_cmd 'import pprint'
+	exec s:py_cmd '__obj = vim.eval("a:obj")'
+	exec s:py_cmd 'pprint.pprint(__obj)'
+	" exec s:py_cmd 'print(type(__obj))'
+endfunc
+
+
+"----------------------------------------------------------------------
+" returns import base and name
+"----------------------------------------------------------------------
+function! asclib#python#get_imp_info(pyfile)
+	let path = a:pyfile
+	if path == '' || path == '%'
+		let path = expand('%')
+	endif
+	let path = asclib#path#abspath(path)
+	let home = asclib#path#dirname(path)
+	let name = asclib#path#basename(path)
+	let part = asclib#path#splitext(name)[0]
+	while 1
+		let t = asclib#path#join(home, '__init__.py')
+		if !asclib#path#exists(t)
+			break
+		endif
+		let p = fnamemodify(home, ':t')
+		let part = p . '.' . part
+		let t = asclib#path#normalize(asclib#path#join(home, '..'))
+		if asclib#path#equal(t, home)
+			break
+		endif
+		let home = t
+	endwhile
+	return [home, part]
+endfunc
+
+
+"----------------------------------------------------------------------
+" get import base directory 
+"----------------------------------------------------------------------
+function! asclib#python#get_imp_base(pyfile)
+	let res = asclib#python#get_imp_info(a:pyfile)
+	return res[0]
+endfunc
+
+
+"----------------------------------------------------------------------
+" get import name
+"----------------------------------------------------------------------
+function! asclib#python#get_imp_name(pyfile)
+	let res = asclib#python#get_imp_info(a:pyfile)
+	return res[1]
+endfunc
+
+
+"----------------------------------------------------------------------
+" reload a python script
+"----------------------------------------------------------------------
+function! asclib#python#refresh(pyfile)
+	let iname = asclib#python#get_imp_name(a:pyfile)
+	call asclib#python#reload(iname)
+endfunc
+
 

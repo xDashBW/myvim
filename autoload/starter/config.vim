@@ -39,6 +39,25 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" evaluate keymap dict
+"----------------------------------------------------------------------
+function! s:keymap_eval(keymap)
+	let keymap = a:keymap
+	if type(keymap) == v:t_func
+		let keymap = call(keymap, [])
+	elseif type(keymap) == v:t_string
+		let keymap = quickui#core#string_strip(keymap)
+		if keymap =~ '\v^\$\{(.*)\}$'
+			let t = strpart(keymap, 2, strlen(keymap) - 3)
+			unlet keymap
+			let keymap = eval(t)
+		endif
+	endif
+	return keymap
+endfunc
+
+
+"----------------------------------------------------------------------
 " visit tree node
 "----------------------------------------------------------------------
 function! starter#config#visit(keymap, path) abort
@@ -47,15 +66,19 @@ function! starter#config#visit(keymap, path) abort
 	if type(keymap) == v:t_none || type(path) == v:t_none
 		return v:none
 	endif
-	for key in path
-		if type(keymap) == v:t_func
-			let keymap = call(keymap, [])
+	let index = 0
+	while 1
+		let keymap = s:keymap_eval(keymap)
+		if index >= len(path)
+			break
 		endif
+		let key = path[index]
 		if !has_key(keymap, key)
 			return v:none
 		endif
 		let keymap = keymap[key]
-	endfor
+		let index += 1
+	endwhile
 	return keymap
 endfunc
 
@@ -75,14 +98,14 @@ function! starter#config#compile(keymap, opts) abort
 		if key == '' || key == 'name'
 			continue
 		endif
-		let key_char = starter#charname#translate(key)
-		if type(key_char) == v:t_none
+		let key_code = starter#charname#translate(key)
+		if type(key_code) == v:t_none
 			continue
 		endif
 		let ctx.keys += [key]
 		let item = {}
 		let item.key = key
-		let item.key_char = key_char
+		let item.key_code = key_code
 		let item.key_display = starter#charname#display(key)
 		let item.cmd = ''
 		let item.text = ''
@@ -90,7 +113,15 @@ function! starter#config#compile(keymap, opts) abort
 		let ctx.items[key] = item
 		let value = keymap[keyname]
 		if type(value) == v:t_func
-			value = call(value, [])
+			unlet value
+			let value = call(value, [])
+		elseif type(value) == v:t_str
+			let value = quickui#core#string_strip(value)
+			if value =~ '\v^\$\{(.*)\}$'
+				let t = strpart(value, 2, strlen(value) - 3)
+				unlet value
+				let value = eval(t)
+			endif
 		endif
 		if type(value) == v:t_str
 			let item.cmd = value
@@ -102,14 +133,14 @@ function! starter#config#compile(keymap, opts) abort
 			let item.child = 1
 			let item.text = get(value, 'name', '...')
 		endif
-		if len(item.key) > ctx.strlen_key
-			let ctx.strlen_key = len(item.key)
+		if len(item.key_display) > ctx.strlen_key
+			let ctx.strlen_key = len(item.key_display)
 		endif
 		if len(item.text) > ctx.strlen_txt
-			let ctx.strlen_text = len(item.text)
+			let ctx.strlen_txt = len(item.text)
 		endif
 	endfor
-	call sort(ctx.keys)
+	let ctx.keys = starter#charname#sort(ctx.keys)
 	return ctx
 endfunc
 

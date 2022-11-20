@@ -164,4 +164,8 @@ function! starter#test#demo_keymap()
 	return deepcopy(s:starter_keymap)
 endfunc
 
+function! starter#test#test1()
+	let keymap = deepcopy(s:starter_keymap)
+	call asclib#python#pprint(keymap)
+endfunc
 
