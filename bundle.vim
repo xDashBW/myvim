@@ -454,6 +454,7 @@ if has_key(s:enabled, 'colors')
 	Plug 'mcchrish/zenbones.nvim'
 	Plug 'rafi/awesome-vim-colorschemes'
 	Plug 'flazz/vim-colorschemes'
+	Plug 'jaredgorski/SpaceCamp'
 	IncScript site/bundle/colors.vim
 endif
 

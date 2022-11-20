@@ -3,7 +3,7 @@
 " Maintainer: skywind3000 (at) gmail.com, 2016-2022
 " Homepage: https://github.com/skywind3000/asyncrun.vim
 "
-" Last Modified: 2022/11/19 01:07
+" Last Modified: 2022/11/20 17:53
 "
 " Run shell command in background and output to quickfix:
 "     :AsyncRun[!] [options] {cmd} ...
@@ -1400,6 +1400,12 @@ function! s:terminal_open(opts)
 	if a:opts.cwd != ''
 		silent! call s:chdir(previous)
 	endif
+	if get(a:opts, 'reuse', 0)
+		let bid = get(a:opts, '_terminal_wipe', -1)
+		if bid > 0
+			silent! exec 'bw '  . bid
+		endif
+	endif
 	return hr
 endfunc
 
@@ -1457,6 +1463,7 @@ function! s:start_in_terminal(opts)
 		return -1
 	endif
 	let avail = -1
+	let a:opts._terminal_wipe = -1
 	for ii in range(winnr('$'))
 		let wid = ii + 1
 		if getwinvar(wid, '&bt') == 'terminal'
@@ -1512,6 +1519,7 @@ function! s:start_in_terminal(opts)
 				endif
 			else
 				exec 'tabn ' . avail
+				let a:opts._terminal_wipe = bufnr('%')
 			endif
 		endif
 		let hr = s:terminal_open(a:opts)
@@ -1554,6 +1562,7 @@ function! s:start_in_terminal(opts)
 	endif
 	if avail > 0 
 		exec "normal! ". avail . "\<c-w>\<c-w>"
+		let a:opts._terminal_wipe = bufnr('%')
 	endif
 	let uid = win_getid()
 	keepalt noautocmd call win_gotoid(origin)
@@ -2124,7 +2133,7 @@ endfunc
 " asyncrun - version
 "----------------------------------------------------------------------
 function! asyncrun#version()
-	return '2.11.3'
+	return '2.11.4'
 endfunc
 
 
