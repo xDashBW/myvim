@@ -166,6 +166,7 @@ endfunc
 
 function! starter#test#test1()
 	let keymap = deepcopy(s:starter_keymap)
+	let keymap = starter#config#visit(keymap, ['l'])
 	call asclib#python#pprint(keymap)
 endfunc
 

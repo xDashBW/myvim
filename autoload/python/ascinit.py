@@ -52,7 +52,18 @@ def call(funcname, args):
 # setup path
 #----------------------------------------------------------------------
 sys.path.append(runtime('autoload/python'))
+sys.path.append(runtime('lib'))
 
+def __normalize_path():
+    check = {}
+    result = []
+    for n in sys.path:
+        if n not in check:
+            check[n] = 1
+            result.append(n)
+    sys.path = result
+
+__normalize_path()
 
 
 #----------------------------------------------------------------------

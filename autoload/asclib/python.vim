@@ -256,6 +256,9 @@ function! asclib#python#init()
 	exec s:py_cmd '__path = vim.eval("s:script_home") + "/../python"'
 	exec s:py_cmd '__path = os.path.normpath(__path)'
 	exec s:py_cmd 'sys.path.append(__path)'
+	exec s:py_cmd '__path = vim.eval("s:script_home") + "/../../lib"'
+	exec s:py_cmd '__path = os.path.normpath(__path)'
+	exec s:py_cmd 'sys.path.append(__path)'
 	let fn = s:script_home . '/asclib.py'
 	if filereadable(fn)
 		exec s:py_cmd 'import asclib'
