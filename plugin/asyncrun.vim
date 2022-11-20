@@ -1474,9 +1474,7 @@ function! s:term_alive(bid)
 	endif
 	return 0
 endfunc
-function! asyncrun#term_alive(bid) 
-	return s:term_alive(a:bid)
-endfunc
+
 
 "----------------------------------------------------------------------
 " get a proper name
