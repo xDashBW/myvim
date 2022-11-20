@@ -3,7 +3,7 @@
 " Maintainer: skywind3000 (at) gmail.com, 2016-2022
 " Homepage: https://github.com/skywind3000/asyncrun.vim
 "
-" Last Modified: 2022/11/20 17:53
+" Last Modified: 2022/11/20 22:01
 "
 " Run shell command in background and output to quickfix:
 "     :AsyncRun[!] [options] {cmd} ...
@@ -1300,6 +1300,9 @@ function! s:terminal_init(opts)
 					let opts.cwd = cwd
 				endif
 			endif
+			if has('patch-8.1.1630')
+				let opts.term_name = s:term_new_name(a:opts)
+			endif
 			try
 				let bid = term_start(command, opts)
 			catch /^.*/
@@ -1403,7 +1406,9 @@ function! s:terminal_open(opts)
 	if get(a:opts, 'reuse', 0)
 		let bid = get(a:opts, '_terminal_wipe', -1)
 		if bid > 0
-			silent! exec 'bw '  . bid
+			if bufexists(bid)
+				silent! exec 'bw '  . bid
+			endif
 		endif
 	endif
 	return hr
@@ -1450,6 +1455,67 @@ function! s:terminal_exit(...)
 		call l:F(info.name, code)
 		unlet l:F
 	endif
+endfunc
+
+
+"----------------------------------------------------------------------
+" check terminal is still running
+"----------------------------------------------------------------------
+function! s:term_alive(bid)
+	if getbufvar(a:bid, '&buftype') != 'terminal'
+		return 0
+	endif
+	if has('nvim') == 0
+		return (term_getstatus(a:bid) == 'finished')? 0 : 1
+	else
+		let ch = getbufvar(a:bid, '&channel')
+		let status = (jobwait([ch], 0)[0] == -1)? 1 : 0
+		return (status == 0)? 0 : 1
+	endif
+	return 0
+endfunc
+function! asyncrun#term_alive(bid) 
+	return s:term_alive(a:bid)
+endfunc
+
+"----------------------------------------------------------------------
+" get a proper name
+"----------------------------------------------------------------------
+function! s:term_new_name(opts)
+	let command = a:opts.cmd
+	let name = '!' . command
+	let wipe = get(a:opts, '_terminal_wipe', -1)
+	if !bufexists(name)
+		return name
+	elseif get(a:opts, 'reuse', 0)
+		let bid = bufnr(name)
+		if bid == bufnr('%')
+			unsilent echom 'match'
+			if !s:term_alive(bid)
+				if wipe == bid
+					return name
+				endif
+			endif
+		endif
+	endif
+	let index = 1
+	while 1
+		let test = printf('%s (%d)', name, index)
+		if bufnr(test) < 0
+			return test
+		elseif get(a:opts, 'reuse', 0)
+			let bid = bufnr(test)
+			if bid == bufnr('%')
+				if !s:term_alive(bid)
+					if wipe == bid
+						return test
+					endif
+				endif
+			endif
+		endif
+		let index += 1
+	endwhile
+	return name
 endfunc
 
 
