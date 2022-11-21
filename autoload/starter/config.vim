@@ -94,28 +94,28 @@ function! starter#config#compile(keymap, opts) abort
 	let ctx.keys = []
 	let ctx.strlen_key = 1
 	let ctx.strlen_txt = 8
-	for key in keylist
+	for key in keys(keymap)
 		if key == '' || key == 'name'
 			continue
 		endif
-		let key_code = starter#charname#translate(key)
+		let key_code = starter#charname#get_key_code(key)
 		if type(key_code) == v:t_none
 			continue
 		endif
 		let ctx.keys += [key]
 		let item = {}
 		let item.key = key
-		let item.key_code = key_code
-		let item.key_display = starter#charname#display(key)
+		let item.code = key_code
+		let item.label = starter#charname#get_key_label(key)
 		let item.cmd = ''
 		let item.text = ''
 		let item.child = 0
 		let ctx.items[key] = item
-		let value = keymap[keyname]
+		let value = keymap[key]
 		if type(value) == v:t_func
 			unlet value
 			let value = call(value, [])
-		elseif type(value) == v:t_str
+		elseif type(value) == v:t_string
 			let value = quickui#core#string_strip(value)
 			if value =~ '\v^\$\{(.*)\}$'
 				let t = strpart(value, 2, strlen(value) - 3)
@@ -123,7 +123,7 @@ function! starter#config#compile(keymap, opts) abort
 				let value = eval(t)
 			endif
 		endif
-		if type(value) == v:t_str
+		if type(value) == v:t_string
 			let item.cmd = value
 			let item.text = value
 		elseif type(value) == v:t_list
@@ -133,8 +133,8 @@ function! starter#config#compile(keymap, opts) abort
 			let item.child = 1
 			let item.text = get(value, 'name', '...')
 		endif
-		if len(item.key_display) > ctx.strlen_key
-			let ctx.strlen_key = len(item.key_display)
+		if len(item.label) > ctx.strlen_key
+			let ctx.strlen_key = len(item.label)
 		endif
 		if len(item.text) > ctx.strlen_txt
 			let ctx.strlen_txt = len(item.text)

@@ -160,6 +160,10 @@ let s:starter_keymap.x = {
 			\ },
 			\ }
 
+let s:starter_keymap['<space>'] = {
+			\ 'name' : '+extension',
+			\ }
+
 function! starter#test#demo_keymap()
 	return deepcopy(s:starter_keymap)
 endfunc
@@ -168,5 +172,11 @@ function! starter#test#test1()
 	let keymap = deepcopy(s:starter_keymap)
 	let keymap = starter#config#visit(keymap, ['l'])
 	call asclib#python#pprint(keymap)
+endfunc
+
+function! starter#test#test2()
+	let keymap = deepcopy(s:starter_keymap)
+	let ctx = starter#config#compile(keymap, {})
+	call asclib#python#pprint(ctx)
 endfunc
 

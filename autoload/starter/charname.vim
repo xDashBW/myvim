@@ -99,7 +99,7 @@ let s:char_display = {
 "----------------------------------------------------------------------
 " translate from key-name '<esc>' to key-code '\<esc>'
 "----------------------------------------------------------------------
-function! starter#charname#translate(key)
+function! starter#charname#get_key_code(key)
 	let key = a:key
 	if type(key) == v:t_none
 		return v:none
@@ -122,16 +122,16 @@ endfunc
 "----------------------------------------------------------------------
 " get a proper key-name from key-code
 "----------------------------------------------------------------------
-function! starter#charname#name(code)
+function! starter#charname#get_key_name(code)
 	return get(s:special_names, a:code, v:none)
 endfunc
 
 
 "----------------------------------------------------------------------
-" get display-name from key-name
+" get key-label from key-name
 "----------------------------------------------------------------------
-function! starter#charname#display(key)
-	let code = starter#charname#translate(a:key)
+function! starter#charname#get_key_label(key)
+	let code = starter#charname#get_key_code(a:key)
 	if type(code) == v:t_none
 		return 'BADKEY'
 	endif
@@ -149,17 +149,17 @@ endfunc
 function! starter#charname#sort(keys)
 	let buckets = {}
 	for key in a:keys
-		let display = starter#charname#display(key)
-		if type(display) == v:t_none
+		let label = starter#charname#get_key_label(key)
+		if type(label) == v:t_none
 			continue
-		elseif display == '' && type(display) == v:t_string
+		elseif label == '' && type(label) == v:t_string
 			continue
 		endif
-		let size = len(display)
+		let size = len(label)
 		if !has_key(buckets, size)
 			let buckets[size] = []
 		endif
-		let buckets[size] += [[key, display]]
+		let buckets[size] += [[key, label]]
 	endfor
 	let names = keys(buckets)
 	let result = []
