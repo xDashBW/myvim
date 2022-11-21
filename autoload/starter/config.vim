@@ -18,6 +18,9 @@ let s:default_config = {
 			\ 'icon_breadcrumb': '>',
 			\ 'max_height': 20,
 			\ 'min_height': 5,
+			\ 'max_width': 60,
+			\ 'min_width': 20,
+			\ 'bracket': 0,
 			\ 'padding': [2, 0, 2, 0],
 			\ 'spacing': 3,
 			\ 'position': 'bottom',
@@ -39,9 +42,11 @@ endfunc
 
 
 "----------------------------------------------------------------------
-" evaluate keymap dict
+" internal help
 "----------------------------------------------------------------------
-function! s:keymap_eval(keymap)
+
+" eval ${...}
+function! s:keymap_eval(keymap) abort
 	let keymap = a:keymap
 	if type(keymap) == v:t_func
 		let keymap = call(keymap, [])
@@ -54,6 +59,21 @@ function! s:keymap_eval(keymap)
 		endif
 	endif
 	return keymap
+endfunc
+
+" read config
+function! s:config(opts, key) abort
+	return starter#config#get(a:opts, a:key)
+endfunc
+
+" ljust
+function! s:ljust(str, size) abort
+	return a:str . repeat(' ', a:size - strwidth(a:str))
+endfunc
+
+" rjust
+function! s:rjust(str, size) abort
+	return repeat(' ', a:size - strwidth(a:str)) . a:str
 endfunc
 
 
@@ -92,8 +112,10 @@ function! starter#config#compile(keymap, opts) abort
 	let ctx = {}
 	let ctx.items = {}
 	let ctx.keys = []
-	let ctx.strlen_key = 1
-	let ctx.strlen_txt = 8
+	let ctx.strwidth_key = 1
+	let ctx.strwidth_txt = 8
+	let icon_separator = s:config(a:opts, 'icon_separator')
+	let icon_group = s:config(a:opts, 'icon_group')
 	for key in keys(keymap)
 		if key == '' || key == 'name'
 			continue
@@ -133,15 +155,42 @@ function! starter#config#compile(keymap, opts) abort
 			let item.child = 1
 			let item.text = get(value, 'name', '...')
 		endif
-		if len(item.label) > ctx.strlen_key
-			let ctx.strlen_key = len(item.label)
+		if item.child
+			if stridx(item.text, icon_group) != 0
+				let item.text = icon_group . item.text
+			endif
 		endif
-		if len(item.text) > ctx.strlen_txt
-			let ctx.strlen_txt = len(item.text)
+		if len(item.label) > ctx.strwidth_key
+			let ctx.strwidth_key = strwidth(item.label)
+		endif
+		if len(item.text) >= ctx.strwidth_txt
+			let ctx.strwidth_txt = strwidth(item.text)
 		endif
 	endfor
 	let ctx.keys = starter#charname#sort(ctx.keys)
+	let bracket = s:config(a:opts, 'bracket')
+	if bracket
+		if ctx.strwidth_key < 3
+			let ctx.strwidth_key = 3
+		endif
+	endif
+	let ctx.stride = ctx.strwidth_key + ctx.strwidth_txt 
+	let ctx.stride = ctx.stride + 2 + strwidth(icon_separator)
+	for key in ctx.keys
+		let item = ctx.items[key]
+		let label = item.label
+		let text = item.text
+		if strlen(label) == 1 && bracket
+			let label = '[' . label . ']'
+		endif
+		let label = s:rjust(label, ctx.strwidth_key)
+		let text = s:ljust(text, ctx.strwidth_txt)
+		let item.content = printf('%s %s %s', label, icon_separator, text)
+		let stride = strwidth(item.content)
+		let ctx.stride = (ctx.stride >= stride)? ctx.stride : stride
+	endfor
 	return ctx
 endfunc
+
 
 
