@@ -867,7 +867,7 @@ function! s:AsyncRun_Job_Start(cmd)
 			if type(t) == type('')
 				let format = t
 			elseif type(t) == type(0)
-				let format = (t != 0)? '%Y/%m/%d %T' : ''
+				let format = (t != 0)? '%Y/%m/%d %H:%M:%S' : ''
 			endif
 			if format != ''
 				let t = strftime(format, s:async_start)

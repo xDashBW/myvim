@@ -227,7 +227,7 @@ let g:ycm_collect_identifiers_from_tags_files  = 1
 
 if has('win32') || has('win16') || has('win64') || has('win95')
 	let g:vimwiki_path = '~/OneDrive/Documents/notes/VimWiki'
-	if has('gui_running')
+	if has('gui_running') && v:version >= 801
 		set tbis=large
 	endif
 	if executable('c:/drivers/clink/clink.cmd')
