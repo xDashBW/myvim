@@ -24,8 +24,7 @@ function! asclib#path#chdir(path, ...)
 	else
 		let cmd = haslocaldir()? ((haslocaldir() == 1)? 'lcd' : 'tcd') : 'cd'
 	endif
-	let t = (nac)? 'noautocmd' : ''
-	silent execute t . ' ' . cmd . ' '. fnameescape(a:path)
+	silent execute cmd . ' '. fnameescape(a:path)
 endfunc
 
 
