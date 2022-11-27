@@ -41,6 +41,14 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" change dir with noautocmd prefix
+"----------------------------------------------------------------------
+function! asclib#path#chdir_noautocmd(path)
+	noautocmd call asclib#path#chdir(a:path)
+endfunc
+
+
+"----------------------------------------------------------------------
 " absolute path
 "----------------------------------------------------------------------
 function! asclib#path#abspath(path)
