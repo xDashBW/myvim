@@ -8,4 +8,14 @@
 "
 "======================================================================
 
+function! s:layout_horizon(ctx, opts) abort
+endfunc
+
+function! s:layout_vertical(ctx, opts) abort
+endfunc
+
+function! starter#layout#init(ctx, opts) abort
+
+endfunc
+
 
