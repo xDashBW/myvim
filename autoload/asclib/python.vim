@@ -152,10 +152,10 @@ function! asclib#python#call(funcname, args) abort
 		endif
 		if s:py_version == 2
 			py __py_args = vim.eval('a:args')
-			return pyeval(a:funcname . '(__py_args)')
+			return pyeval(a:funcname . '(*__py_args)')
 		else
 			py3 __py_args = vim.eval('a:args')
-			return py3eval(a:funcname . '(__py_args)')
+			return py3eval(a:funcname . '(*__py_args)')
 		endif
 	endif
 endfunc
