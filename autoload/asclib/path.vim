@@ -216,6 +216,20 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" return 1 if base directory contains child, 0 for not contain
+"----------------------------------------------------------------------
+function! asclib#path#contains(base, child)
+	let base = asclib#path#abspath(a:base)
+	let child = asclib#path#abspath(a:child)
+	let base = asclib#path#normalize(base) . '/'
+	let child = asclib#path#normalize(child)
+	let base = asclib#path#normcase(base)
+	let child = asclib#path#normcase(child)
+	return (stridx(child, base) == 0)? 1 : 0
+endfunc
+
+
+"----------------------------------------------------------------------
 " path asc home
 "----------------------------------------------------------------------
 function! asclib#path#runtime(path)
