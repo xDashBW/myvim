@@ -4,7 +4,7 @@
 "
 " Maintainer: skywind3000 (at) gmail.com, 2020-2021
 "
-" Last Modified: 2022/11/29 04:24
+" Last Modified: 2022/11/29 04:55
 " Verision: 1.9.9
 "
 " For more information, please visit:
@@ -70,7 +70,7 @@ let g:asynctasks_term_rows = get(g:, 'asynctasks_term_rows', '')
 let g:asynctasks_term_focus = get(g:, 'asynctasks_term_focus', 1)
 
 " make internal terminal tab reusable
-let g:asynctasks_term_reuse = get(g:, 'asynctasks_term_reuse', -1)
+let g:asynctasks_term_reuse = get(g:, 'asynctasks_term_reuse', 1)
 
 " whether set bufhidden to 'hide' in terminal window
 let g:asynctasks_term_hidden = get(g:, 'asynctasks_term_hidden', 0)
