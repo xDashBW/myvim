@@ -182,7 +182,7 @@ function! asclib#core#system(cmd, ...)
 	let cwd = ((a:0) > 0)? (a:1) : ''
 	if cwd != ''
 		let previous = getcwd()
-		call asclib#core#chdir(cwd)
+		noautocmd call asclib#core#chdir(cwd)
 	endif
 	if a:0 >= 3
 		if type(a:3) == type('')
@@ -195,7 +195,7 @@ function! asclib#core#system(cmd, ...)
 	endif
 	let hr = s:python_system(a:cmd, get(g:, 'asclib#core#python', 0), sinput)
 	if cwd != ''
-		call asclib#core#chdir(previous)
+		noautocmd call asclib#core#chdir(previous)
 	endif
 	let g:asclib#core#shell_error = s:shell_error
 	if (a:0) > 1 && has('iconv')
@@ -282,7 +282,7 @@ function! asclib#core#unix_system(cmd, ...)
 	let cwd = ((a:0) > 0)? (a:1) : ''
 	if cwd != ''
 		let previous = getcwd()
-		call asclib#core#chdir(cwd)
+		noautocmd call asclib#core#chdir(cwd)
 	endif
 	if s:windows == 0
 		let hr = system(a:cmd)
@@ -295,7 +295,7 @@ function! asclib#core#unix_system(cmd, ...)
 		endif
 	endif
 	if cwd != ''
-		call asclib#core#chdir(previous)
+		noautocmd call asclib#core#chdir(previous)
 	endif
 	if (a:0) > 1 && has('iconv')
 		let hr = iconv(hr, a:2, &encoding)
@@ -381,7 +381,7 @@ function! asclib#core#start(cmd, ...)
 	let cwd = ((a:0) > 0)? (a:1) : ''
 	if cwd != ''
 		let previous = getcwd()
-		call asclib#core#chdir(cwd)
+		noautocmd call asclib#core#chdir(cwd)
 	endif
 	if s:windows == 0
 		call system(a:cmd . ' &')
@@ -394,7 +394,7 @@ function! asclib#core#start(cmd, ...)
 		silent exec '!start /b cmd /C ' . cmd
 	endif
 	if cwd != ''
-		call asclib#core#chdir(previous)
+		noautocmd call asclib#core#chdir(previous)
 	endif
 	return 0
 endfunc
