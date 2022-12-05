@@ -104,7 +104,7 @@ function! s:feed_popup()
 	if s:meets_keyword(context)
 		let module = get(b:, 'apc_module', g:apc_module)
 		if empty(module)
-			let feeds = "\<c-x>\<c-n>"
+			let feeds = "\<c-n>"
 		else
 			let feeds = s:feed_module(0)
 			let feeds .= "\<c-r>=" . s:sid() . 'feed_module(1)' . "\<cr>"
@@ -123,7 +123,7 @@ function! s:feed_module(index)
 	if pumvisible()
 		return ""
 	elseif len(module) == 0
-		return (a:index == 0)? "\<c-x>\<c-n>" : ""
+		return (a:index == 0)? "\<c-n>" : ""
 	elseif a:index >= len(module)
 		return ""
 	endif
@@ -138,10 +138,11 @@ function! s:feed_module(index)
 	elseif name == 'tags'
 		let feed = "\<c-x>\<c-]>"
 	else
-		let feed = "\<c-x>\<c-n>"
+		let feed = "\<c-n>"
 	endif
 	let fn = s:sid() . 'feed_module(' . (a:index + 1) . ')'
 	let feed = feed . "\<c-r>=" . fn . "\<cr>"
+	let feed = "\<c-e>" . feed
 	" echom 'feed chain: ' . feed
 	return feed
 endfunc

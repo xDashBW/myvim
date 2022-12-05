@@ -4,7 +4,7 @@
 " lsp.vim - LSP config
 "
 " Created by skywind on 2022/12/05
-" Last Modified: 2022/12/05 13:53:14
+" Last Modified: 2022/12/06 03:51
 "
 "======================================================================
 
@@ -69,12 +69,16 @@ inoremap <expr> <Tab>   pumvisible() ? "\<C-n>" : "\<Tab>"
 inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 inoremap <expr> <cr> pumvisible() ? asyncomplete#close_popup() . "\<cr>" : "\<cr>"
 
-function! s:refresh_dot()
-	let hr = asyncomplete#force_refresh()
-	return '.'
+function! s:check_back_space() abort
+	let col = col('.') - 1
+	return !col || getline('.')[col - 1]  =~ '\s'
 endfunc
 
-" inoremap <expr> . ("." . asyncomplete#force_refresh())
+inoremap <silent><expr> <TAB>
+			\ pumvisible() ? "\<C-n>" :
+			\ <SID>check_back_space() ? "\<TAB>" :
+			\ asyncomplete#force_refresh()
 
+" inoremap <silent><expr> .  ("." . asyncomplete#force_refresh())
 
 
