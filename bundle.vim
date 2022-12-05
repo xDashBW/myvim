@@ -365,6 +365,7 @@ endif
 if has_key(s:enabled, 'lsp')
 	Plug 'prabirshrestha/vim-lsp'
 	Plug 'prabirshrestha/asyncomplete.vim'
+	Plug 'prabirshrestha/asyncomplete-lsp.vim'
 	Plug 'mattn/vim-lsp-settings'
 	IncScript site/bundle/lsp.vim
 endif
