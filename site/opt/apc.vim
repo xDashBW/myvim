@@ -102,7 +102,7 @@ function! s:feed_popup()
 	let context = s:get_context()
 	let feeds = ''
 	if s:meets_keyword(context)
-		let module = get(b:, 'apc_module', get(g:, 'apc_module', []))
+		let module = get(b:, 'apc_module', g:apc_module)
 		if empty(module)
 			let feeds = "\<c-x>\<c-n>"
 		else
@@ -119,7 +119,7 @@ endfunc
 
 " try module chain
 function! s:feed_module(index)
-	let module = get(b:, 'apc_module', get(g:, 'apc_module', []))
+	let module = get(b:, 'apc_module', g:apc_module)
 	if pumvisible()
 		return ""
 	elseif len(module) == 0
