@@ -3,7 +3,7 @@
 " apc.vim - auto popup completion window
 "
 " Created by skywind on 2020/03/05
-" Last Modified: 2022/12/05 17:01
+" Last Modified: 2022/12/05 21:22
 "
 " Features:
 "
@@ -21,29 +21,20 @@ let g:apc_enable_ft = get(g:, 'apc_enable_ft', {})    " enable filetypes
 let g:apc_enable_tab = get(g:, 'apc_enable_tab', 1)   " remap tab
 let g:apc_min_length = get(g:, 'apc_min_length', 2)   " minimal length to open popup
 let g:apc_key_ignore = get(g:, 'apc_key_ignore', [])  " ignore keywords
-let g:apc_module = get(g:, 'apc_module', [])          " module list: omni, user, default
+let g:apc_trigger = get(g:, 'apc_trigger', "\<c-n>")  " which key to trigger popmenu
 
 " get word before cursor
 function! s:get_context()
 	return strpart(getline('.'), 0, col('.') - 1)
 endfunc
 
-function! s:meets_keyword(context, ...)
-	let meets_dot = (a:0 > 0)? (a:1) : 0
+function! s:meets_keyword(context)
 	if g:apc_min_length <= 0
 		return 0
 	endif
 	let matches = matchlist(a:context, '\(\k\{' . g:apc_min_length . ',}\)$')
 	if empty(matches)
-		if meets_dot == 0
-			return 0
-		else
-			let pattern = '\(\k\{' . g:apc_min_length . ',}\.\)$'
-			let matches = matchlist(a:context, pattern)
-			if empty(matches)
-				return 0
-			endif
-		endif
+		return 0
 	endif
 	for ignore in g:apc_key_ignore
 		if stridx(ignore, matches[1]) == 0
@@ -65,12 +56,6 @@ function! s:on_backspace()
 	return s:meets_keyword(text)? "\<BS>" : "\<c-e>\<bs>"
 endfunc
 
-function s:sid()
-	if has('patch-8.2.1400')
-		return expand('<SID>')
-	endif
-	return '<SNR>' . matchstr(expand('<sfile>'), '<SNR>\zs\d\+\ze_SID$') . '_'
-endfun
 
 " autocmd for CursorMovedI
 function! s:feed_popup()
@@ -100,50 +85,13 @@ function! s:feed_popup()
 		return -3
 	endif
 	let context = s:get_context()
-	let feeds = ''
 	if s:meets_keyword(context)
-		let module = get(b:, 'apc_module', g:apc_module)
-		if empty(module)
-			let feeds = "\<c-x>\<c-n>"
-		else
-			let feeds = s:feed_module(0)
-			let feeds .= "\<c-r>=" . s:sid() . 'feed_module(1)' . "\<cr>"
-		endif
-		silent! call feedkeys(feeds, 'n')
+		silent! call feedkeys(get(b:, 'apc_trigger', g:apc_trigger), 'n')
 		let b:apc_lastx = x
 		let b:apc_lasty = y
 		let b:apc_tick = b:changedtick
 	endif
 	return 0
-endfunc
-
-" try module chain
-function! s:feed_module(index)
-	let module = get(b:, 'apc_module', g:apc_module)
-	if pumvisible()
-		return ""
-	elseif len(module) == 0
-		return (a:index == 0)? "\<c-x>\<c-n>" : ""
-	elseif a:index >= len(module)
-		return ""
-	endif
-	let name = module[a:index]
-	let feed = ''
-	if name == 'omni' || name == 'omnifunc'
-		let feed = (&omnifunc != '')? "\<c-x>\<c-o>" : ""
-	elseif name == 'user' || name == 'completefunc'
-		let feed = (&completefunc != '')? "\<c-x>\<c-u>" : ""
-	elseif name == 'dict'
-		let feed = (&dictionary != '')? "\<c-x>\<c-k>" : ""
-	elseif name == 'tags'
-		let feed = "\<c-x>\<c-]>"
-	else
-		let feed = "\<c-x>\<c-n>"
-	endif
-	let fn = s:sid() . 'feed_module(' . (a:index + 1) . ')'
-	let feed = feed . "\<c-r>=" . fn . "\<cr>"
-	" echom 'feed chain: ' . feed
-	return feed
 endfunc
 
 " autocmd for CompleteDone
@@ -166,7 +114,7 @@ function! s:apc_enable()
 		inoremap <silent><buffer><expr> <tab>
 					\ pumvisible()? "\<c-n>" :
 					\ <SID>check_back_space() ? "\<tab>" : 
-					\ <SID>feed_module(0)
+					\ get(b:, 'apc_trigger', g:apc_trigger)
 		inoremap <silent><buffer><expr> <s-tab>
 					\ pumvisible()? "\<c-p>" : "\<s-tab>"
 		let b:apc_init_tab = 1
@@ -216,7 +164,7 @@ endfunc
 
 " check if need to be enabled
 function! s:apc_check_init()
-	if &bt != '' || get(b:, 'apc_enable', 1) == 0
+	if &bt != ''
 		return
 	endif
 	if get(g:apc_enable_ft, &ft, 0) != 0
@@ -238,5 +186,4 @@ augroup ApcInitGroup
 	au BufEnter * call s:apc_check_init()
 	au TabEnter * call s:apc_check_init()
 augroup END
-
 
