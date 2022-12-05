@@ -358,7 +358,7 @@ if has_key(s:enabled, 'matchup')
 	" vim-matchup conflicts with matchit, should disable matchit
 	let g:loaded_matchit = 1
 	IncScript site/bundle/matchup.vim
-elseif has_key(s:enabled, 'matchit')
+else
 	runtime! macros/matchit.vim
 endif
 
