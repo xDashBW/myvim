@@ -164,7 +164,7 @@ endfunc
 
 " check if need to be enabled
 function! s:apc_check_init()
-	if &bt != ''
+	if &bt != '' || get(b:, 'apc_enable', 1) == 0
 		return
 	endif
 	if get(g:apc_enable_ft, &ft, 0) != 0
