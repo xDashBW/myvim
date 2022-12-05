@@ -362,6 +362,13 @@ else
 	runtime! macros/matchit.vim
 endif
 
+if has_key(s:enabled, 'lsp')
+	Plug 'prabirshrestha/vim-lsp'
+	Plug 'prabirshrestha/asyncomplete.vim'
+	Plug 'mattn/vim-lsp-settings'
+	IncScript site/bundle/lsp.vim
+endif
+
 if has_key(s:enabled, 'neomake')
 	Plug 'neomake/neomake'
 endif
