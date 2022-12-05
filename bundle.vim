@@ -290,6 +290,9 @@ if has_key(s:enabled, 'lsp')
 	Plug 'prabirshrestha/asyncomplete.vim'
 	Plug 'prabirshrestha/asyncomplete-lsp.vim'
 	Plug 'mattn/vim-lsp-settings'
+	Plug 'prabirshrestha/asyncomplete-buffer.vim'
+	Plug 'prabirshrestha/asyncomplete-tags.vim'
+	Plug 'jsit/asyncomplete-user.vim'
 	IncScript site/bundle/lsp.vim
 endif
 
