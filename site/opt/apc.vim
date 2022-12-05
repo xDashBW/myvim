@@ -165,7 +165,8 @@ function! s:apc_enable()
 	if g:apc_enable_tab
 		inoremap <silent><buffer><expr> <tab>
 					\ pumvisible()? "\<c-n>" :
-					\ <SID>check_back_space() ? "\<tab>" : "\<c-n>"
+					\ <SID>check_back_space() ? "\<tab>" : 
+					\ <SID>feed_module(0)
 		inoremap <silent><buffer><expr> <s-tab>
 					\ pumvisible()? "\<c-p>" : "\<s-tab>"
 		let b:apc_init_tab = 1

@@ -275,8 +275,23 @@ endif
 
 
 "----------------------------------------------------------------------
-" optional 
+" modules 
 "----------------------------------------------------------------------
+
+" CoC
+if has_key(s:enabled, 'coc')
+	Plug 'neoclide/coc.nvim', {'branch': 'release'}
+	IncScript site/bundle/coc.vim
+endif
+
+" vim-lsp
+if has_key(s:enabled, 'lsp')
+	Plug 'prabirshrestha/vim-lsp'
+	Plug 'prabirshrestha/asyncomplete.vim'
+	Plug 'prabirshrestha/asyncomplete-lsp.vim'
+	Plug 'mattn/vim-lsp-settings'
+	IncScript site/bundle/lsp.vim
+endif
 
 " deoplete
 if has_key(s:enabled, 'deoplete')
@@ -292,17 +307,38 @@ if has_key(s:enabled, 'deoplete')
 	IncScript site/bundle/deoplete.vim
 endif
 
-" vimwiki
-if has_key(s:enabled, 'vimwiki')
-	Plug 'vimwiki/vimwiki'
-	IncScript site/bundle/vimwiki.vim
-endif
-
 " echodoc
 if has_key(s:enabled, 'echodoc')
 	Plug 'Shougo/echodoc.vim'
 	set noshowmode
 	let g:echodoc#enable_at_startup = 1
+endif
+
+" lightline
+if has_key(s:enabled, 'lightline')
+	Plug 'itchyny/lightline.vim'
+	IncScript site/bundle/lightline.vim
+endif
+
+" ale
+if has_key(s:enabled, 'ale')
+	Plug 'w0rp/ale'
+	IncScript site/bundle/ale.vim
+endif
+
+if has_key(s:enabled, 'matchup')
+	Plug 'andymass/vim-matchup'
+	" vim-matchup conflicts with matchit, should disable matchit
+	let g:loaded_matchit = 1
+	IncScript site/bundle/matchup.vim
+else
+	runtime! macros/matchit.vim
+endif
+
+" vimwiki
+if has_key(s:enabled, 'vimwiki')
+	Plug 'vimwiki/vimwiki'
+	IncScript site/bundle/vimwiki.vim
 endif
 
 " airline
@@ -312,15 +348,9 @@ if has_key(s:enabled, 'airline')
 	IncScript site/bundle/airline.vim
 endif
 
-" lightline
-if has_key(s:enabled, 'lightline')
-	Plug 'itchyny/lightline.vim'
-	IncScript site/bundle/lightline.vim
-endif
-
-if has_key(s:enabled, 'coc')
-	Plug 'neoclide/coc.nvim', {'branch': 'release'}
-	IncScript site/bundle/coc.vim
+if has_key(s:enabled, 'floaterm')
+	Plug 'voldikss/vim-floaterm'
+	IncScript site/bundle/floaterm.vim
 endif
 
 if has_key(s:enabled, 'vim-doge')
@@ -345,29 +375,6 @@ if has_key(s:enabled, 'grammer')
 	map <space>rd <Plug>(grammarous-disable-rule)
 	map <space>rn <Plug>(grammarous-move-to-next-error)
 	map <space>rp <Plug>(grammarous-move-to-previous-error)
-endif
-
-
-if has_key(s:enabled, 'ale')
-	Plug 'w0rp/ale'
-	IncScript site/bundle/ale.vim
-endif
-
-if has_key(s:enabled, 'matchup')
-	Plug 'andymass/vim-matchup'
-	" vim-matchup conflicts with matchit, should disable matchit
-	let g:loaded_matchit = 1
-	IncScript site/bundle/matchup.vim
-else
-	runtime! macros/matchit.vim
-endif
-
-if has_key(s:enabled, 'lsp')
-	Plug 'prabirshrestha/vim-lsp'
-	Plug 'prabirshrestha/asyncomplete.vim'
-	Plug 'prabirshrestha/asyncomplete-lsp.vim'
-	Plug 'mattn/vim-lsp-settings'
-	IncScript site/bundle/lsp.vim
 endif
 
 if has_key(s:enabled, 'neomake')
@@ -436,11 +443,6 @@ endif
 
 if has_key(s:enabled, 'icons')
 	Plug 'istepura/vim-toolbar-icons-silk'
-endif
-
-if has_key(s:enabled, 'floaterm')
-	Plug 'voldikss/vim-floaterm'
-	IncScript site/bundle/floaterm.vim
 endif
 
 if has_key(s:enabled, 'tabnine')
