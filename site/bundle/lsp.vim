@@ -20,7 +20,9 @@ let g:lsp_diagnostics_highlights_enabled = 0
 let g:lsp_document_code_action_signs_enabled = 0
 
 let g:lsp_signature_help_enabled = 0
-let g:lsp_document_highlight_enabled = 0
+let g:lsp_document_highlight_enabled = 1
+let g:lsp_preview_fixup_conceal = 1
+let g:lsp_hover_conceal = 1
 
 
 "----------------------------------------------------------------------
@@ -30,6 +32,34 @@ let g:asyncomplete_min_chars = 0
 let g:asyncomplete_auto_completeopt = 0
 
 set shortmess+=c
+
+
+"----------------------------------------------------------------------
+" popup
+"----------------------------------------------------------------------
+hi! PopupWindow ctermbg=236 guibg=#303030
+
+function! s:preview_open()
+	let wid = lsp#document_hover_preview_winid()
+	hi! PopupWindow ctermbg=236 guibg=#303030
+	echom "popup opened"
+	if has('nvim') == 0
+		call setwinvar(wid, '&wincolor', 'PopupWindow')
+		" call win_execute(wid, 'syn clear')
+		" call win_execute(wid, 'unsilent echom "ft: " . &ft')
+	else
+		call nvim_win_set_option(wid, 'winhighlight', 'Normal:PopupWindow')
+	endif
+endfunc
+
+function! s:preview_close()
+endfunc
+
+augroup Lsp_FloatColor2
+	au!
+	autocmd User lsp_float_opened call s:preview_open()
+	autocmd User lsp_float_closed call s:preview_close()
+augroup END
 
 
 "----------------------------------------------------------------------
@@ -45,3 +75,6 @@ function! s:refresh_dot()
 endfunc
 
 " inoremap <expr> . ("." . asyncomplete#force_refresh())
+
+
+
