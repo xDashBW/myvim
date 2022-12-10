@@ -23,8 +23,20 @@ let s:default_config = {
 			\ 'bracket': 0,
 			\ 'padding': [2, 0, 2, 0],
 			\ 'spacing': 3,
-			\ 'position': 'bottom',
+			\ 'vertical': 0,
+			\ 'position': 'botright',
 			\ 'splitmod': '',
+			\ }
+
+
+"----------------------------------------------------------------------
+" position direction
+"----------------------------------------------------------------------
+let s:position_dict = {
+			\ 'leftabove': 0, 'aboveleft': 0, 'lefta': 0, 'abo': 0,
+			\ 'rightbelow': 1, 'belowright': 1, 'rightb': 1, 'bel': 1,
+			\ 'topleft': 2, 'to': 2,
+			\ 'botright': 3, 'bo': 3,
 			\ }
 
 
@@ -189,6 +201,8 @@ function! starter#config#compile(keymap, opts) abort
 		let stride = strwidth(item.content)
 		let ctx.stride = (ctx.stride >= stride)? ctx.stride : stride
 	endfor
+	let ctx.vertical = starter#config#get(a:opts, 'vertical')
+	let ctx.position = starter#config#get(a:opts, 'position')
 	return ctx
 endfunc
 
