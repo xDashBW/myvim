@@ -25,11 +25,13 @@ call after_object#enable(['r', 'R'], '=', ':', '-', '#', ' ', '/', ';', '(', ')'
 "----------------------------------------------------------------------
 "- Global Settings
 "----------------------------------------------------------------------
-let g:asyncrun_msys = 'd:/software/msys32'
-
-if isdirectory(g:asyncrun_msys)
-	let g:asyncrun_msys = 'd:/Linux'
-endif
+let g:asyncrun_msys = ''
+for msys in ['d:/Linux', 'd:/software/msys32']
+	if isdirectory(msys) && executable(msys . '/usr/bin/bash.exe')
+		let g:asyncrun_msys = msys
+		break
+	endif
+endfor
 
 let g:asyncrun_show_time = 1
 let g:asyncrun_rootmarks = ['.project', '.root', '.git', '.git', '.svn']

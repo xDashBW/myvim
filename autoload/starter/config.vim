@@ -198,11 +198,19 @@ function! starter#config#compile(keymap, opts) abort
 		let label = s:rjust(label, ctx.strwidth_key)
 		let text = s:ljust(text, ctx.strwidth_txt)
 		let item.content = printf('%s %s %s', label, icon_separator, text)
+		let item.compact = printf('%s %s %s', label, icon_separator, item.text)
+		let item.clength = strwidth(item.compact)
 		let stride = strwidth(item.content)
 		let ctx.stride = (ctx.stride >= stride)? ctx.stride : stride
 	endfor
 	let ctx.vertical = starter#config#get(a:opts, 'vertical')
 	let ctx.position = starter#config#get(a:opts, 'position')
+	let pos = get(s:position_dict, ctx.position, 3)
+	if pos <= 1
+		let ctx.position = (pos == 0)? 'leftabove' : 'rightbelow'
+	else
+		let ctx.position = (pos == 2)? 'topleft' : 'botright'
+	endif
 	return ctx
 endfunc
 
