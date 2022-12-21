@@ -79,12 +79,12 @@ function! s:config(opts, key) abort
 endfunc
 
 " ljust
-function! s:ljust(str, size) abort
+function! starter#config#ljust(str, size) abort
 	return a:str . repeat(' ', a:size - strwidth(a:str))
 endfunc
 
 " rjust
-function! s:rjust(str, size) abort
+function! starter#config#rjust(str, size) abort
 	return repeat(' ', a:size - strwidth(a:str)) . a:str
 endfunc
 
@@ -195,8 +195,8 @@ function! starter#config#compile(keymap, opts) abort
 		if strlen(label) == 1 && bracket
 			let label = '[' . label . ']'
 		endif
-		let label = s:rjust(label, ctx.strwidth_key)
-		let text = s:ljust(text, ctx.strwidth_txt)
+		let label = starter#config#rjust(label, ctx.strwidth_key)
+		let text = starter#config#ljust(text, ctx.strwidth_txt)
 		let item.content = printf('%s %s %s', label, icon_separator, text)
 		let item.compact = printf('%s %s %s', label, icon_separator, item.text)
 		let item.clength = strwidth(item.compact)

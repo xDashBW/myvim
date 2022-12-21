@@ -13,8 +13,8 @@
 " horizon
 "----------------------------------------------------------------------
 function! s:layout_horizon(ctx, opts) abort
-	let ctx = a.ctx
-	let padding = starter#config#get(a:opts, 'pedding')
+	let ctx = a:ctx
+	let padding = starter#config#get(a:opts, 'padding')
 	let spacing = starter#config#get(a:opts, 'spacing')
 	let ctx.cx = a:ctx.wincx - (padding[0] + padding[2])
 	if ctx.cx <= ctx.stride
@@ -72,5 +72,41 @@ function! starter#layout#init(ctx, opts, hspace, vspace) abort
 	endif
 endfunc
 
+
+
+"----------------------------------------------------------------------
+" fill a column
+"----------------------------------------------------------------------
+function! starter#layout#fill_column(ctx, opts, start, size, compact) abort
+	let ctx = a:ctx
+	let columns = []
+	let index = a:start
+	let endup = index + a:size
+	let endup = (endup < len(ctx.keys))? endup : len(ctx.keys)
+	let csize = 0
+	while index < endup
+		let item = ctx.items[ctx.keys[index]]
+		if a:compact == 0
+			let columns += [item.content]
+		else
+			let columns += [item.compact]
+		endif
+		let index += 1
+	endwhile
+	for text in columns
+		let width = strwidth(text)
+		let csize = (width > csize)? width : csize
+	endfor
+	let index = 0
+	while index < len(columns)
+		let text = columns[index]
+		let width = strwidth(text)
+		if width < csize
+			let columns[index] = text . repeat(' ', csize - width)
+		endif
+		let index += 1
+	endwhile
+	return columns
+endfunc
 
 
