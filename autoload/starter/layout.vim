@@ -77,7 +77,7 @@ endfunc
 "----------------------------------------------------------------------
 " fill a column
 "----------------------------------------------------------------------
-function! starter#layout#fill_column(ctx, opts, start, size, compact) abort
+function! starter#layout#fill_column(ctx, opts, start, size, minwidth) abort
 	let ctx = a:ctx
 	let columns = []
 	let index = a:start
@@ -86,17 +86,14 @@ function! starter#layout#fill_column(ctx, opts, start, size, compact) abort
 	let csize = 0
 	while index < endup
 		let item = ctx.items[ctx.keys[index]]
-		if a:compact == 0
-			let columns += [item.content]
-		else
-			let columns += [item.compact]
-		endif
+		let columns += [item.compact]
 		let index += 1
 	endwhile
 	for text in columns
 		let width = strwidth(text)
 		let csize = (width > csize)? width : csize
 	endfor
+	let csize = (csize < a:minwidth)? a:minwidth : csize
 	let index = 0
 	while index < len(columns)
 		let text = columns[index]

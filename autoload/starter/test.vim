@@ -185,8 +185,9 @@ function! starter#test#test3() abort
 	let ctx = starter#config#compile(keymap, {})
 	" echo 'size ' . len(ctx.items)
 	call starter#layout#init(ctx, {}, &columns, &lines)
-	let columns = starter#layout#fill_column(ctx, {}, 0, 100, 1)
+	let columns = starter#layout#fill_column(ctx, {}, 0, 100, 0)
 	call asclib#python#pprint(columns)
 	echo ctx.pg_count
+	echo ctx.pg_height
 endfunc
 
