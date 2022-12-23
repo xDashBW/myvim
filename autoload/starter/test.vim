@@ -32,7 +32,7 @@ let s:starter_keymap.c = {
 			\ }
 
 let s:starter_keymap.f = ['<Plug>(coc-smartf-forward)', 'coc-smartf-forward']
-let s:starter_keymap.F = ['<Plug>(coc-smartf-backward)', 'coc-smartf-forward']
+let s:starter_keymap.F = ['<Plug>(coc-smartf-backward)', 'coc-smartf-backward']
 let s:starter_keymap[';'] = ['<Plug>(coc-smartf-repeat)', 'coc-smartf-repeat']
 let s:starter_keymap[','] = ['<Plug>(coc-smartf-repeat-opposite)', 'coc-smartf-repeat-opposite']
 

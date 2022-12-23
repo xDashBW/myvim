@@ -44,7 +44,8 @@ function! s:layout_horizon(ctx, opts) abort
 	if type(ctx.pg_count) == 5
 		let ctx.pg_count = float2nr(ctx.pg_count)
 	endif
-	let ctx.pg_height = (max_height < ctx.nrows)? max_height : ctx.nrows
+	let ctx.pg_height = ctx.nrows
+	let ctx.pg_height = (max_height < ctx.pg_height)? max_height : ctx.pg_height
 	let ctx.pg_height = (min_height > ctx.pg_height)? min_height : ctx.pg_height
 	let ctx.pg_size = ctx.pg_height * ctx.ncols
 	let ctx.pages = []
