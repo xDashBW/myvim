@@ -153,11 +153,23 @@ endfunc
 "----------------------------------------------------------------------
 function! starter#utils#window_resize(wid, width, height) abort
 	let wid = (a:wid == 0)? winnr() : a:wid
+	call starter#utils#save_view()
 	if a:width >= 0
 		exec printf('vert %dresize %d', wid, a:width)
 	endif
 	if a:height >= 0
 		exec printf('%dresize %d', wid, a:height)
+	endif
+	call starter#utils#restore_view()
+endfunc
+
+
+"----------------------------------------------------------------------
+" update window content
+"----------------------------------------------------------------------
+function! starter#utils#window_update(textline) abort
+	if s:bid > 0
+		call starter#utils#update_buffer(s:bid, a:textline)
 	endif
 endfunc
 
