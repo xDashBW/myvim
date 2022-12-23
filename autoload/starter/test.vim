@@ -197,6 +197,7 @@ function! starter#test#test4() abort
 	let ctx = starter#config#compile(keymap, {})
 	call starter#layout#init(ctx, {}, &columns, &lines)
 	let page = starter#layout#fill_page(ctx, {}, 0, len(ctx.keys), 5)
-	call asclib#python#pprint(page.content)
+	" call asclib#python#pprint(page.content)
+	call asclib#common#print_content(page.content)
 endfunc
 

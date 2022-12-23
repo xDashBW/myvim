@@ -135,12 +135,13 @@ function! starter#layout#fill_page(ctx, opts, start, size, winheight) abort
 	let cowidth = []
 	let ncols = (a:size + winheight - 1) / winheight
 	let minwidth = 0
+	" let minwidth = ctx.stride
 	if type(ncols) == 5
 		let ncols = float2nr(ncols)
 	endif
 	for index in range(ncols)
 		let start = a:start + winheight * index
-		let endup = a:start + winheight
+		let endup = start + winheight
 		if endup > a:start + a:size
 			let endup = a:start + a:size
 		endif

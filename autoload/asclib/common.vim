@@ -87,3 +87,13 @@ endfunc
 
 
 
+"----------------------------------------------------------------------
+" print lines
+"----------------------------------------------------------------------
+function! asclib#common#print_content(content) abort
+	for text in a:content
+		echo text
+	endfor
+endfunc
+
+
