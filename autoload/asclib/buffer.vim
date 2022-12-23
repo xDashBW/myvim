@@ -21,7 +21,7 @@ function! asclib#buffer#alloc()
 		let bid = s:buffer_array[index]
 		unlet s:buffer_array[index]
 	else
-		if g:quickui#core#has_nvim == 0
+		if has('nvim') == 0
 			let bid = bufadd('')
 			call bufload(bid)
 			call setbufvar(bid, '&buflisted', 0)
