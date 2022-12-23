@@ -54,6 +54,53 @@ endfunc
 
 
 "----------------------------------------------------------------------
+" update buffer content
+"----------------------------------------------------------------------
+function! asclib#buffer#update(bid, textlist)
+	if type(a:textlist) == v:t_list
+		let textlist = a:textlist
+	else
+		let textlist = split('' . a:textlist, '\n', 1)
+	endif
+	let old = getbufvar(a:bid, '&modifiable', 0)
+	call setbufvar(a:bid, '&modifiable', 1)
+	call deletebufline(a:bid, 1, '$')
+	call setbufline(a:bid, 1, textlist)
+	call setbufvar(a:bid, '&modified', old)
+endfunc
+
+
+"----------------------------------------------------------------------
+" clear buffer content
+"----------------------------------------------------------------------
+function! asclib#buffer#clear(bid)
+	call asclib#buffer#update(a:bid, [])
+endfunc
+
+
+"----------------------------------------------------------------------
+" get named buffer
+"----------------------------------------------------------------------
+function! asclib#buffer#named(name)
+	if !exists('s:buffer_cache')
+		let s:buffer_cache = {}
+	endif
+	if a:name != ''
+		let bid = get(s:buffer_cache, a:name, -1)
+	else
+		let bid = -1
+	endif
+	if bid < 0
+		let bid = asclib#buffer#alloc()
+		if a:name != ''
+			let s:buffer_cache[a:name] = bid
+		endif
+	endif
+	return bid
+endfunc
+
+
+"----------------------------------------------------------------------
 " list buffer bid
 "----------------------------------------------------------------------
 function! asclib#buffer#list()

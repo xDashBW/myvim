@@ -10,6 +10,12 @@
 
 
 "----------------------------------------------------------------------
+" internal
+"----------------------------------------------------------------------
+let s:bid = -1
+
+
+"----------------------------------------------------------------------
 " internal save view
 "----------------------------------------------------------------------
 function! s:save_view(mode)
@@ -44,4 +50,24 @@ function! starter#utils#restore_view() abort
 	keepalt noautocmd windo call s:save_view(1)
 	keepalt noautocmd silent! exec printf('%dwincmd w', winid)
 endfunc
+
+
+"----------------------------------------------------------------------
+" open window
+"----------------------------------------------------------------------
+function! starter#utils#window_open(opts) abort
+	let opts = a:opts
+	let vertical = starter#config#get(opts, 'vertical')
+	let position = starter#config#get(opts, 'position')
+	let min_height = starter#config#get(opts, 'min_height')
+	let min_width = starter#config#get(opts, 'min_width')
+	call starter#utils#save_view()
+	if vertical == 0
+		exec printf('%s %dsplit', position, min_height)
+	else
+		exec printf('%s %dvsplit', position, min_width)
+	endif
+	call starter#utils#restore_view()
+endfunc
+
 
