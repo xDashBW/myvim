@@ -185,9 +185,18 @@ function! starter#test#test3() abort
 	let ctx = starter#config#compile(keymap, {})
 	" echo 'size ' . len(ctx.items)
 	call starter#layout#init(ctx, {}, &columns, &lines)
-	let columns = starter#layout#fill_column(ctx, {}, 0, 100, 0)
-	call asclib#python#pprint(columns)
+	let column = starter#layout#fill_column(ctx, {}, 0, 100, 40)
+	let column = starter#layout#just_column(column, 20)
+	call asclib#python#pprint(column)
 	echo ctx.pg_count
 	echo ctx.pg_height
+endfunc
+
+function! starter#test#test4() abort
+	let keymap = deepcopy(s:starter_keymap)
+	let ctx = starter#config#compile(keymap, {})
+	call starter#layout#init(ctx, {}, &columns, &lines)
+	let page = starter#layout#fill_page(ctx, {}, 0, len(ctx.keys), 5)
+	call asclib#python#pprint(page.content)
 endfunc
 

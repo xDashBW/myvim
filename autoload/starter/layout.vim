@@ -79,31 +79,101 @@ endfunc
 "----------------------------------------------------------------------
 function! starter#layout#fill_column(ctx, opts, start, size, minwidth) abort
 	let ctx = a:ctx
-	let columns = []
+	let column = []
 	let index = a:start
 	let endup = index + a:size
 	let endup = (endup < len(ctx.keys))? endup : len(ctx.keys)
 	let csize = 0
 	while index < endup
 		let item = ctx.items[ctx.keys[index]]
-		let columns += [item.compact]
+		let column += [item.compact]
 		let index += 1
 	endwhile
-	for text in columns
+	for text in column
 		let width = strwidth(text)
 		let csize = (width > csize)? width : csize
 	endfor
 	let csize = (csize < a:minwidth)? a:minwidth : csize
 	let index = 0
-	while index < len(columns)
-		let text = columns[index]
+	while index < len(column)
+		let text = column[index]
 		let width = strwidth(text)
 		if width < csize
-			let columns[index] = text . repeat(' ', csize - width)
+			let column[index] = text . repeat(' ', csize - width)
 		endif
 		let index += 1
 	endwhile
-	return columns
+	return column
 endfunc
+
+
+"----------------------------------------------------------------------
+" fill to necessary size
+"----------------------------------------------------------------------
+function! starter#layout#just_column(column, size)
+	let newcolumn = []
+	if len(a:column) >= a:size
+		return a:column
+	endif
+	let width = 0
+	if len(a:column) > 0
+		let width = strwidth(a:column[0])
+	endif
+	let text = repeat(' ', width)
+	return a:column + repeat([text], a:size - len(a:column))
+endfunc
+
+
+"----------------------------------------------------------------------
+" fill a page
+"----------------------------------------------------------------------
+function! starter#layout#fill_page(ctx, opts, start, size, winheight) abort
+	let ctx = a:ctx
+	let winheight = a:winheight
+	let page = {}
+	let columns = []
+	let cowidth = []
+	let ncols = (a:size + winheight - 1) / winheight
+	let minwidth = 0
+	if type(ncols) == 5
+		let ncols = float2nr(ncols)
+	endif
+	for index in range(ncols)
+		let start = a:start + winheight * index
+		let endup = a:start + winheight
+		if endup > a:start + a:size
+			let endup = a:start + a:size
+		endif
+		let require = endup - start
+		let column = starter#layout#fill_column(ctx, a:opts, start, require, minwidth)
+		let column = starter#layout#just_column(column, winheight)
+		let width = 0
+		if len(column) > 0
+			let width = strwidth(column[0])
+		endif
+		let columns += [column]
+		let cowidth += [width]
+	endfor
+	let padding = starter#config#get(a:opts, 'padding')
+	let spacing = starter#config#get(a:opts, 'spacing')
+	let space1 = repeat(' ', padding[0])
+	let space2 = repeat(' ', padding[2])
+	let space3 = repeat(' ', spacing)
+	let content = []
+	let content += repeat([''], padding[1])
+	for y in range(winheight)
+		let parts = repeat([''], ncols)
+		for x in range(ncols)
+			let t = columns[x][y]
+			let parts[x] = t
+		endfor
+		let t = space1 . join(parts, space3)
+		let content += [t]
+	endfor
+	let content += repeat([''], padding[3])
+	let page.content = content
+	return page
+endfunc
+
 
 
