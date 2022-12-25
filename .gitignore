@@ -3,6 +3,7 @@
 .tags
 .cscope
 .tasks
+.root
 .vscode/
 __pycache__/
 tags
