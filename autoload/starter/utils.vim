@@ -143,6 +143,7 @@ function! starter#utils#window_close() abort
 		let s:working_wid = -1
 		if s:previous_wid > 0
 			exec printf('%dwincmd w', s:previous_wid)
+			let s:previous_wid = -1
 		endif
 	endif
 endfunc
@@ -170,6 +171,26 @@ endfunc
 function! starter#utils#window_update(textline) abort
 	if s:bid > 0
 		call starter#utils#update_buffer(s:bid, a:textline)
+	endif
+endfunc
+
+
+"----------------------------------------------------------------------
+" execute in window
+"----------------------------------------------------------------------
+function! starter#utils#window_execute(command) abort
+	if type(a:command) == type([])
+		let command = join(a:command, "\n")
+	elseif type(a:command) == type('')
+		let command = a:command
+	else
+		let command = a:command
+	endif
+	if s:working_wid > 0
+		let wid = winnr()
+		noautocmd exec printf('%dwincmd w', s:working_wid)
+		exec command
+		noautocmd exec printf('%dwincmd w', wid)
 	endif
 endfunc
 

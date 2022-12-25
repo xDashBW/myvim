@@ -54,7 +54,7 @@ if has_key(s:enabled, 'simple')
 	Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
 	Plug 'bootleq/vim-cycle'
 	Plug 'tpope/vim-surround'
-	Plug 'romainl/vim-cool'
+	" Plug 'romainl/vim-cool'
 
 	nnoremap gb= :Tabularize /=<CR>
 	vnoremap gb= :Tabularize /=<CR>
