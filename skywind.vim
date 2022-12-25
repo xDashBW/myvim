@@ -109,7 +109,7 @@ endif
 if has('win32') || has('win16') || has('win64') || has('win95')
 	let $VIM_ONEDRIVE = $HOME . '/OneDrive/Documents/notes/Vim'
 	noremap <silent><space>hw :FileSwitch e:\github\workshop\README.md<cr>
-	noremap <silent><space>hq :FileSwitch $VIM_ONEDRIVE/quicknote.txt<cr>
+	noremap <silent><space>hq :FileSwitch $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hm :FileSwitch -ft=markdown $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hp :FileSwitch $VIM_ONEDRIVE/personal.gpg<cr>
 	if filereadable('c:/drivers/clink/clink.cmd')
@@ -118,7 +118,7 @@ if has('win32') || has('win16') || has('win64') || has('win95')
 elseif isdirectory('/mnt/c/Users/Linwei/OneDrive/Documents/notes/Vim') 
 	let $VIM_ONEDRIVE = '/mnt/c/Users/Linwei/OneDrive/Documents/notes/Vim'
 	noremap <silent><space>hw :FileSwitch ~/github/workshop/README.md<cr>
-	noremap <silent><space>hq :FileSwitch $VIM_ONEDRIVE/quicknote.txt<cr>
+	noremap <silent><space>hq :FileSwitch $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hm :FileSwitch -ft=markdown $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hp :FileSwitch $VIM_ONEDRIVE/personal.gpg<cr>
 endif
