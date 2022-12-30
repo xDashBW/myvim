@@ -99,6 +99,7 @@ if has_key(s:enabled, 'basic')
 	Plug 'tbastos/vim-lua', { 'for': 'lua' }
 	Plug 'vim-python/python-syntax', { 'for': ['python'] }
 	Plug 'pboettch/vim-cmake-syntax', { 'for': ['cmake'] }
+	Plug 'skywind3000/vim-flex-bison-syntax', { 'for': ['yacc', 'lex'] }
 	Plug 'beyondmarc/hlsl.vim'
 	Plug 'peterhoeg/vim-qml'
 	Plug 'tpope/vim-eunuch'
