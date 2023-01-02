@@ -3241,7 +3241,7 @@ def main(argv = None):
         inipath = os.path.abspath(inipath)
 
     if len(argv) <= 1:
-        version = '(emake 3.6.9 Dec.21 2017 %s)'%sys.platform
+        version = '(emake 3.6.10 Jan.2 2023 %s)'%sys.platform
         print('usage: "emake.py [option] srcfile" %s'%version)
         print('options  :  -b | -build      build project')
         print('            -c | -compile    compile project')
