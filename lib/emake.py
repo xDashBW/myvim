@@ -2084,7 +2084,7 @@ class iparser (object):
         self.out = ''
         self.int = ''
         self.makefile = ''
-        self.errors = []
+        self.pending_check = []
         self.incdict = {}
         self.libdict = {}
         self.srcdict = {}
@@ -2360,11 +2360,13 @@ class iparser (object):
     
     # 编译前检测错误：比如文件不存在
     def check_error (self):
-        if not self.errors:
-            return 0
-        for error, fname, lineno in self.errors:
-            self.error(error, fname, lineno)
-        return 1
+        hr = 0
+        for srcname, mainfile, lineno in self.pending_check:
+            if not os.path.exists(srcname):
+                self.error('error: %s: No such file'%srcname,
+                        mainfile, lineno)
+                hr = 1
+        return hr
 
     # 处理源文件
     def _process_src (self, textline, fname = '', lineno = -1):
@@ -2392,10 +2394,7 @@ class iparser (object):
                 names = glob.glob(srcname)
             for srcname in names:
                 absname = os.path.abspath(srcname)
-                if not os.path.exists(absname):
-                    self.errors.append(('error: %s: No such file'%srcname,
-                        fname, lineno))
-                    continue
+                self.pending_check.append((srcname, fname, lineno))
                 extname = os.path.splitext(absname)[1].lower()
                 if (extname not in ext1) and (extname not in ext2):
                     self.error('error: %s: Unknow file type'%absname, 
@@ -2923,7 +2922,7 @@ class emake (object):
         #print('replace', self.config.replace)
         return 0
 
-    def check_error (self):
+    def _check_error (self):
         if not self.loaded:
             return 1
         if self.error_checked is None:
@@ -2933,7 +2932,7 @@ class emake (object):
         return 0
     
     def compile (self, printmode = 0):
-        if self.check_error() != 0:
+        if not self.loaded:
             return 1
         dirty = 0
         for src in self.parser:
@@ -2945,6 +2944,9 @@ class emake (object):
         if dirty:
             self.coremake.remove(self.parser.out)
             self.coremake.event(self.parser.events.get('prebuild', []))
+            sys.stdout.flush()
+        if self._check_error() != 0:
+            return 2
         cpus = self.config.cpus
         if self.cpus >= 0:
             cpus = self.cpus
@@ -2954,8 +2956,10 @@ class emake (object):
         return 0
     
     def link (self, printmode = 0):
-        if self.check_error() != 0:
+        if not self.loaded:
             return 1
+        if self._check_error() != 0:
+            return 2
         update = False
         outname = self.parser.out
         outtime = self.dependence.mtime(outname)
@@ -2975,14 +2979,14 @@ class emake (object):
         return 3
     
     def build (self, printmode = 0):
-        if self.check_error() != 0:
+        if not self.loaded:
             return 1
         retval = self.compile(printmode)
         if retval != 0:
-            return 2
+            return 3
         retval = self.link(printmode)
         if retval != 0:
-            return 3
+            return 4
         return 0
     
     def clean (self):
