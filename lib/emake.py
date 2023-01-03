@@ -2084,6 +2084,7 @@ class iparser (object):
         self.out = ''
         self.int = ''
         self.makefile = ''
+        self.errors = []
         self.incdict = {}
         self.libdict = {}
         self.srcdict = {}
@@ -2357,17 +2358,25 @@ class iparser (object):
         sys.stderr.flush()
         return 0
     
+    # 编译前检测错误：比如文件不存在
+    def check_error (self):
+        if not self.errors:
+            return 0
+        for error, fname, lineno in self.errors:
+            self.error(error, fname, lineno)
+        return 1
+
     # 处理源文件
     def _process_src (self, textline, fname = '', lineno = -1):
         ext1 = ('.c', '.cpp', '.cc', '.cxx', '.asm')
         ext2 = ('.s', '.o', '.obj', '.m', '.mm')
         pos = textline.find(':')
         body, options = textline, ''
-        pos = textline.find(':')
+        pos = textline.rfind(':')
         if pos >= 0:
             split = (sys.platform[:3] != 'win') and True or False
             if sys.platform[:3] == 'win':
-                if not textline[pos:pos + 2] in (':/', ':\\'):
+                if textline[pos:pos + 2] not in (':/', ':\\'):
                     split = True
             if split:
                 body = textline[:pos].strip('\r\n\t ')
@@ -2384,9 +2393,9 @@ class iparser (object):
             for srcname in names:
                 absname = os.path.abspath(srcname)
                 if not os.path.exists(absname):
-                    self.error('error: %s: No such file'%srcname, 
-                        fname, lineno)
-                    return -1
+                    self.errors.append(('error: %s: No such file'%srcname,
+                        fname, lineno))
+                    continue
                 extname = os.path.splitext(absname)[1].lower()
                 if (extname not in ext1) and (extname not in ext2):
                     self.error('error: %s: Unknow file type'%absname, 
@@ -2915,6 +2924,8 @@ class emake (object):
     def compile (self, printmode = 0):
         if not self.loaded:
             return 1
+        if self.parser.check_error() != 0:
+            return 2
         dirty = 0
         for src in self.parser:
             if src in self.dependence._dirty:
@@ -2930,12 +2941,14 @@ class emake (object):
             cpus = self.cpus
         retval = self.coremake.compile(True, printmode, cpus)
         if retval != 0:
-            return 2
+            return 3
         return 0
     
     def link (self, printmode = 0):
         if not self.loaded:
             return 1
+        if self.parser.check_error() != 0:
+            return 2
         update = False
         outname = self.parser.out
         outtime = self.dependence.mtime(outname)
@@ -2956,6 +2969,8 @@ class emake (object):
     
     def build (self, printmode = 0):
         if not self.loaded:
+            return 1
+        if self.parser.check_error() != 0:
             return 1
         retval = self.compile(printmode)
         if retval != 0:
