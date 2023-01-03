@@ -2841,12 +2841,14 @@ class emake (object):
         self.unix = self.coremake.unix
         self.cpus = -1
         self.loaded = 0
+        self.error_checked = None
     
     def reset (self):
         self.parser.reset()
         self.coremake.reset()
         self.dependence.reset()
         self.loaded = 0
+        self.error_checked = None
     
     def open (self, makefile):
         self.reset()
@@ -2920,12 +2922,19 @@ class emake (object):
         self.config.parameters()
         #print('replace', self.config.replace)
         return 0
-    
-    def compile (self, printmode = 0):
+
+    def check_error (self):
         if not self.loaded:
             return 1
-        if self.parser.check_error() != 0:
+        if self.error_checked is None:
+            self.error_checked = self.parser.check_error()
+        if self.error_checked != 0:
             return 2
+        return 0
+    
+    def compile (self, printmode = 0):
+        if self.check_error() != 0:
+            return 1
         dirty = 0
         for src in self.parser:
             if src in self.dependence._dirty:
@@ -2945,10 +2954,8 @@ class emake (object):
         return 0
     
     def link (self, printmode = 0):
-        if not self.loaded:
+        if self.check_error() != 0:
             return 1
-        if self.parser.check_error() != 0:
-            return 2
         update = False
         outname = self.parser.out
         outtime = self.dependence.mtime(outname)
@@ -2968,9 +2975,7 @@ class emake (object):
         return 3
     
     def build (self, printmode = 0):
-        if not self.loaded:
-            return 1
-        if self.parser.check_error() != 0:
+        if self.check_error() != 0:
             return 1
         retval = self.compile(printmode)
         if retval != 0:
