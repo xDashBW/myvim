@@ -1692,13 +1692,13 @@ class coremake(object):
             else:
                 name = os.path.abspath(part[0] + '.o')
             return name
-        if not ext in ('.o', '.obj'):
+        if ext not in ('.o', '.obj'):
             raise Exception('unknow ext-type of %s\n'%srcname)
         return srcname
     
     # 取得输出文件的文件名
     def outname (self, output, mode = 'exe'):
-        if not mode in ('exe', 'win', 'dll', 'lib'):
+        if mode not in ('exe', 'win', 'dll', 'lib'):
             raise Exception("mode must in ('exe', 'win', 'dll', 'lib')")
         part = os.path.splitext(os.path.abspath(output))
         output = part[0]
