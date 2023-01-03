@@ -362,6 +362,7 @@ def execute(args, shell = False, capture = False):
     import sys, os
     parameters = []
     cmd = None
+    os.shell_return = -1
     if not isinstance(args, list):
         import shlex
         cmd = args
@@ -393,12 +394,12 @@ def execute(args, shell = False, capture = False):
     if sys.platform[:3] == 'win' and len(cmd) > 255:
         shell = False
     if shell and (not capture):
-        os.system(cmd)
+        os.shell_return = os.system(cmd)
         return b''
     elif (not shell) and (not capture):
         import subprocess
         if 'call' in subprocess.__dict__:
-            subprocess.call(args)
+            os.shell_return = subprocess.call(args)
             return b''
     import subprocess
     if 'Popen' in subprocess.__dict__:
@@ -413,6 +414,9 @@ def execute(args, shell = False, capture = False):
     text = stdouterr.read()
     stdouterr.close()
     if p: p.wait()
+    os.shell_return = -1
+    if 'returncode' in p.__dict__:
+        os.shell_return = p.returncode
     if not capture:
         sys.stdout.write(text)
         sys.stdout.flush()
@@ -1256,13 +1260,9 @@ class configure(object):
         # printcmd = True
         return self.execute(self.exename['gcc'], parameters, printcmd, capture)
 
-    # 编译
-    def compile (self, srcname, objname, cflags, printcmd = False, capture = False):
-        if CFG['abspath']:
-            srcname = self.pathtext(os.path.abspath(srcname))
-        else:
-            srcname = self.pathrel(srcname)
-        cmd = '-c %s -o %s %s'%(srcname, self.pathrel(objname), cflags)
+    # 根据扩展名取得额外的编译参数
+    def cond_flags (self, srcname):
+        extname = os.path.splitext(srcname)[-1].lower()
         extname = os.path.splitext(srcname)[-1].lower()
         cond = []
         if extname in ('.c', '.h'):
@@ -1275,9 +1275,31 @@ class configure(object):
             cond = self.condition({'mflag':1})
         elif extname in ('.mm',):
             cond = self.condition({'mmflag':1})
+        return cond
+
+    # 编译
+    def compile (self, srcname, objname, cflags, printcmd = False, capture = False):
+        if CFG['abspath']:
+            srcname = self.pathtext(os.path.abspath(srcname))
+        else:
+            srcname = self.pathrel(srcname)
+        cmd = '-c %s -o %s %s'%(srcname, self.pathrel(objname), cflags)
+        cond = self.cond_flags(srcname)
         if cond:
             cmd = cmd + ' ' + (' '.join(cond))
         return self.gcc(cmd, False, printcmd, capture)
+
+    # 取得编译参数
+    def mm (self, srcname, cflags):
+        if CFG['abspath']:
+            srcname = self.pathtext(os.path.abspath(srcname))
+        else:
+            srcname = self.pathrel(srcname)
+        cmd = '-MM %s %s'%(srcname, cflags)
+        hr = self.gcc(cmd, False, False, True)
+        if os.shell_return != 0:
+            return None
+        return hr
     
     # 使用 dllwrap
     def dllwrap (self, parameters, printcmd = False, capture = False):
@@ -2124,7 +2146,7 @@ class iparser (object):
         if realname in self.chkdict:
             return -1
         self.srcdict[filename] = ''
-        self.chkdict[realname] = ''
+        self.chkdict[realname] = filename
         self.optdict[filename] = options
         self.src.append(filename)
         return 0
@@ -2361,8 +2383,8 @@ class iparser (object):
     # 编译前检测错误：比如文件不存在
     def check_error (self):
         hr = 0
-        for srcname, mainfile, lineno in self.pending_check:
-            if not os.path.exists(srcname):
+        for absname, srcname, mainfile, lineno in self.pending_check:
+            if not os.path.exists(absname):
                 self.error('error: %s: No such file'%srcname,
                         mainfile, lineno)
                 hr = 1
@@ -2394,7 +2416,7 @@ class iparser (object):
                 names = glob.glob(srcname)
             for srcname in names:
                 absname = os.path.abspath(srcname)
-                self.pending_check.append((srcname, fname, lineno))
+                self.pending_check.append((absname, srcname, fname, lineno))
                 extname = os.path.splitext(absname)[1].lower()
                 if (extname not in ext1) and (extname not in ext2):
                     self.error('error: %s: Unknow file type'%absname, 
@@ -2638,7 +2660,34 @@ class iparser (object):
             obj = src2obj[fn]
             self.srcdict[fn] = os.path.abspath(obj)
         return 0
-    
+
+    # 取得某文件的编译参数
+    def compile_flag (self, srcname):
+        chkname = os.path.abspath(srcname)
+        chkname = os.path.normcase(chkname)
+        if chkname not in self.chkdict:
+            return None
+        srcname = self.chkdict[chkname]
+        options = self.optdict[srcname]
+        cond = self.config.cond_flags(srcname)
+        hr = self.config.param_compile.strip('\r\n\t ')
+        if options:
+            hr += ' ' + options
+        if cond:
+            hr += ' ' + (' '.join(cond))
+        return hr
+
+    # 使用 gcc -MM 取得编译依赖
+    def mm (self, srcname):
+        chkname = os.path.abspath(srcname)
+        chkname = os.path.normcase(chkname)
+        options = ''
+        if chkname in self.chkdict:
+            srcname = self.chkdict[chkname]
+            options = self.optdict[srcname]
+        hr = self.config.mm(srcname, options)
+        return hr
+
     # 设置终端颜色
     def console (self, color):
         if not os.isatty(sys.stdout.fileno()):
@@ -2704,6 +2753,11 @@ class dependence (object):
         mtime = float('%.6f'%mtime)
         self._mtime[fname] = mtime
         return mtime
+
+    def _scan_include (self, srcname):
+        head, lost, src = self.preprocessor.dependence(srcname)
+        # print(srcname, head)
+        return head
     
     def _scan_src (self, srcname):
         srcname = os.path.abspath(srcname)
@@ -2712,7 +2766,7 @@ class dependence (object):
         if not os.path.exists(srcname):
             return None
         objname = self.parser[srcname]  # noqa: F841
-        head, lost, src = self.preprocessor.dependence(srcname)
+        head = self._scan_include(srcname)
         filelist = [srcname] + head
         dependence = []
         for fn in filelist:
@@ -2747,6 +2801,7 @@ class dependence (object):
                     break
         if update:
             dependence = self._scan_src(srcname)
+            # print(srcname, dependence)
             info = {}
             self._depinfo[srcname] = info
             if not dependence:
@@ -2822,7 +2877,7 @@ class dependence (object):
         self._save_dep()
         for info in self._depinfo:
             dirty = (info in self._dirty) and 1 or 0  # noqa: F841
-            #print(info, '=', dirty)
+            # print(info, '=', dirty)
         return 0
 
 
@@ -2899,7 +2954,6 @@ class emake (object):
             #print('lib', lib)
         for flag in self.parser.flag:
             self.config.push_flag(flag)
-            #print('flag', flag)
         for link in self.parser.link:
             self.config.push_link(link)
             #print('link', link)
