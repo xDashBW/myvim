@@ -24,7 +24,6 @@ import json
 if sys.version_info[0] >= 3:
     long = int
     unicode = str
-    xrange = range
 
 UNIX = (sys.platform[:3] != 'win') and True or False
 
@@ -616,7 +615,7 @@ def http_request(url, timeout = 10, data = None, post = False, head = None):
 # request with retry
 #----------------------------------------------------------------------
 def request_safe(url, timeout = 10, retry = 3, verbose = True, delay = 1):
-    for i in xrange(retry):
+    for i in range(retry):
         if verbose:
             print('%s: %s'%(i == 0 and 'request' or 'retry', url))
         time.sleep(delay)
@@ -1462,24 +1461,24 @@ def tabulify (rows, style = 0):
         return (' ' * pad1) + text + (' ' * pad2)
     if style == 0:
         for y, row in enumerate(rows):
-            line = ''.join([ gettext(y, x) for x in xrange(maxcol) ])
+            line = ''.join([ gettext(y, x) for x in range(maxcol) ])
             output.append(line)
     elif style == 1:
         if rows:
             newrows = rows[:1]
-            head = [ '-' * colsize[i] for i in xrange(maxcol) ]
+            head = [ '-' * colsize[i] for i in range(maxcol) ]
             newrows.append(head)
             newrows.extend(rows[1:])
             rows = newrows
         for y, row in enumerate(rows):
-            line = ''.join([ gettext(y, x) for x in xrange(maxcol) ])
+            line = ''.join([ gettext(y, x) for x in range(maxcol) ])
             output.append(line)
     elif style == 2:
-        sep = '+'.join([ '-' * (colsize[x] + 2) for x in xrange(maxcol) ])
+        sep = '+'.join([ '-' * (colsize[x] + 2) for x in range(maxcol) ])
         sep = '+' + sep + '+'
         for y, row in enumerate(rows):
             output.append(sep)
-            line = '|'.join([ gettext(y, x) for x in xrange(maxcol) ])
+            line = '|'.join([ gettext(y, x) for x in range(maxcol) ])
             output.append('|' + line + '|')
         output.append(sep)
     return '\n'.join(output)
@@ -1704,19 +1703,21 @@ def mlog(*args):
     now = time.strftime('%Y-%m-%d %H:%M:%S')
     part = [ str(n) for n in args ]
     text = u' '.join(part)
-    logfile = sys.modules[__name__].__dict__.get('_mlog_file', None)
-    encoding = sys.modules[__name__].__dict__.get('_mlog_encoding', 'utf-8')
-    stdout = sys.modules[__name__].__dict__.get('_mlog_stdout', True)
+    mm = sys.modules[__name__]
+    logfile = mm.__dict__.get('_mlog_file', None)
+    encoding = mm.__dict__.get('_mlog_encoding', 'utf-8')
+    stdout = mm.__dict__.get('_mlog_stdout', True)
     if logfile is None:
         name = os.path.abspath(sys.argv[0])
         name = os.path.splitext(name)[0] + '.log'
         logfile = codecs.open(name, 'a', encoding = encoding, errors = 'ignore')
-        sys.modules[__name__]._mlog_file = logfile
+        mm._mlog_file = logfile
     content = '[%s] %s'%(now, text)
     if logfile:
         logfile.write(content + '\r\n')
         logfile.flush()
-    sys.stdout.write(content + '\n')
+    if stdout:
+        sys.stdout.write(content + '\n')
     return 0
 
 
