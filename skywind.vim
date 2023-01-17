@@ -108,7 +108,7 @@ endif
 "----------------------------------------------------------------------
 if has('win32') || has('win16') || has('win64') || has('win95')
 	let $VIM_ONEDRIVE = $HOME . '/OneDrive/Documents/notes/Vim'
-	noremap <silent><space>hw :FileSwitch e:\github\workshop\README.md<cr>
+	noremap <silent><space>hw :FileSwitch e:\lab\workshop\README.md<cr>
 	noremap <silent><space>hq :FileSwitch $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hm :FileSwitch -ft=markdown $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hp :FileSwitch $VIM_ONEDRIVE/personal.gpg<cr>
