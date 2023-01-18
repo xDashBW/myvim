@@ -319,7 +319,7 @@ endfunc
 "----------------------------------------------------------------------
 " run in a split
 "----------------------------------------------------------------------
-function! s:script_run_split(name, args, lnum, count, debug) abort
+function! s:run_in_split(name, args, lnum, count, debug) abort
 	if a:count <= 0
 		return 0
 	endif
@@ -330,6 +330,8 @@ function! s:script_run_split(name, args, lnum, count, debug) abort
 		echohl None
 		return 0
 	endif
+	let bid = bufnr('%')
+	let input = getbufline(bid, a:lnum, a:lnum + a:count - 1)
 	if type(scripts[a:name]) == v:t_string
 		let script = scripts[a:name]
 		let runner = s:script_runner(script)
@@ -341,7 +343,6 @@ function! s:script_run_split(name, args, lnum, count, debug) abort
 		endif
 		let line1 = a:lnum
 		let line2 = line1 + a:count - 1
-		let cmd = printf('%s,%s!%s', line1, line2, cmd)
 		let $VIM_ENCODING = &encoding
 		let $VIM_FILEPATH = expand('%:p')
 		let $VIM_FILENAME = expand('%:t')
@@ -351,20 +352,90 @@ function! s:script_run_split(name, args, lnum, count, debug) abort
 		let $VIM_SCRIPTNAME = a:name
 		let $VIM_SCRIPTDIR = fnamemodify(script, ':p:h')
 		let $VIM_FILETYPE = &ft
-		execute cmd
+		let text = system(cmd, input)
+		let output = split(text, '\n', 1)
 	elseif type(scripts[a:name]) == v:t_func
-		let bid = bufnr('%')
-		let text = getbufline(bid, a:lnum, a:lnum + a:count - 1)
-		let hr = call(scripts[a:name], [text])
-		if len(text) < len(hr)
-			call appendbufline(bid, a:lnum, repeat([''], len(hr) - len(text)))
-		elseif len(text) > len(hr)
-			call deletebufline(bid, a:lnum, a:lnum + len(text) - len(hr) - 1)
-		endif
-		call setbufline(bid, a:lnum, hr)
+		let output = call(scripts[a:name], [input])
 	endif
+	let bid = get(t:, '_textproc_buffer', -1)
+	if bid < 0
+		if has('nvim') == 0
+			let bid = bufadd('')
+			call bufload(bid)
+			call setbufvar(bid, '&buflisted', 0)
+			call setbufvar(bid, '&bufhidden', 'hide')
+			call setbufvar(bid, '&buftype', 'nofile')
+			call setbufvar(bid, 'noswapfile', 1)
+		else
+			let bid = nvim_create_buffer(v:false, v:true)
+		endif
+		let t:_textproc_buffer = bid
+	endif
+	call setbufvar(bid, '_textproc_buffer', bid)
+	call setbufvar(bid, '&modifiable', 1)
+	call deletebufline(bid, 1, '$')
+	call setbufline(bid, 1, output)
+	call setbufvar(bid, '&modified', 0)
+	return bid
 endfunc
 
+
+"----------------------------------------------------------------------
+" display buffer in a split 
+"----------------------------------------------------------------------
+function! s:display_buffer(bid)
+	function! s:WindowCheck(mode)
+		if a:mode == 0
+			let w:textproc_save = winsaveview()
+		else
+			if exists('w:textproc_save')
+				call winrestview(w:textproc_save)
+				unlet w:textproc_save
+			endif
+		endif
+	endfunc
+	if a:bid > 0
+		for i in range(winnr('$'))
+			let nr = winbufnr(i + 1)
+			if nr == a:bid
+				return 0
+			endif
+		endfor
+		let open_mode = get(g:, 'textproc_split', '<auto>')
+		if open_mode == '<auto>' || 'auto'
+			let open_mode = (winwidth(0) >= 160)? 'vert' : ''
+		endif
+		let l:winnr = winnr()
+		let savebid = bufnr('')
+		keepalt noautocmd windo call s:WindowCheck(0)
+		keepalt noautocmd silent! exec ''.l:winnr.'wincmd w'
+		exec open_mode . ' ' . 'split'
+		exec 'b ' . a:bid
+		keepalt noautocmd exec 'wincmd p'
+		let l:winnr = winnr()
+		keepalt noautocmd windo call s:WindowCheck(1)
+		keepalt noautocmd silent! exec ''.l:winnr.'wincmd w'
+	else
+		let bid = -(a:bid)
+		if bid == 0
+			return 0
+		endif
+		for i in range(winnr('$'))
+			let nr = winbufnr(i + 1)
+			if nr == bid
+				let avail = i + 1
+				let l:winnr = winnr()
+				let savebid = bufnr('')
+				keepalt noautocmd windo call s:WindowCheck(0)
+				keepalt noautocmd silent! exec ''.l:winnr.'wincmd w'
+				keepalt noautocmd exec ''.avail.'close'
+				keepalt noautocmd windo call s:WindowCheck(1)
+				break
+			endif
+		endfor
+	endif
+	return 0
+endfunc
 
 " hello world
 
@@ -378,20 +449,34 @@ function! s:TextProcess(bang, args, line1, line2, count) abort
 	if cmdline =~# '^\w\+'
 		let name = matchstr(cmdline, '^\w\+')
 		let args = substitute(cmdline, '^\w\+\s*', '', '')
+	elseif cmdline == '-close'
+		let bid = get(t:, '_textproc_buffer', 0)
+		call s:display_buffer(-bid)
+		return 0
 	endif
 	if a:count == 0
-		echohl WarningMsg
-		" echo 'Warning: no range specified !'
-		echohl None
+		if a:bang == ''
+			echohl WarningMsg
+			" echo 'Warning: no range specified !'
+			echohl None
+		endif
 		return 0
 	endif
 	if name == ''
-		echohl ErrorMsg
-		echo 'ERROR: script name required'
-		echohl None
+		if a:bang == ''
+			echohl ErrorMsg
+			echo 'ERROR: script name required'
+			echohl None
+		endif
+		return 0
 	endif
 	let cc = a:line2 - a:line1 + 1
-	call s:script_run(name, args, a:line1, cc, 0)
+	if a:bang == ''
+		call s:script_run(name, args, a:line1, cc, 0)
+	else
+		let bid = s:run_in_split(name, args, a:line1, cc, 0)
+		call s:display_buffer(bid)
+	endif
 	return 0
 endfunc
 
