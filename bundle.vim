@@ -531,9 +531,9 @@ endif
 " packages end
 "----------------------------------------------------------------------
 if exists('g:bundle_post')
-	if type(g:bundle_post) == v:t_string
+	if type(g:bundle_post) == type('')
 		exec g:bundle_post
-	elseif type(g:bundle_post) == v:t_list
+	elseif type(g:bundle_post) == type([])
 		exec join(g:bundle_post, "\n")
 	endif
 endif

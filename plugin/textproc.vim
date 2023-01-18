@@ -315,6 +315,57 @@ function! s:script_run(name, args, lnum, count, debug) abort
 	return 0
 endfunc
 
+
+"----------------------------------------------------------------------
+" run in a split
+"----------------------------------------------------------------------
+function! s:script_run_split(name, args, lnum, count, debug) abort
+	if a:count <= 0
+		return 0
+	endif
+	let scripts = s:script_list()
+	if has_key(scripts, a:name) == 0
+		echohl ErrorMsg
+		echo 'ERROR: runner not find: ' . a:name
+		echohl None
+		return 0
+	endif
+	if type(scripts[a:name]) == v:t_string
+		let script = scripts[a:name]
+		let runner = s:script_runner(script)
+		let runner = (runner != '')? (runner . ' ') : ''
+		let runner = (runner != '' || s:windows == 0)? runner : 'call '
+		let cmd = runner . shellescape(script)
+		if a:args != ''
+			let cmd = cmd . ' ' . (a:args)
+		endif
+		let line1 = a:lnum
+		let line2 = line1 + a:count - 1
+		let cmd = printf('%s,%s!%s', line1, line2, cmd)
+		let $VIM_ENCODING = &encoding
+		let $VIM_FILEPATH = expand('%:p')
+		let $VIM_FILENAME = expand('%:t')
+		let $VIM_FILEDIR = expand('%:p:h')
+		let $VIM_CWD = getcwd()
+		let $VIM_SCRIPT = script
+		let $VIM_SCRIPTNAME = a:name
+		let $VIM_SCRIPTDIR = fnamemodify(script, ':p:h')
+		let $VIM_FILETYPE = &ft
+		execute cmd
+	elseif type(scripts[a:name]) == v:t_func
+		let bid = bufnr('%')
+		let text = getbufline(bid, a:lnum, a:lnum + a:count - 1)
+		let hr = call(scripts[a:name], [text])
+		if len(text) < len(hr)
+			call appendbufline(bid, a:lnum, repeat([''], len(hr) - len(text)))
+		elseif len(text) > len(hr)
+			call deletebufline(bid, a:lnum, a:lnum + len(text) - len(hr) - 1)
+		endif
+		call setbufline(bid, a:lnum, hr)
+	endif
+endfunc
+
+
 " hello world
 
 "----------------------------------------------------------------------
