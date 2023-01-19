@@ -221,7 +221,7 @@ nnoremap <silent><space><space> :call quickui#menu#open()<cr>
 nnoremap <silent>K :QuickUI context<cr>
 
 if has('gui_running') || has('nvim')
-	noremap <c-f10> :TaskFinder<cr>
+	" noremap <c-f10> :TaskFinder<cr>
 endif
 
 
