@@ -299,6 +299,18 @@ if has_key(s:enabled, 'lsp')
 	IncScript site/bundle/lsp.vim
 endif
 
+" vimspector
+if has_key(s:enabled, 'vimspector')
+	Plug 'puremourning/vimspector'
+	IncScript site/bundle/vimspector.vim
+endif
+
+" NeoDebug
+if has_key(s:enabled, 'neodebug')
+	Plug 'skywind3000/NeoDebug'
+	IncScript site/bundle/neodebug.vim
+endif
+
 " deoplete
 if has_key(s:enabled, 'deoplete')
 	if has('nvim')
