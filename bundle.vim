@@ -378,7 +378,7 @@ if has_key(s:enabled, 'vim-doge')
 endif
 
 if has_key(s:enabled, 'nerdtree')
-	Plug 'scrooloose/nerdtree', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind'] }
+	Plug 'preservim/nerdtree', {'on': ['NERDTree', 'NERDTreeFocus', 'NERDTreeToggle', 'NERDTreeCWD', 'NERDTreeFind'] }
 	Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 	IncScript site/bundle/nerdtree.vim
 endif
