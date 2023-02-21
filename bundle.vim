@@ -104,10 +104,12 @@ if has_key(s:enabled, 'basic')
 	Plug 'dylon/vim-antlr'
 	Plug 'beyondmarc/hlsl.vim'
 	Plug 'peterhoeg/vim-qml'
+	Plug 'neovimhaskell/haskell-vim'
+	Plug 'preservim/vim-markdown'
+
 	Plug 'tpope/vim-eunuch'
 	Plug 'dag/vim-fish'
 	Plug 'jamessan/vim-gnupg'
-	Plug 'preservim/vim-markdown'
 
 	Plug 'kana/vim-textobj-user'
 	" Plug 'kana/vim-textobj-indent'

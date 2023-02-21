@@ -100,43 +100,27 @@ endfunc
 
 " get a single tab label
 function! Vim_NeatTabLabel(n)
-	let l:buflist = tabpagebuflist(a:n)
-	let l:winnr = tabpagewinnr(a:n)
-	let l:bufnr = l:buflist[l:winnr - 1]
-	let l:fname = Vim_NeatBuffer(l:bufnr, 0)
-	let l:buftype = getbufvar(l:bufnr, '&buftype')
+	let l:caption = gettabvar(a:n, '__caption', '')
 	let l:num = a:n
+	let l:modified = 0
+	if l:caption == ''
+		let l:winnr = tabpagewinnr(a:n)
+		let l:buflist = tabpagebuflist(a:n)
+		let l:bufnr = l:buflist[l:winnr - 1]
+		let l:caption = Vim_NeatBuffer(l:bufnr, 0)
+		let l:modified = getbufvar(l:bufnr, '&modified', 0)
+	endif
 	if g:config_vim_tab_style == 0
-		return l:fname
+		return l:caption
 	elseif g:config_vim_tab_style == 1
-		return "[".l:num."] ".l:fname
+		return "[".l:num."] ".l:caption
 	elseif g:config_vim_tab_style == 2
-		return "".l:num." - ".l:fname
+		return "".l:num." - ".l:caption
 	endif
-	if getbufvar(l:bufnr, '&modified')
-		return "[".l:num."] ".l:fname." +"
+	if l:modified
+		return "[".l:num."] ".l:caption." +"
 	endif
-	return "[".l:num."] ".l:fname
-endfunc
-
-" get a single tab label in gui
-function! Vim_NeatGuiTabLabel()
-	let l:num = v:lnum
-	let l:buflist = tabpagebuflist(l:num)
-	let l:winnr = tabpagewinnr(l:num)
-	let l:bufnr = l:buflist[l:winnr - 1]
-	let l:fname = Vim_NeatBuffer(l:bufnr, 0)
-	if g:config_vim_tab_style == 0
-		return l:fname
-	elseif g:config_vim_tab_style == 1
-		return "[".l:num."] ".l:fname
-	elseif g:config_vim_tab_style == 2
-		return "".l:num." - ".l:fname
-	endif
-	if getbufvar(l:bufnr, '&modified')
-		return "[".l:num."] ".l:fname." +"
-	endif
-	return "[".l:num."] ".l:fname
+	return "[".l:num."] ".l:caption
 endfunc
 
 " get a label tips
@@ -164,7 +148,7 @@ endfunc
 
 " setup new tabline, just %M%t in macvim
 set tabline=%!Vim_NeatTabLine()
-set guitablabel=%{Vim_NeatGuiTabLabel()}
+set guitablabel=%{Vim_NeatTabLabel(v:lnum)}
 set guitabtooltip=%{Vim_NeatGuiTabTip()}
 
 
