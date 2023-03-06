@@ -18,6 +18,7 @@ cp $SCRIPTPATH/*.conf "$HOME/.local/etc/"
 cp $SCRIPTPATH/*.fish "$HOME/.config/fish/"
 cp $SCRIPTPATH/*.zsh "$HOME/.local/etc/"
 cp $SCRIPTPATH/*.lua "$HOME/.local/etc/"
+cp $SCRIPTPATH/*.py "$HOME/.local/etc/"
 cp $SCRIPTPATH/inputrc "$HOME/.local/etc"
 
 cp $SCRIPTPATH/../tools/bin/* "$HOME/.local/bin"
