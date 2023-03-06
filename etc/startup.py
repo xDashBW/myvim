@@ -6,6 +6,7 @@ if sys.version_info[0] >= 3:
         if 'abc' in collections.__dict__:
             if 'Callable' in collections.abc.__dict__:
                 collections.Callable = collections.abc.Callable
+    del collections
 
 import rlcompleter
 try:
