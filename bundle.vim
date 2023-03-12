@@ -49,7 +49,6 @@ if has_key(s:enabled, 'simple')
 	Plug 'justinmk/vim-dirvish'
 	Plug 'justinmk/vim-sneak'
 	Plug 'tpope/vim-fugitive'
-	Plug 'rbong/vim-flog'
 	Plug 'tpope/vim-unimpaired'
 	Plug 'godlygeek/tabular', { 'on': 'Tabularize' }
 	Plug 'bootleq/vim-cycle'
@@ -175,6 +174,9 @@ if has_key(s:enabled, 'inter')
 	Plug 'mattn/gist-vim'
 	Plug 'hrj/vim-DrawIt'
 	Plug 'lambdalisue/vim-gista', { 'on': 'Gista' }
+	if has('patch-8.2.1') || has('nvim')
+		Plug 'rbong/vim-flog'
+	endif
 
 	if 1
 		Plug 'inkarkat/vim-ingo-library'
