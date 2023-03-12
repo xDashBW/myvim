@@ -37,6 +37,10 @@ if get(g:, 'quickui_color_pmenu', 0) == 0
 		" tune completion popup menu
 		hi! Pmenu guibg=gray guifg=black ctermbg=gray ctermfg=black
 		hi! PmenuSel guibg=gray guifg=brown ctermbg=brown ctermfg=gray
+		hi! PmenuExtra guibg=gray guifg=#707070 ctermbg=gray ctermfg=238
+		hi! PmenuExtraSel guibg=gray guifg=#b54a4a ctermbg=brown ctermfg=gray
+		hi! PmenuKind guibg=gray guifg=darkgreen ctermbg=22 ctermfg=black
+		hi! PmenuKindSel guibg=gray guifg=brown ctermbg=brown ctermfg=gray
 	endif
 endif
 
