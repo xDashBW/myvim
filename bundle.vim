@@ -492,6 +492,10 @@ if has_key(s:enabled, 'colors')
 	IncScript site/bundle/colors.vim
 endif
 
+if has_key(s:enabled, 'localvimrc')
+	Plug 'embear/vim-localvimrc'
+endif
+
 if has_key(s:enabled, 'games')
 	Plug 'iqxd/vim-mine-sweeping'
 	Plug 'vim-scripts/Mines'
