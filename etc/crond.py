@@ -591,8 +591,8 @@ if __name__ == '__main__':
         #args = ['crontab', '--help']
         main(args)
         return 0
-    test3()
-    # sys.exit(main())
+    # test3()
+    sys.exit(main())
 
 
 
