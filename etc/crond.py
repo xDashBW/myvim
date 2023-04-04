@@ -3,9 +3,9 @@
 #======================================================================
 #
 # crontab.py - yet another crond implementation in python
-# author: skywind3000 (at) gmail.com
+# author: skywind3000 (at) gmail.com, 2016-2023
 # 
-# Last Modified: 2023/04/04 15:00
+# Last Modified: 2023/04/04 15:06
 #
 # If you find yourself in a situation where you require a standalone
 # crontab scheduler, there are a few reasons why this may be 
@@ -439,7 +439,7 @@ def errmsg(text):
 # testing case
 #----------------------------------------------------------------------
 def main(args = None):
-    if args == None:
+    if args is None:
         args = [ n for n in sys.argv ]
     import optparse
     p = optparse.OptionParser('usage: %prog [options] to start cron')
@@ -472,7 +472,7 @@ def main(args = None):
 
     # read content
     task = cron.read(text)
-    if type(task) != type([]):
+    if not isinstance(task, list):
         errmsg('%s:%d: error: syntax error'%(filename, task))
         return 1
 
@@ -487,7 +487,7 @@ def main(args = None):
     if options.daemon:
         if sys.platform[:3] == 'win':
             errmsg('daemon mode does support in windows')
-        elif not 'fork' in os.__dict__:
+        elif 'fork' not in os.__dict__:
             errmsg('can not fork myself')
         else:
             daemon()
@@ -526,7 +526,7 @@ def main(args = None):
     # main loop
     while not closing:
         ts = long(time.time())
-        now = time.localtime(ts)[:5]
+        now = time.localtime(ts)[:5]   # noqa
         run = cron.interval(task, ts, env = environ)
         if run:
             for node in run:
@@ -543,10 +543,10 @@ def main(args = None):
                     content = load_file_text(filename)
                 except:
                     mlog('error open: ' + filename)
-                    content =None
-                if content != None:
+                    content = None
+                if content is not None:
                     newtask = cron.read(content)
-                    if type(newtask) != type([]):
+                    if not isinstance(newtask, list):
                         mlog('%s:%d: syntax error'%(filename, newtask))
                     else:
                         task = newtask
