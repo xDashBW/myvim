@@ -50,3 +50,4 @@ tags
 /site/escript/test_*
 
 /abc.py
+/etc/crontab.*
