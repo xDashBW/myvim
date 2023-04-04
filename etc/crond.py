@@ -1,12 +1,12 @@
 #! /usr/bin/env python2
 # -*- coding: utf-8 -*-
 #======================================================================
-# 
+#
 # crontab.py - yet another crond implementation in python
 #
 # Maybe some time, you want a independent crond scheduler
 # when you don't want to disturb system builtin crontab (eg, some nas
-# /embed linux won't let you do it), or maybe, you just want a crontab 
+# /embed linux won't let you do it), or maybe, you just want a crontab
 # on Windows.
 #
 #======================================================================
@@ -44,7 +44,7 @@ class crontab (object):
             self.monnames[MONNAMES[x]] = x + 1
         self.timestamp = 0
         self.lastmin = -1
-    
+
     # check_atom('0-10/2', (0, 59), 4) -> True
     # check_atom('0-10/2', (0, 59), 5) -> False
     def check_atom (self, text, minmax, value):
@@ -123,7 +123,7 @@ class crontab (object):
             if hr:
                 return True
         return False
-    
+
     # 切割 crontab配置
     def split (self, text):
         text = text.strip('\r\n\t ')
@@ -153,7 +153,7 @@ class crontab (object):
         if len(data) == need:
             data.append('')
         return tuple(data[:need + 1])
-    
+
     # 传入如(2013, 10, 21, 16, 35)的时间，检查 crontab是否该运行
     def check (self, text, datetuple, runtimes = 0):
         data = self.split(text)
@@ -209,7 +209,7 @@ class crontab (object):
         hr = self.check_token(data[4], (0, 6), weekday)
         if not hr: return hr
         return True
-    
+
     # 调用 crontab程序
     def call (self, command):
         import subprocess
@@ -283,7 +283,7 @@ class crontab (object):
         for line in content.split('\n'):
             line = line.strip('\r\n\t ')
             ln += 1
-            if line[:1] in ('#', ';', ''): 
+            if line[:1] in ('#', ';', ''):
                 continue
             hr = self.split(line)
             if hr == None:
@@ -431,7 +431,7 @@ def main(args = None):
     p.add_option('-l', '--log', dest = 'log', metavar='LOG', help = 'log file')
     p.add_option('-c', '--cwd', dest = 'dir', help = 'working dir')
     p.add_option('-d', '--daemon', action = 'store_true', dest = 'daemon', help = 'run as daemon')
-    options, args = p.parse_args(args) 
+    options, args = p.parse_args(args)
     if not options.filename:
         errmsg('No config file name. Try --help for more information.')
         return 2
@@ -445,11 +445,11 @@ def main(args = None):
     filetime = 0
     try:
         filetime = os.stat(filename).st_mtime
-        text = open(filename, 'rb').read()
+        text = load_file_text(filename)
     except:
         errmsg('cannot read %s'%filename)
         return 5
-    
+
     # crontab initialize
     cron = crontab()
 
@@ -489,9 +489,9 @@ def main(args = None):
     environ = {}
     for n in os.environ:
         environ[n] = os.environ[n]
-    
+
     mlog('crontab start with %d task(s)'%len(task))
-    
+
     if options.dir:
         if os.path.exists(options.dir):
             try:
@@ -523,7 +523,7 @@ def main(args = None):
             if newts > 0 and newts > filetime:
                 content = None
                 try:
-                    content = open(filename).read()
+                    content = load_file_text(filename)
                 except:
                     mlog('error open: ' + filename)
                     content =None
@@ -555,7 +555,7 @@ if __name__ == '__main__':
         return 0
     def test2():
         cron = crontab()
-        task = cron.read(open('crontab.cfg').read())
+        task = cron.read(load_file_text('crontab.cfg'))
         ts = time.time()
         for n in cron.event(task, ev = 0):
             print('reboot', n[0])
