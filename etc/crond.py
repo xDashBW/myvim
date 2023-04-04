@@ -3,11 +3,27 @@
 #======================================================================
 #
 # crontab.py - yet another crond implementation in python
+# author: skywind3000 (at) gmail.com
+# 
+# Last Modified: 2023/04/04 15:00
 #
-# Maybe some time, you want a independent crond scheduler
-# when you don't want to disturb system builtin crontab (eg, some nas
-# /embed linux won't let you do it), or maybe, you just want a crontab
-# on Windows.
+# If you find yourself in a situation where you require a standalone
+# crontab scheduler, there are a few reasons why this may be 
+# necessary. For example, some embedded Linux systems may not allow 
+# you to modify the system's built-in crontab, or you may simply 
+# prefer to have a separate crontab on a Windows system. In either
+# case, a standalone crontab scheduler can provide a reliable and 
+# efficient solution.
+#
+# To define the time you can provide concrete values for 
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').
+#
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+#
+# For more information see the manual pages of crontab(5) and cron(8)
 #
 #======================================================================
 from __future__ import print_function, unicode_literals
@@ -118,7 +134,7 @@ class crontab (object):
             for x, y in self.monnames.iteritems():
                 text = text.replace(x, str(y))
             hr = self.check_atom(text, minmax, value)
-            if hr == None:
+            if hr is None:
                 return None
             if hr:
                 return True
@@ -154,7 +170,8 @@ class crontab (object):
             data.append('')
         return tuple(data[:need + 1])
 
-    # 传入如(2013, 10, 21, 16, 35)的时间，检查 crontab是否该运行
+    # input a datetime tuple like (2013, 10, 21, 16, 35)
+    # returns True if the text match the given date-time.
     def check (self, text, datetuple, runtimes = 0):
         data = self.split(text)
         if not data:
@@ -179,12 +196,12 @@ class crontab (object):
                 data = self.split('0 * * * * ' + data[1])
             else:
                 return None
-            if data == None:
+            if data is None:
                 return None
         if len(data) != 6 or len(datetuple) != 5:
             return None
         year, month, day, hour, mins = datetuple
-        if type(month) == type(''):
+        if isinstance(month, str):
             month = month.lower()
             for x, y in self.monnames.iteritems():
                 month = month.replace(x, str(y))
@@ -286,7 +303,7 @@ class crontab (object):
             if line[:1] in ('#', ';', ''):
                 continue
             hr = self.split(line)
-            if hr == None:
+            if hr is None:
                 return ln
             obj = {}
             obj['cron'] = line
