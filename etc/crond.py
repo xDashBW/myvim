@@ -531,7 +531,7 @@ def main(args = None):
         run = cron.interval(task, ts, env = environ)
         if run:
             for node in run:
-                mlog('schedule: ' + node[1])
+                mlog('exec: ' + node[1])
         if loopcount % 10 == 0:
             newts = -1
             try:
@@ -541,6 +541,7 @@ def main(args = None):
             if newts > 0 and newts > filetime:
                 content = None
                 try:
+                    time.sleep(0.1)
                     content = load_file_text(filename)
                 except:
                     mlog('error open: ' + filename)
@@ -559,7 +560,7 @@ def main(args = None):
     for node in cron.event(task, -1, env = environ, wait = True):
         mlog('quit: ' + node[1])
 
-    mlog('terminate')
+    mlog('terminated')
 
     return 0
 
