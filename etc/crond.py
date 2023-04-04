@@ -111,7 +111,7 @@ class crontab (object):
         if y < minmax[0] or y > minmax[1]:
             return None
         if x <= y:
-            if value >= x and value <= y:
+            if x <= value <= y:
                 if increase == 1 or (value - x) % increase == 0:
                     return True
             return False
@@ -575,7 +575,7 @@ if __name__ == '__main__':
         cron = crontab()
         task = cron.read(load_file_text('crontab.cfg'))
         ts = time.time()
-        for n in cron.event(task, ev = 0):
+        for n in cron.event(task, 0):
             print('reboot', n[0])
         for i in range(3600):
             now = time.localtime(ts)[:5]
@@ -583,7 +583,7 @@ if __name__ == '__main__':
             for n in res:
                 print(now, n[0])
             ts += 1
-        for n in cron.event(task, ev = -1):
+        for n in cron.event(task, -1):
             print('shutdown', n[0])
         return 0
     def test3():
