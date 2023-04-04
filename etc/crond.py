@@ -125,13 +125,13 @@ class crontab (object):
             return False
         return None
 
-    # 解析带有月份/星期缩写，逗号的项目
+    # parse month and week information
     def check_token (self, text, minmax, value):
         for text in text.strip('\r\n\t ').split(','):
             text = text.lower()
-            for x, y in self.daynames.iteritems():
+            for x, y in self.daynames.items():
                 text = text.replace(x, str(y))
-            for x, y in self.monnames.iteritems():
+            for x, y in self.monnames.items():
                 text = text.replace(x, str(y))
             hr = self.check_atom(text, minmax, value)
             if hr is None:
@@ -140,7 +140,7 @@ class crontab (object):
                 return True
         return False
 
-    # 切割 crontab配置
+    # split rule and command
     def split (self, text):
         text = text.strip('\r\n\t ')
         need = text[:1] == '@' and 1 or 5
@@ -203,7 +203,7 @@ class crontab (object):
         year, month, day, hour, mins = datetuple
         if isinstance(month, str):
             month = month.lower()
-            for x, y in self.monnames.iteritems():
+            for x, y in self.monnames.items():
                 month = month.replace(x, str(y))
             try:
                 month = int(month)
@@ -255,7 +255,7 @@ class crontab (object):
                             os.chdir(workdir)
                         command = obj['command']
                         execute = command
-                        for k, v in env.iteritems():
+                        for k, v in env.items():
                             execute = execute.replace('$(%s)'%k, str(v))
                         self.call(execute)
                         if workdir:
@@ -278,7 +278,7 @@ class crontab (object):
                     os.chdir(workdir)
                 command = obj['command']
                 execute = command
-                for k, v in env.iteritems():
+                for k, v in env.items():
                     execute = execute.replace('$(%s)'%k, str(v))
                 pids.append(self.call(execute))
                 if workdir:
@@ -291,7 +291,8 @@ class crontab (object):
                 pid.wait()
         return runlist
 
-    # 读取crontab文本，如果错误则返回行号，否则返回任务列表
+    # read crontab configuration and returns task list
+    # or error line number
     def read (self, content, times = 0):
         schedule = []
         if not isinstance(content, str):
@@ -590,8 +591,8 @@ if __name__ == '__main__':
         #args = ['crontab', '--help']
         main(args)
         return 0
-    #test3()
-    sys.exit(main())
+    test3()
+    # sys.exit(main())
 
 
 
