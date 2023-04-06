@@ -75,6 +75,11 @@ let s:settings_win = {
 	\ 'junk' : '~/OneDrive/Documents/notes/VimJunk',
 	\ }
 
+let test = '~/ODrive/OneDrive/Documents/notes/VimJunk'
+if isdirectory(expand(test))
+	let s:settings_win.junk = test
+endif
+
 call asclib#setting#update(s:settings)
 
 if has('win32') || has('win64') || has('win16') || has('win95')
@@ -108,6 +113,10 @@ endif
 "----------------------------------------------------------------------
 if has('win32') || has('win16') || has('win64') || has('win95')
 	let $VIM_ONEDRIVE = $HOME . '/OneDrive/Documents/notes/Vim'
+	let test = $HOME . '/ODrive/OneDrive/Documents/notes/Vim'
+	if isdirectory(test)
+		let $VIM_ONEDRIVE = test
+	endif
 	noremap <silent><space>hw :FileSwitch e:\lab\workshop\README.md<cr>
 	noremap <silent><space>hq :FileSwitch $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hm :FileSwitch -ft=markdown $VIM_ONEDRIVE/quicknote.md<cr>
@@ -117,6 +126,10 @@ if has('win32') || has('win16') || has('win64') || has('win95')
 	endif
 elseif isdirectory('/mnt/c/Users/Linwei/OneDrive/Documents/notes/Vim') 
 	let $VIM_ONEDRIVE = '/mnt/c/Users/Linwei/OneDrive/Documents/notes/Vim'
+	let test = '/mnt/c/Users/Linwei/ODrive/OneDrive/Documents/notes/Vim'
+	if isdirectory(test)
+		let $VIM_ONEDRIVE = test
+	endif
 	noremap <silent><space>hw :FileSwitch ~/github/workshop/README.md<cr>
 	noremap <silent><space>hq :FileSwitch $VIM_ONEDRIVE/quicknote.md<cr>
 	noremap <silent><space>hm :FileSwitch -ft=markdown $VIM_ONEDRIVE/quicknote.md<cr>
@@ -229,6 +242,10 @@ let g:ycm_collect_identifiers_from_tags_files  = 1
 
 if has('win32') || has('win16') || has('win64') || has('win95')
 	let g:vimwiki_path = '~/OneDrive/Documents/notes/VimWiki'
+	let test = '~/ODrive/OneDrive/Documents/notes/VimWiki'
+	if isdirectory(expand(test))
+		let g:vimwiki_path = test
+	endif
 	if has('gui_running') && v:version >= 801
 		set tbis=large
 	endif
