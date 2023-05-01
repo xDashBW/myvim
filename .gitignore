@@ -34,6 +34,7 @@ tags
 /tools/test/test_*
 /doc/tags
 /etc/test_*
+/lib/test_*
 
 /autoload/module/test_*
 /autoload/asyncrun/runner/test_*
