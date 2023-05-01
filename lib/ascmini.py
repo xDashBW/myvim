@@ -425,7 +425,7 @@ class PosixKit (object):
             prefix = os.path.normcase(root)
             if not prefix.endswith(os.path.sep):
                 if (not prefix.endswith('/')) and (not prefix.endswith('\\')):
-                    prefix += os.path.sep
+                    prefix = os.path.normcase(root + os.path.sep)
             for path in matched:
                 t = os.path.normcase(path)
                 if t.startswith(prefix):
@@ -1805,7 +1805,7 @@ if __name__ == '__main__':
         print(res.password)
         return 0
     def test7():
-        for n in posix.find_files('../autoload', '*.vim', 0, 4):
+        for n in posix.find_files('../autoload', '*.vim', 1, 4):
             print(n)
         return 0
     test7()
