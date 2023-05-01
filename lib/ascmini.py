@@ -6,7 +6,7 @@
 # ascmini.py - mini library
 #
 # Created by skywind on 2017/03/24
-# Version: 9, Last Modified: 2023/05/01 21:01
+# Version: 9, Last Modified: 2023/05/01 21:04
 #
 #======================================================================
 from __future__ import print_function, unicode_literals
@@ -507,9 +507,9 @@ class PosixKit (object):
                     config[sect][key] = val
         return config
 
-    def dir_contains (self, root, name):
-        root = os.path.normcase(os.path.abspath(root))
-        name = os.path.normcase(os.path.abspath(name))
+    def in_directory (self, filename, directory):
+        root = os.path.normcase(os.path.abspath(directory))
+        name = os.path.normcase(os.path.abspath(filename))
         if not root.endswith(os.path.sep):
             if (not root.endswith('/')) and (not root.endswith('\\')):
                 root = os.path.normcase(root + os.path.sep)
