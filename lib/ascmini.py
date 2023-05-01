@@ -6,7 +6,7 @@
 # ascmini.py - mini library
 #
 # Created by skywind on 2017/03/24
-# Version: 8, Last Modified: 2022/10/18 23:22
+# Version: 8, Last Modified: 2023/05/01 19:17
 #
 #======================================================================
 from __future__ import print_function, unicode_literals
@@ -395,13 +395,43 @@ class PosixKit (object):
         return True
 
     # find file recursive
-    def find_files (self, cwd, pattern = '*.*'):
+    def find_files (self, root, pattern = '*', recursive = True, mode = 0):
         import fnmatch
-        matches = []
-        for root, dirnames, filenames in os.walk(cwd):
-            for filename in fnmatch.filter(filenames, pattern):
-                matches.append(os.path.join(root, filename))
-        return matches
+        matched = []
+        root = os.path.normpath(os.path.abspath(root))
+        names = None
+        if not recursive:
+            for fn in os.listdir(root):
+                path = os.path.join(root, fn)
+                if (mode & 3) == 0:
+                    matched.append(path)
+                else:
+                    if os.path.isdir(path):
+                        if (mode & 1) == 0:
+                            matched.append(path)
+                    else:
+                        if (mode & 2) == 0:
+                            matched.append(path)
+        else:
+            for base, dirnames, filenames in os.walk(root):
+                if (mode & 1) == 0:
+                    for dirname in fnmatch.filter(dirnames, pattern):
+                        matched.append(os.path.join(base, dirname))
+                if (mode & 2) == 0:
+                    for filename in fnmatch.filter(filenames, pattern):
+                        matched.append(os.path.join(base, filename))
+        if (mode & 4) != 0:
+            selected = []
+            prefix = os.path.normcase(root)
+            if not prefix.endswith(os.path.sep):
+                if (not prefix.endswith('/')) and (not prefix.endswith('\\')):
+                    prefix += os.path.sep
+            for path in matched:
+                t = os.path.normcase(path)
+                if t.startswith(prefix):
+                    selected.append(t[len(prefix):])
+            matched = selected
+        return matched
 
     # load file and guess encoding
     def load_file_text (self, filename, encoding = None):
@@ -1260,6 +1290,7 @@ class ShellUtils (object):
     def print_binary (self, data, char = False):
         print(self.hexdump(data, char))
         return True
+
     
 
 utils = ShellUtils()
@@ -1773,7 +1804,11 @@ if __name__ == '__main__':
         print(res.username)
         print(res.password)
         return 0
-    test6()
+    def test7():
+        for n in posix.find_files('../autoload', '*.vim', 0, 4):
+            print(n)
+        return 0
+    test7()
 
 
 
