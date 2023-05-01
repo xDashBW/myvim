@@ -6,7 +6,7 @@
 # ascmini.py - mini library
 #
 # Created by skywind on 2017/03/24
-# Version: 8, Last Modified: 2023/05/01 19:17
+# Version: 9, Last Modified: 2023/05/01 21:01
 #
 #======================================================================
 from __future__ import print_function, unicode_literals
@@ -429,7 +429,7 @@ class PosixKit (object):
             for path in matched:
                 t = os.path.normcase(path)
                 if t.startswith(prefix):
-                    selected.append(t[len(prefix):])
+                    selected.append(path[len(prefix):])
             matched = selected
         return matched
 
@@ -506,6 +506,14 @@ class PosixKit (object):
                         config[sect] = {}
                     config[sect][key] = val
         return config
+
+    def dir_contains (self, root, name):
+        root = os.path.normcase(os.path.abspath(root))
+        name = os.path.normcase(os.path.abspath(name))
+        if not root.endswith(os.path.sep):
+            if (not root.endswith('/')) and (not root.endswith('\\')):
+                root = os.path.normcase(root + os.path.sep)
+        return name.startswith(root)
 
 
 #----------------------------------------------------------------------
