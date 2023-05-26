@@ -22,7 +22,6 @@ set autoindent
 set cindent
 set winaltkeys=no
 set nowrap
-set wildignore=*.swp,*.bak,*.pyc,*.obj,*.o,*.class
 set ttimeout
 set ttimeoutlen=50
 set cmdheight=1
