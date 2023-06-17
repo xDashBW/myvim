@@ -17,6 +17,22 @@
 "----------------------------------------------------------------------
 set nocompatible
 
+" 总是显示状态栏
+set laststatus=2
+
+" 总是显示行号
+set number
+
+" 总是显示侧边栏（用于显示 mark/gitdiff/诊断信息）
+set signcolumn=yes
+
+" 总是显示标签栏
+set showtabline=2
+
+" 设置显示制表符等隐藏字符
+set list
+
+
 set backspace=eol,start,indent
 set autoindent
 set cindent
@@ -29,10 +45,10 @@ set ruler
 set nopaste
 set display=lastline
 
-set shiftwidth=4
-set softtabstop=4
+set shiftwidth=2
+set softtabstop=2
 set noexpandtab
-set tabstop=4
+set tabstop=2
 
 if has('multi_byte')
 	set encoding=utf-8

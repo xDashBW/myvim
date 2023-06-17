@@ -16,6 +16,7 @@ call quickui#menu#reset()
 call quickui#menu#install("&File", [
 			\ [ "&Open\t(:w)", 'call feedkeys(":tabe ")'],
 			\ [ "&Save\t(:w)", 'write'],
+			\ [ "cl&ang-format", 'YcmCompleter Format'],
 			\ [ "--", ],
 			\ [ "LeaderF &File", 'Leaderf file', 'Open file with leaderf'],
 			\ [ "LeaderF &Mru", 'Leaderf mru --regexMode', 'Open recently accessed files'],
@@ -56,6 +57,8 @@ call quickui#menu#install("&Edit", [
 			\ ])
 
 call quickui#menu#install('&Search', [
+			\ [ "Leaderf Color Sche&me", 'Leaderf! colorscheme'],
+			\ [ "--", ],
 			\ [ "&Grep Word\t(In Project)", 'call MenuHelp_GrepCode()', 'Grep keyword in current project' ],
 			\ [ "--", ],
 			\ [ "Find &Definition\t(GNU Global)", 'call MenuHelp_Gscope("g")', 'GNU Global search g'],

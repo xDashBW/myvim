@@ -39,6 +39,68 @@ let s:enabled = g:bundle_enabled
 
 call plug#begin(get(g:, 'bundle_home', '~/.vim/bundles'))
 
+if has_key(s:enabled, 'xiejianan')
+	"color
+	Plug 'mhartington/oceanic-next'
+	Plug 'soft-aesthetic/soft-era-vim'
+	Plug 'sonph/onehalf', {'rtp': 'vim/'}
+	Plug 'sainnhe/sonokai'
+	Plug 'chuling/ci_dark'
+	Plug 'arcticicestudio/nord-vim'
+	Plug 'romainl/Apprentice'
+	Plug 'arzg/vim-colors-xcode'
+	Plug 'wuelnerdotexe/vim-enfocado'
+	Plug 'kaicataldo/material.vim'
+	Plug 'cocopon/iceberg.vim'
+	Plug 'mcchrish/zenbones.nvim'
+	Plug 'rafi/awesome-vim-colorschemes'
+	Plug 'flazz/vim-colorschemes'
+	Plug 'jaredgorski/SpaceCamp'
+	IncScript site/bundle/colors.vim
+
+	"echodoc
+	Plug 'Shougo/echodoc.vim'
+	set noshowmode
+	let g:echodoc#enable_at_startup = 1
+
+	" 括号
+	Plug 'Raimondi/delimitMate'
+
+	"highlight
+	Plug 'octol/vim-cpp-enhanced-highlight', { 'for': ['c', 'cpp'] }
+
+	"YCM 
+	Plug 'ycm-core/YouCompleteMe'
+	IncScript site/bundle/ycm.vim
+
+	" Leaderf
+	Plug 'Yggdroot/LeaderF'
+	Plug 'tamago324/LeaderF-filer'
+	Plug 'voldikss/LeaderF-emoji'
+	IncScript site/bundle/leaderf.vim
+
+	" tags 
+	let g:gutentags_modules = []
+	if executable('ctags')
+		let g:gutentags_modules += ['ctags']
+	endif
+	if executable('gtags-cscope') && executable('gtags')
+		let g:gutentags_modules += ['gtags_cscope']
+	endif
+	if len(g:gutentags_modules) > 0
+		" Plug 'ludovicchabant/vim-gutentags'
+		Plug 'skywind3000/vim-gutentags'
+	endif
+
+	" ALE
+	Plug 'w0rp/ale'
+	IncScript site/bundle/ale.vim
+endif
+
+if has_key(s:enabled, 'ycm')
+	Plug 'ycm-core/YouCompleteMe'
+	IncScript site/bundle/ycm.vim
+endif
 
 "----------------------------------------------------------------------
 " package group - simple

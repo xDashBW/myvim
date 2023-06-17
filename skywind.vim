@@ -256,3 +256,11 @@ endif
 
 
 
+set t_Co=256
+color desert256
+hi LineNr term=bold cterm=NONE ctermfg=DarkGrey ctermbg=NONE gui=NONE guifg=DarkGrey guibg=NONE
+hi SignColumn ctermbg=0
+
+
+
+

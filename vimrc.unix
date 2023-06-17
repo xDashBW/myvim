@@ -5,7 +5,7 @@ exec 'so '.fnameescape(s:home).'/init.vim'
 exec 'so '.fnameescape(s:home).'/skywind.vim'
 
 set t_Co=256
-color desert256
+color kolor
 
 hi! CursorLineNr cterm=none
 
@@ -23,14 +23,14 @@ if g:vim_startup != 0 || has('gui_running')
 endif
 
 if get(g:, 'vim_manual', 0) == 0
-	let g:bundle_group += ['simple', 'basic']
-	if g:vim_startup == 1
-		let g:bundle_group += ['inter']
-	elseif g:vim_startup == 2
-		let g:bundle_group += ['basic', 'inter', 'high', 'opt']
-		let g:bundle_group += ['ale']
-	endif
-	let g:bundle_group += ['nerdtree']
+	let g:bundle_group += ['xiejianan']
+	" if g:vim_startup == 1
+	" 	let g:bundle_group += ['inter']
+	" elseif g:vim_startup == 2
+	" 	let g:bundle_group += ['basic', 'inter', 'high', 'opt']
+	" 	let g:bundle_group += ['ale']
+	" endif
+	" let g:bundle_group += ['nerdtree']
 endif
 
 if len(g:bundle_group) > 0
